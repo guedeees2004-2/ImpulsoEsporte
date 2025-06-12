@@ -59,12 +59,15 @@ MIDDLEWARE = [
 
 X_FRAME_OPTIONS = "ALLOW-FROM preview.app.github.dev"
 
-ROOT_URLCONF = "hello_world.urls"
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "impulse_esporte.settings")
+
+ROOT_URLCONF = "impulse_esporte.urls"
+WSGI_APPLICATION = "impulse_esporte.wsgi.application"
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "hello_world" / "templates"],
+        "DIRS": [BASE_DIR / "impulse_esporte" / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -76,8 +79,6 @@ TEMPLATES = [
         },
     },
 ]
-
-WSGI_APPLICATION = "hello_world.wsgi.application"
 
 
 # Database
@@ -126,14 +127,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATICFILES_DIRS = [
-    BASE_DIR / "hello_world" / "static",
+    BASE_DIR / "impulse_esporte" / "static",
 ]
 
 STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "hello_world" / "staticfiles"
+STATIC_ROOT = BASE_DIR / "impulse_esporte" / "staticfiles"
 
 MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "hello_world" / "media"
+MEDIA_ROOT = BASE_DIR / "impulse_esporte" / "media"
 
 
 # Default primary key field type
