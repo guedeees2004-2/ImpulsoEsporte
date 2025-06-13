@@ -1,0 +1,58 @@
+{% load django_browser_reload %}
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+
+    <title>{% block title %}Impulso Esporte{% endblock %}</title>
+    
+    <link rel="stylesheet" href="{% static 'main.css' %}">
+</head>
+
+
+<body>
+    <header class="header pagina">
+    <div class="header-container">
+        <div class="header-brand">
+            <img src="{% static 'icones/logoImpulse.png' %}" class="logo">
+            <a href="/" class="btn btn-brand">Impulso Esporte</a>
+        </div>
+
+        <nav class="header-nav">
+            <ul class="nav-list">
+                <li class="nav-item"><a href="/sobre" class="btn">Sobre</a></li>
+                <li class="nav-item"><a href="/servicos" class="btn">Serviços</a></li>
+                <li class="nav-item"><a href="/contato" class="btn">Contato</a></li>
+
+                <li class="nav-item">
+                    <a href="{% url 'login' %}" class="btn btn-login">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'register' %}" class="btn btn-register">Criar Conta</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    </header>
+
+    <main class="main-container">
+        {% block content %}
+        <section class="hero-banner">
+            <div class="banner-content">
+                <h1>CONECTANDO TALENTOS ESPORTIVOS A OPORTUNIDADES</h1>
+                <p class="banner-subtitle">Encontre patrocínios para seu esporte ou descubra talentos para sua marca</p>
+            </div>
+        </section>
+        {% endblock %}
+    </main>
+    
+
+</body>
+
+
+</html>

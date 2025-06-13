@@ -1,0 +1,177 @@
+body {
+    font-family: 'Oswald';
+    display: block;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+    background-color: #F5F5F5;
+}
+  
+.logo{
+    width: 80px;
+    border: 2px solid #165732;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 5px;
+}
+
+.header {
+    background-color: #f8f9fa;
+    padding: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.header-container {
+    width: 90%;
+    max-width: 2000px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+}
+
+.header-brand {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.header-brand a {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2E8B57 ;
+    text-decoration: none;
+}
+
+.nav-list {
+    display: flex; 
+    list-style: none;
+    gap: 1.5rem; 
+}
+
+.nav-item a {
+    color: #165732;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+    white-space: nowrap; 
+}
+
+.nav-item a:hover {
+    color: #007bff;
+}
+
+.pagina {
+    min-width: 800px;
+    max-width: 2000px;
+}
+
+.btn {
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-block; 
+}
+
+
+.btn-login {
+    background-color: transparent;
+    border: 2px solid #165732; 
+    color: #165732; 
+}
+
+.btn-login:hover {
+    background-color: #165732;
+    color: #ffffff; 
+}
+
+
+.btn-register {
+    background-color: #2E8B57; 
+    border: 2px solid #2E8B57;
+    color: #ffffff; 
+}
+
+.btn-register:hover {
+    background-color: #165732; 
+    border-color: #165732;
+}
+
+.btn-brand {
+    font-size: 4.5rem;
+    margin-top: 30px;
+}
+
+/* ========== BANNER STYLES ========== */
+.hero-banner {
+    background: linear-gradient(to right, #165732, #2E8B57);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    padding: 0 20px;
+    width: 100%;
+    height: 300px;
+    margin-top: 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.banner-content {
+    max-width: 1200px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hero-banner h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    line-height: 1.1;
+    letter-spacing: 1px;
+    color: #ffffff;
+    width: 100%;
+}
+
+.banner-subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    color: #f0f0f0;
+    max-width: 800px;
+}
+
+.banner-elements {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1000px;
+    margin-top: 30px;
+}
+
+.btn-banner {
+    background: #ffffff;
+    color: #165732;
+    border: none;
+    padding: 1rem 3rem; 
+    font-size: 1.2rem;
+    border-radius: 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.btn-banner:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+}

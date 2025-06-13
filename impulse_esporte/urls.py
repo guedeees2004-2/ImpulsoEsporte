@@ -1,5 +1,5 @@
 """
-URL configuration for hello_world project.
+URL configuration for impulse_esporte project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.0/topics/http/urls/
@@ -20,13 +20,24 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from hello_world.core import views as core_views
+# Vamos importar as views de uma forma mais limpa
+from impulse_esporte.core.views import index, RegisterView, LoginView, user_logout
 
 urlpatterns = [
-    path("", core_views.index),
+    # 1. Rota da página inicial (index), agora com o nome 'home' para o redirect funcionar
+    path("", index, name="home"),
+    
+    # 2. Novas rotas para autenticação
+    path('login/', LoginView.as_view(), name='login'),
+    path('register/', RegisterView.as_view(), name='register'),
+    path('logout/', user_logout, name='logout'),
+
+    # 3. Rotas que você já tinha
     path("admin/", admin.site.urls),
     path("__reload__/", include("django_browser_reload.urls")),
 ]
+
+# Sua configuração de arquivos estáticos e de mídia continua a mesma
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
