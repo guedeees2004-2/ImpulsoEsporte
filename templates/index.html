@@ -40,12 +40,17 @@
     </div>
     </header>
 
-
-    <!-- Conteúdo principal da página -->
-    <main>
+    <main class="main-container">
         {% block content %}
+        <section class="hero-banner">
+            <div class="banner-content">
+                <h1>CONECTANDO TALENTOS ESPORTIVOS A OPORTUNIDADES</h1>
+                <p class="banner-subtitle">Encontre patrocínios para seu esporte ou descubra talentos para sua marca</p>
+            </div>
+        </section>
         {% endblock %}
     </main>
+    
 
 </body>
 
