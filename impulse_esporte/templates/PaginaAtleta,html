@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Página de Atleta</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f6f6f6;
+    }
+
+
+    header {
+      background-color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #ddd;
+    }
+
+
+    header h1 {
+      color: green;
+      margin: 0;
+    }
+
+
+    nav a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: black;
+      font-weight: bold;
+    }
+
+
+    .menu-icon {
+      font-size: 24px;
+      display: inline-block;
+    }
+
+
+    main {
+      padding: 2rem;
+    }
+
+
+    .botoes {
+      margin-bottom: 2rem;
+    }
+
+
+    button {
+      background-color: #eee;
+      border: none;
+      padding: 10px 15px;
+      margin: 10px 10px 0 0;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+
+    .form-box {
+      display: none;
+      margin-top: 10px;
+      padding: 15px;
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+      border-radius: 8px;
+      max-width: 400px;
+    }
+
+
+    .form-box input, .form-box button {
+      display: block;
+      width: 100%;
+      margin: 5px 0;
+      padding: 8px;
+    }
+
+
+    .form-box ul {
+      list-style: none;
+      padding: 0;
+    }
+
+
+    .form-box li {
+      margin: 4px 0;
+      display: flex;
+      justify-content: space-between;
+      background: #fff;
+      padding: 5px;
+      border: 1px solid #ddd;
+    }
+
+
+    .conteudo {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+
+    .patrocinadores, .equipe, .jogos {
+      flex: 1;
+      margin: 1rem;
+      min-width: 250px;
+    }
+
+
+    .logos img {
+      height: 50px;
+      margin-right: 20px;
+    }
+
+
+    .equipe-nome {
+      background-color: #eee;
+      padding: 20px;
+      border-radius: 5px;
+      display: inline-block;
+      margin-top: 5px;
+    }
+
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #f1f1f1;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+
+    footer {
+      text-align: right;
+      padding: 1rem 2rem;
+      background-color: #fff;
+    }
+
+
+    footer img {
+      height: 50px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Bem vindo Atleta</h1>
+    <nav>
+      <a href="#">Início</a>
+      <a href="#">Sobre</a>
+      <a href="#">Contato</a>
+      <div class="menu-icon">☰</div>
+    </nav>
+  </header>
+
+
+  <main>
+    <section class="botoes">
+      <button onclick="toggleBox('patrocinadorBox')">+ Buscar patrocinadores</button>
+      <button onclick="toggleBox('equipeBox')">+ Buscar Equipe</button>
+      <button onclick="toggleBox('partidaBox')">+ Adicionar partida</button>
+    </section>
+
+
+    <div class="form-box" id="patrocinadorBox">
+      <input type="text" id="buscarPatrocinador" placeholder="Buscar patrocinador..." oninput="filtrar('buscarPatrocinador', 'listaPatrocinadores')">
+      <input type="text" id="novoPatrocinador" placeholder="Adicionar novo patrocinador...">
+      <button onclick="adicionar('novoPatrocinador', 'listaPatrocinadores')">Adicionar</button>
+      <ul id="listaPatrocinadores">
+        <li>Nike <button onclick="remover(this)">X</button></li>
+        <li>Coca-Cola <button onclick="remover(this)">X</button></li>
+      </ul>
+    </div>
+
+
+    <div class="form-box" id="equipeBox">
+      <input type="text" id="buscarEquipe" placeholder="Buscar equipe..." oninput="filtrar('buscarEquipe', 'listaEquipes')">
+      <ul id="listaEquipes">
+        <li>União Serrana</li>
+        <li>Atlético Sul</li>
+        <li>FC Estrela</li>
+      </ul>
+    </div>
+
+
+    <div class="form-box" id="partidaBox">
+      <input type="text" id="buscarPartida" placeholder="Buscar partida..." oninput="filtrar('buscarPartida', 'listaPartidas')">
+      <input type="text" id="novaPartida" placeholder="Adicionar nova partida...">
+      <button onclick="adicionar('novaPartida', 'listaPartidas')">Adicionar</button>
+      <ul id="listaPartidas">
+        <li>13/04/2025 - FC Estrela <button onclick="remover(this)">X</button></li>
+        <li>17/04/2025 - Tigres da Vila <button onclick="remover(this)">X</button></li>
+      </ul>
+    </div>
+
+
+    <section class="conteudo">
+      <div class="patrocinadores">
+        <h2>Patrocinadores</h2>
+        <div class="logos">
+         <!-- <img src="https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg" alt="Nike"-->
+          <!-- <img src="https://1000marcas.net/wp-content/uploads/2020/01/Coca-Cola-Logo.png" alt="Coca-Cola"-->
+        </div>
+      </div>
+
+
+      <div class="equipe">
+        <h2>Equipe</h2>
+        <p class="equipe-nome">União Serrana</p>
+      </div>
+
+
+      <div class="jogos">
+        <h2>Próximos jogos</h2>
+        <table>
+          <tr><th>Data</th><th>Hora</th><th>Adversário</th></tr>
+          <tr><td>13/04/2025</td><td>16:00</td><td>FC Estrela</td></tr>
+          <tr><td>17/04/2025</td><td>19:30</td><td>Tigres da Vila</td></tr>
+          <tr><td>21/04/2025</td><td>18:00</td><td>Atlético Verde</td></tr>
+        </table>
+      </div>
+    </section>
+  </main>
+
+
+  <footer>
+    <img src="https://impulso.network/wp-content/uploads/2023/11/Impulso-Esporte-logo.webp" alt="Impulso Esporte">
+  </footer>
+
+
+  <script>
+    function toggleBox(id) {
+      const box = document.getElementById(id);
+      box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    }
+
+
+    function adicionar(inputId, listaId) {
+      const input = document.getElementById(inputId);
+      const valor = input.value.trim();
+      if (valor === '') return;
+
+
+      const li = document.createElement("li");
+      li.innerHTML = `${valor} <button onclick="remover(this)">X</button>`;
+      document.getElementById(listaId).appendChild(li);
+      input.value = '';
+    }
+
+
+    function remover(botao) {
+      botao.parentElement.remove();
+    }
+
+
+    function filtrar(inputId, listaId) {
+      const termo = document.getElementById(inputId).value.toLowerCase();
+      const itens = document.getElementById(listaId).getElementsByTagName("li");
+
+
+      for (let item of itens) {
+        const texto = item.textContent.toLowerCase();
+        item.style.display = texto.includes(termo) ? "" : "none";
+      }
+    }
+  </script>
+</body>
+</html>
