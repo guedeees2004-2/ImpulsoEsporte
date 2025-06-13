@@ -22,7 +22,7 @@ from django.conf.urls.static import static
 
 # Vamos importar as views de uma forma mais limpa
 
-from impulse_esporte.appImpulsoEsporte.views import index, RegisterView, LoginView, user_logout, pagina_atleta
+from appImpulsoEsporte.views import index, RegisterView, LoginView, user_logout, pagina_atleta
 
 
 urlpatterns = [
