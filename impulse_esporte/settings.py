@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     "django_browser_reload",
     "crispy_forms",          
     "crispy_bootstrap5",     
-    "impulse_esporte.core",   
+    "impulse_esporte.appImpulsoEsporte",   
 ]
 
 MIDDLEWARE = [
@@ -164,4 +164,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-AUTH_USER_MODEL = 'core.Usuario'
+AUTH_USER_MODEL = 'appImpulsoEsporte.Usuario'

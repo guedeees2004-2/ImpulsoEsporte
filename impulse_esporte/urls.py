@@ -21,7 +21,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 # Vamos importar as views de uma forma mais limpa
-from impulse_esporte.core.views import index, RegisterView, LoginView, user_logout, pagina_atleta
+from impulse_esporte.appImpulsoEsporte.views import index, RegisterView, LoginView, user_logout, pagina_atleta
 
 urlpatterns = [
     # 1. Rota da página inicial (index), agora com o nome 'home' para o redirect funcionar
