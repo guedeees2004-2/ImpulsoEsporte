@@ -7,6 +7,16 @@ body {
     background-color: #F5F5F5;
 }
   
+.info-box {
+    max-width: 600px;
+    margin: 2rem 0 0 8vw; /* top, right, bottom, left */
+    padding: 1.5rem 2rem;
+    border: 2px solid #2E8B57;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(46, 139, 87, 0.08);
+}
+
 .logo{
     width: 80px;
     border: 2px solid #165732;
