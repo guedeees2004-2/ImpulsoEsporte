@@ -14,9 +14,14 @@ class CustomUserCreationForm(UserCreationForm):
         help_text="Máximo de 25 caracteres. Apenas letras, números e @ . + - __"
     )
 
+    tipo_conta = forms.ChoiceField(
+        choices=Usuario.TIPOS_USUARIO,
+        label="Tipo de Conta"
+    )
+
     class Meta(UserCreationForm.Meta):
         model = Usuario
-        fields = ("username", "email")
+        fields = ("username", "email", "tipo_conta")
 
 class CustomAuthenticationForm(AuthenticationForm):
     pass

@@ -1,15 +1,25 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %} {% block content %}
+{% load crispy_forms_tags %}
+{% block content %}
+
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card shadow-sm">
             <div class="card-body">
                 <h2 class="card-title text-center mb-4">Criar Nova Conta</h2>
-                
                 <form method="post" novalidate>
                     {% csrf_token %}
+                    {{ form.username|as_crispy_field }}
+                    {{ form.email|as_crispy_field }}
+                    {{ form.password1|as_crispy_field }}
+                    {{ form.password2|as_crispy_field }}
 
-                    {{ form|crispy }} <div class="d-grid gap-2 mt-4">
+                    <div class="mb-3">
+                        <label class="form-label">Tipo de Conta</label>
+                        {{ form.tipo_conta }}
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
                         <button type="submit" class="btn btn-primary btn-block">Registrar</button>
                     </div>
                 </form>

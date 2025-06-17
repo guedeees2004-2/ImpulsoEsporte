@@ -39,7 +39,7 @@ class LoginView(View):
 
 def user_logout(request):
     logout(request)
-    return redirect('login')
+    return render(request, 'index.html')
 
 def pagina_atleta(request):
     return render(request, "PaginaAtleta.html")

@@ -1,0 +1,33 @@
+{% load static %}
+
+<header class="header pagina">
+    <div class="header-container">
+        <div class="header-brand">
+            <img src="{% static 'icones/logoImpulse.png' %}" class="logo">
+            <a href="/" class="btn btn-brand">Impulso Esporte</a>
+        </div>
+
+        <nav class="header-nav">
+            <ul class="nav-list">
+                <li class="nav-item"><a href="/sobre" class="btn">Sobre</a></li>
+                <li class="nav-item"><a href="/servicos" class="btn">Serviços</a></li>
+                <li class="nav-item"><a href="/contato" class="btn">Contato</a></li>
+                {% if user.is_authenticated and user.tipo_conta == "atleta" %}
+                    <li class="nav-item">
+                        <a href="{% url 'pagina_atleta' %}" class="btn">Página do Atleta</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'logout' %}" class="btn btn-logout">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a href="{% url 'login' %}" class="btn btn-login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'register' %}" class="btn btn-register">Criar Conta</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</header>
