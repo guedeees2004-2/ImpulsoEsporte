@@ -20,7 +20,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from appImpulsoEsporte.views import index, RegisterView, LoginView, user_logout, pagina_atleta
+from appImpulsoEsporte.views import index, RegisterView, LoginView, user_logout, pagina_atleta, buscar_patrocinadores
 
 
 urlpatterns = [
@@ -29,6 +29,7 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('logout/', user_logout, name='logout'),
     path("atleta/", pagina_atleta, name="pagina_atleta"),
+    path("patrocinadores/", buscar_patrocinadores, name="buscar_patrocinadores"),
     path("admin/", admin.site.urls),
     path("__reload__/", include("django_browser_reload.urls")),
 ]

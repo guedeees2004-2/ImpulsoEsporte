@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buscar Patrocinadores - Impulso Esporte</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'main.css' %}">
+  <link rel="stylesheet" href="{% static 'patrocinador.css' %}">
+</head>
+<body>
+  {% include 'headers/headerPadrao.html' %}
+
+  <!-- Page title section -->
+  <section class="page-title-section">
+    <div class="title-content">
+      <h1>Buscar Patrocinadores</h1>
+      <p class="subtitle">Encontre empresas abertas para patrocinar seu talento esportivo</p>
+    </div>
+  </section>
+
+  <main class="patrocinadores-container">
+    <a href="{% url 'pagina_atleta' %}" class="back-link">← Voltar à Página do {{ user_type|capfirst }}</a>
+    
+    <div class="search-bar">
+      <form method="GET">
+        <input 
+          type="text" 
+          name="search" 
+          placeholder="Buscar patrocinadores por nome da empresa..." 
+          value="{{ search_query }}"
+        >
+        <button type="submit">Buscar</button>
+        {% if search_query %}
+          <a href="{% url 'buscar_patrocinadores' %}" class="btn-clear">Limpar</a>
+        {% endif %}
+      </form>
+    </div>
+
+    {% if patrocinadores %}
+      <div class="patrocinadores-grid">
+        {% for patrocinador in patrocinadores %}
+          <div class="patrocinador-card">
+            <div class="patrocinador-nome">{{ patrocinador.empresa }}</div>
+            <div class="patrocinador-usuario">Usuário: {{ patrocinador.usuario.username }}</div>
+            
+            <div class="status-disponivel">
+              ✓ Disponível para parcerias
+            </div>
+            
+            {% if patrocinador.descricao %}
+              <div class="patrocinador-descricao">
+                {{ patrocinador.descricao|truncatewords:30 }}
+              </div>
+            {% else %}
+              <div class="patrocinador-descricao sem-descricao">
+                Sem descrição disponível.
+              </div>
+            {% endif %}
+            
+            <button class="contato-btn" onclick="entrarEmContato('{{ patrocinador.empresa }}', '{{ patrocinador.usuario.username }}')">
+              Entrar em Contato
+            </button>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="no-results">
+        {% if search_query %}
+          <h3>Nenhum patrocinador encontrado para "{{ search_query }}"</h3>
+          <p>Tente buscar com outros termos ou <a href="{% url 'buscar_patrocinadores' %}">veja todos os patrocinadores disponíveis</a>.</p>
+        {% else %}
+          <h3>Nenhum patrocinador disponível no momento</h3>
+          <p>Parece que não há patrocinadores abertos para novas oportunidades.</p>
+        {% endif %}
+      </div>
+    {% endif %}
+  </main>
+
+  <script>
+    function entrarEmContato(empresa, username) {
+      // Aqui você pode implementar a lógica de contato
+      // Por exemplo, abrir um modal, redirecionar para uma página de contato, etc.
+      alert(`Entrando em contato com ${empresa} (${username}). \n\nEsta funcionalidade será implementada em breve!`);
+      
+      // Exemplo de redirecionamento para página de contato (quando implementada):
+      // window.location.href = `/contato/${username}/`;
+    }
+  </script>
+</body>
+</html>

@@ -57,7 +57,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_browser_reload",
     "crispy_forms",          
-    "crispy_bootstrap5",     
+    "crispy_bootstrap5",
+    "appImpulsoEsporte",     
 ]
 
 MIDDLEWARE = [
