@@ -11,9 +11,18 @@ class Esporte(models.Model):
 
 class Usuario(AbstractUser):
     TIPOS_USUARIO = [
-        ('jogador', 'Jogador'),
+        ('', 'Selecione o tipo de conta'),
+        ('atleta', 'Atleta'),
         ('patrocinador', 'Patrocinador'),
+        ('equipe', 'Equipe'),
+        ('outro', 'Outro'),
     ]
+    tipo_conta = models.CharField(
+        max_length=20,
+        choices=TIPOS_USUARIO,
+        default='atleta',
+        verbose_name='Tipo de Conta'
+    )
     tipo_usuario = models.CharField(max_length=20, choices=TIPOS_USUARIO)
     username = models.CharField(
         max_length=25,

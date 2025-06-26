@@ -40,7 +40,7 @@ class LoginView(View):
 
 def user_logout(request):
     logout(request)
-    return redirect('login')
+    return render(request, 'index.html')
 
 patrocinadores = ["Nike", "Adidas", "Puma"]
 equipes = ["Time A", "Time B", "Time C"]
