@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.views import View
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 from .forms import CustomUserCreationForm, CustomAuthenticationForm
+from .models import Patrocinador, Usuario
 
 
 
@@ -49,8 +52,47 @@ partidas = [
     "20/04/2023 - Time A vs Time B"
 ]
 
+@login_required
+def buscar_patrocinadores(request):
+    """
+    View para buscar patrocinadores disponíveis.
+    Acessível apenas para usuários do tipo 'atleta' ou 'equipe'.
+    """
+    # Verificar se o usuário é atleta ou equipe
+    if request.user.tipo_conta not in ['atleta', 'equipe']:
+        return redirect('home')
+    
+    # Buscar patrocinadores que estão abertos para oportunidades
+    patrocinadores_disponiveis = Patrocinador.objects.filter(
+        usuario__tipo_conta='patrocinador',
+        aberto_para_oportunidades=True
+    ).select_related('usuario')
+    
+    # Filtro de busca (opcional)
+    search_query = request.GET.get('search', '')
+    if search_query:
+        patrocinadores_disponiveis = patrocinadores_disponiveis.filter(
+            empresa__icontains=search_query
+        )
+    
+    context = {
+        'patrocinadores': patrocinadores_disponiveis,
+        'search_query': search_query,
+        'user_type': request.user.tipo_conta,
+    }
+    
+    return render(request, 'buscar_patrocinadores.html', context)
+
+
 def pagina_atleta(request):
+    """
+    Página principal do atleta/equipe com informações e funcionalidades básicas.
+    """
     global patrocinadores, partidas, equipes
+    
+    # Verificar se o usuário é atleta ou equipe
+    if not request.user.is_authenticated or request.user.tipo_conta not in ['atleta', 'equipe']:
+        return redirect('home')
     
     filtro_equipe = request.GET.get('filtro_equipe', '')
     box_aberto = request.GET.get('box_aberto', '')
@@ -87,11 +129,19 @@ def pagina_atleta(request):
     # Filtra equipes se houver filtro
     equipes_filtradas = [e for e in equipes if filtro_equipe.lower() in e.lower()]
     
+    # Buscar patrocinadores disponíveis do banco de dados
+    patrocinadores_disponiveis = Patrocinador.objects.filter(
+        usuario__tipo_conta='patrocinador',
+        aberto_para_oportunidades=True
+    ).select_related('usuario')[:5]  # Mostrar apenas os 5 primeiros
+    
     context = {
         'patrocinadores': sorted(patrocinadores),
+        'patrocinadores_disponiveis': patrocinadores_disponiveis,
         'equipes': sorted(equipes_filtradas if filtro_equipe else equipes),
         'partidas': sorted(partidas),
         'filtro_equipe': filtro_equipe,
         'box_aberto': box_aberto,
+        'user_type': request.user.tipo_conta,
     }
     return render(request, 'PaginaAtleta.html', context)

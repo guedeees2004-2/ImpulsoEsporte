@@ -10,18 +10,19 @@ from .models import (
     PatrocinioJogador
 )
 
+@admin.register(Usuario)
 class UsuarioAdmin(UserAdmin):
     model = Usuario
-    list_display = ('username', 'email', 'tipo_usuario', 'is_staff', 'is_active')
-    list_filter = ('tipo_usuario', 'is_staff', 'is_active')
+    list_display = ('username', 'email', 'tipo_conta', 'is_staff', 'is_active')
+    list_filter = ('tipo_conta', 'is_staff', 'is_active')
     fieldsets = (
-        (None, {'fields': ('username', 'email', 'password', 'tipo_usuario')}),
+        (None, {'fields': ('username', 'email', 'password', 'tipo_conta')}),
         ('Permissões', {'fields': ('is_staff', 'is_active', 'groups', 'user_permissions')}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'email', 'password1', 'password2', 'tipo_usuario', 'is_staff', 'is_active')}
+            'fields': ('username', 'email', 'password1', 'password2', 'tipo_conta', 'is_staff', 'is_active')}
         ),
     )
     search_fields = ('username', 'email')
@@ -47,8 +48,13 @@ class JogadorAdmin(admin.ModelAdmin):
 
 @admin.register(Patrocinador)
 class PatrocinadorAdmin(admin.ModelAdmin):
-    list_display = ('usuario', 'empresa', 'cnpj')
+    list_display = ('usuario', 'empresa', 'cnpj', 'aberto_para_oportunidades')
     search_fields = ('empresa', 'cnpj')
+    list_filter = ('aberto_para_oportunidades',)
+    fieldsets = (
+        (None, {'fields': ('usuario', 'empresa', 'cnpj')}),
+        ('Disponibilidade', {'fields': ('aberto_para_oportunidades', 'descricao')}),
+    )
 
 @admin.register(PatrocinioEquipe)
 class PatrocinioEquipeAdmin(admin.ModelAdmin):
@@ -61,4 +67,5 @@ class PatrocinioJogadorAdmin(admin.ModelAdmin):
     search_fields = ('patrocinador__empresa', 'jogador__usuario__username')
 
 
-admin.site.register(Usuario, UsuarioAdmin)
+# Register Usuario with custom admin class
+# Note: We don't need to call admin.site.register again since we use @admin.register decorator above
