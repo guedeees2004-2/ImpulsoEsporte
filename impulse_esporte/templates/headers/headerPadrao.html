@@ -9,7 +9,8 @@
 
         <nav class="header-nav">
             <ul class="nav-list">
-                <li class="nav-item"><a href="/sobre" class="btn">Sobre</a></li>
+                <li class="nav-item"><a href="{% url 'pagina_equipe' %}" class="btn">EQUIPE TESTE</a></li>
+                <li class="nav-item"><a href="{% url 'pagina_sobre_nos' %}" class="btn">Sobre</a></li>
                 <li class="nav-item"><a href="/servicos" class="btn">Serviços</a></li>
                 <li class="nav-item"><a href="{% url 'contato' %}" class="btn">Contato</a></li>
                 {% if user.is_authenticated and user.tipo_conta == "atleta" %}

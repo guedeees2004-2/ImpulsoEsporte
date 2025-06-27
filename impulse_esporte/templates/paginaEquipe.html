@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Equipe</title>
+    <link rel="stylesheet" href="{% static 'equipeFormatacao.css' %}">
+</head>
+
+<script>
+function toggleDescricao(id) {
+    const elem = document.getElementById(id);
+    elem.style.display = (elem.style.display === 'none' || elem.style.display === '') ? 'block' : 'none';
+}
+</script>
+
+<body>
+    <header class="header">
+        <div class="top-bar">
+            <h1 class="welcome">Bem vindo Equipe</h1>
+            <nav class="menu">
+                <ul>
+                    <li><a href="#">Início</a></li>
+                    <li><a href="index.html">Sobre</a></li>
+                    <li><a href="#">Contato</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="menu-icon"></div>
+    </header>
+
+    <main class="main">
+        <div class="actions">
+            <button>Patrocinadores</button>
+            <button>Jogador</button>
+            <button>+ Adicionar partida</button>
+        </div>
+
+         <<div class="column">
+    <div class="column">
+    <h3>Patrocinadores</h3>
+
+    <div class="patrocinador">
+        <a href="indexredbull.html" class="sponsor-button" target="_blank">
+            <img src="redbull.png" alt="Red Bull" class="sponsor-logo">
+        </a>
+    </div>
+
+    <div class="patrocinador">
+        <a href="indexsantander.html" class="sponsor-button" target="_blank">
+            <img src="santander.png" alt="Santander" class="sponsor-logo">
+        </a>
+    </div>
+</div>
+            <div class="column">
+                <h3>Atletas</h3>
+                <div class="athletes-box">
+                    <p>Lucas Menezes</p>
+                    <p>Rafael Santos</p>
+                    <p>Diego Oliveira</p>
+                    <p>João Silva</p>
+                    <p>Carlos Mendes</p>
+                    <p>Rafael Costa</p>
+                    <p>Bruno Oliveira</p>
+                </div>
+            </div>
+
+            <div class="column">
+                <h3>Próximos jogos</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Hora</th>
+                            <th>Adversário</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>13/04/2025</td>
+                            <td>16:00</td>
+                            <td>FC Estrela</td>
+                        </tr>
+                        <tr>
+                            <td>17/04/2025</td>
+                            <td>19:30</td>
+                            <td>União Serrana</td>
+                        </tr>
+                        <tr>
+                            <td>21/04/2025</td>
+                            <td>18:00</td>
+                            <td>Atlético Verde</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <img src="logo.png" alt="Logo Impulso Esporte" class="logo">
+    </footer>
+</body>
+</html>

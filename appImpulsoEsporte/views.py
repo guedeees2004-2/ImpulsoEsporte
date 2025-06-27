@@ -299,3 +299,15 @@ def buscar_equipes(request):
     }
     
     return render(request, 'buscar_equipes.html', context)
+
+def pagina_sobre_nos(request):
+    context = {
+        "title": "Sobre Nós - Impulso Esporte",
+    }
+    return render(request, "paginaSobreNos.html", context)
+
+def pagina_equipe(request):
+    context = {
+        "title ": "Impulso Esporte - Equipe",
+    }
+    return render(request, 'paginaEquipe.html', context)
