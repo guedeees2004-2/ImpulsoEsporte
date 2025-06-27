@@ -1,0 +1,139 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciar Equipes - Impulso Esporte</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'main.css' %}">
+  <link rel="stylesheet" href="{% static 'equipes.css' %}">
+</head>
+<body>
+  {% include 'headers/headerPadrao.html' %}
+
+  <!-- Page title section -->
+  <section class="page-title-section">
+    <div class="title-content">
+      <h1>Gerenciar Equipes</h1>
+      <p class="subtitle">Cadastre e gerencie suas equipes esportivas</p>
+    </div>
+  </section>
+
+  <main class="equipes-container">
+    <a href="{% url 'home' %}" class="back-link">← Voltar ao Início</a>
+    
+    <!-- Formulário para cadastrar nova equipe -->
+    <div class="form-section">
+      <h2>Cadastrar Nova Equipe</h2>
+      <form method="POST" id="form-cadastro">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="cadastrar">
+        
+        <div class="form-group">
+          <label for="nome">Nome da Equipe:</label>
+          <input type="text" id="nome" name="nome" placeholder="Ex: Dragões do Futsal" required>
+        </div>
+
+        <div class="form-group">
+          <label for="modalidade">Modalidade:</label>
+          <input type="text" id="modalidade" name="modalidade" placeholder="Ex: Futsal, Vôlei, Basquete" required>
+        </div>
+
+        <div class="form-group">
+          <label for="cidade">Cidade:</label>
+          <input type="text" id="cidade" name="cidade" placeholder="Ex: São Paulo, Rio de Janeiro" required>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-submit">Cadastrar Equipe</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Formulário para remover equipe -->
+    <div class="form-section">
+      <h2>Remover Equipe</h2>
+      <form method="POST" id="form-remover">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="remover">
+        
+        <div class="form-group">
+          <label for="nome-remover">Nome da Equipe a Remover:</label>
+          <input type="text" id="nome-remover" name="nome_remover" placeholder="Digite o nome exato da equipe" required>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-submit" style="background: linear-gradient(135deg, #dc3545, #c82333);">Remover Equipe</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Lista de equipes cadastradas -->
+    {% if equipes %}
+      <div class="form-section">
+        <h2>Equipes Cadastradas</h2>
+        <div class="equipes-grid">
+          {% for equipe in equipes %}
+            <div class="equipe-card">
+              <div class="equipe-nome">{{ equipe.nome }}</div>
+              <div class="equipe-modalidade">{{ equipe.modalidade }}</div>
+              <div class="equipe-cidade">{{ equipe.cidade }}</div>
+              
+              <div class="equipe-actions">
+                <button class="btn-edit" onclick="editarEquipe('{{ equipe.nome }}', '{{ equipe.modalidade }}', '{{ equipe.cidade }}')">
+                  Editar
+                </button>
+                <button class="btn-remove" onclick="confirmarRemocao('{{ equipe.nome }}')">
+                  Remover
+                </button>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% else %}
+      <div class="no-results">
+        <h3>Nenhuma equipe cadastrada</h3>
+        <p>Cadastre sua primeira equipe usando o formulário acima!</p>
+      </div>
+    {% endif %}
+  </main>
+
+  <script>
+    // Função para editar equipe
+    function editarEquipe(nome, modalidade, cidade) {
+      // Preencher o formulário com os dados da equipe
+      document.getElementById('nome').value = nome;
+      document.getElementById('modalidade').value = modalidade;
+      document.getElementById('cidade').value = cidade;
+      
+      // Rolar para o formulário
+      document.querySelector('.form-section').scrollIntoView({ 
+        behavior: 'smooth' 
+      });
+      
+      // Focar no campo nome
+      document.getElementById('nome').focus();
+    }
+
+    // Função para confirmar remoção
+    function confirmarRemocao(nomeEquipe) {
+      if (confirm(`Tem certeza que deseja remover a equipe "${nomeEquipe}"?`)) {
+        document.getElementById('nome-remover').value = nomeEquipe;
+        document.getElementById('form-remover').submit();
+      }
+    }
+
+    // Adicionar confirmação ao formulário de remoção
+    document.getElementById('form-remover').addEventListener('submit', function(e) {
+      const nomeEquipe = document.getElementById('nome-remover').value;
+      if (!confirm(`Tem certeza que deseja remover a equipe "${nomeEquipe}"?`)) {
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>

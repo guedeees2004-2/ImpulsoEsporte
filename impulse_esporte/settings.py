@@ -80,7 +80,6 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / "templates",
             BASE_DIR / "impulse_esporte" / "templates",
         ],
         'APP_DIRS': True,
@@ -144,7 +143,7 @@ USE_TZ = True
 
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    BASE_DIR / "impulse_esporte" / "static",
 ]
 
 STATIC_URL = "static/"

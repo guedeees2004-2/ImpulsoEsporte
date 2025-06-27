@@ -1,0 +1,167 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Equipes - Impulso Esporte</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'main.css' %}">
+  <link rel="stylesheet" href="{% static 'equipes.css' %}">
+</head>
+<body>
+  {% include 'headers/headerPadrao.html' %}
+
+  <!-- Page title section -->
+  <section class="page-title-section">
+    <div class="title-content">
+      <h1>Lista de Equipes</h1>
+      <p class="subtitle">Conheça todas as equipes cadastradas em nossa plataforma</p>
+    </div>
+  </section>
+
+  <main class="equipes-container">
+    <a href="{% url 'home' %}" class="back-link">← Voltar ao Início</a>
+    
+    <!-- Barra de filtros/busca -->
+    <div class="form-section" style="margin-bottom: 30px;">
+      <h2>Filtrar Equipes</h2>
+      <form method="GET" style="display: flex; align-items: end; gap: 15px; flex-wrap: wrap;">
+        <div class="form-group" style="flex: 1; min-width: 200px; margin-bottom: 0;">
+          <label for="search">Buscar por nome:</label>
+          <input type="text" id="search" name="search" placeholder="Digite o nome da equipe..." value="{{ search_query }}">
+        </div>
+        
+        <div class="form-group" style="flex: 1; min-width: 150px; margin-bottom: 0;">
+          <label for="modalidade">Modalidade:</label>
+          <input type="text" id="modalidade" name="modalidade" placeholder="Ex: Futsal, Vôlei..." value="{{ modalidade_filter }}">
+        </div>
+        
+        <div class="form-group" style="flex: 1; min-width: 150px; margin-bottom: 0;">
+          <label for="cidade">Cidade:</label>
+          <input type="text" id="cidade" name="cidade" placeholder="Ex: São Paulo..." value="{{ cidade_filter }}">
+        </div>
+        
+        <div class="form-actions" style="margin-top: 0; gap: 10px;">
+          <button type="submit" class="btn-submit">Filtrar</button>
+          {% if search_query or modalidade_filter or cidade_filter %}
+            <a href="{% url 'lista_equipes' %}" class="btn-submit" style="background: #6c757d; text-decoration: none; display: inline-block; text-align: center;">Limpar</a>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+
+    <!-- Lista de equipes -->
+    {% if equipes %}
+      <div class="form-section">
+        <h2>
+          Equipes Encontradas 
+          <span style="color: #666; font-size: 1.2rem; font-weight: normal;">
+            ({{ equipes|length }} equipe{{ equipes|length|pluralize }})
+          </span>
+        </h2>
+        
+        <div class="equipes-grid">
+          {% for equipe in equipes %}
+            <div class="equipe-card">
+              <div class="equipe-nome">{{ equipe.nome }}</div>
+              <div class="equipe-modalidade">{{ equipe.modalidade }}</div>
+              <div class="equipe-cidade">{{ equipe.cidade }}</div>
+              
+              <!-- Informações adicionais (simuladas) -->
+              <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee;">
+                <div style="color: #666; font-size: 0.9rem; margin-bottom: 8px;">
+                  <strong>Fundação:</strong> {{ equipe.ano_fundacao|default:"Não informado" }}
+                </div>
+                <div style="color: #666; font-size: 0.9rem; margin-bottom: 8px;">
+                  <strong>Membros:</strong> {{ equipe.numero_membros|default:"Não informado" }}
+                </div>
+                <div style="color: #666; font-size: 0.9rem;">
+                  <strong>Status:</strong> 
+                  <span style="color: #28a745; font-weight: 600;">Ativa</span>
+                </div>
+              </div>
+              
+              <div class="equipe-actions" style="margin-top: 20px;">
+                <button class="btn-edit" onclick="verDetalhes('{{ equipe.nome }}')">
+                  Ver Detalhes
+                </button>
+                <button class="btn-edit" onclick="entrarEmContato('{{ equipe.nome }}')">
+                  Contatar
+                </button>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% else %}
+      <div class="no-results">
+        {% if search_query or modalidade_filter or cidade_filter %}
+          <h3>Nenhuma equipe encontrada</h3>
+          <p>
+            Não foram encontradas equipes com os filtros aplicados. 
+            <a href="{% url 'lista_equipes' %}" style="color: #2E8B57; text-decoration: none; font-weight: bold;">
+              Clique aqui para ver todas as equipes
+            </a>
+          </p>
+        {% else %}
+          <h3>Nenhuma equipe cadastrada</h3>
+          <p>Ainda não há equipes cadastradas em nossa plataforma.</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <!-- Estatísticas -->
+    {% if equipes %}
+      <div class="form-section" style="text-align: center; background: linear-gradient(135deg, #f8f9fa, #e9ecef);">
+        <h2>Estatísticas</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px;">
+          <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <div style="font-size: 2rem; color: #165732; font-weight: bold;">{{ total_equipes }}</div>
+            <div style="color: #666;">Total de Equipes</div>
+          </div>
+          <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <div style="font-size: 2rem; color: #165732; font-weight: bold;">{{ total_modalidades }}</div>
+            <div style="color: #666;">Modalidades</div>
+          </div>
+          <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <div style="font-size: 2rem; color: #165732; font-weight: bold;">{{ total_cidades }}</div>
+            <div style="color: #666;">Cidades</div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </main>
+
+  <script>
+    // Função para ver detalhes da equipe
+    function verDetalhes(nomeEquipe) {
+      alert(`Visualizando detalhes de "${nomeEquipe}". \n\nEsta funcionalidade será implementada em breve!`);
+      // Aqui você pode implementar a navegação para uma página de detalhes
+      // window.location.href = `/equipes/detalhes/${nomeEquipe}/`;
+    }
+
+    // Função para entrar em contato com a equipe
+    function entrarEmContato(nomeEquipe) {
+      alert(`Entrando em contato com "${nomeEquipe}". \n\nEsta funcionalidade será implementada em breve!`);
+      // Aqui você pode implementar a lógica de contato
+      // window.location.href = `/contato/equipe/${nomeEquipe}/`;
+    }
+
+    // Auto-submit do formulário quando modalidade ou cidade mudam (opcional)
+    document.getElementById('modalidade').addEventListener('change', function() {
+      if (this.value.trim() !== '') {
+        this.form.submit();
+      }
+    });
+
+    document.getElementById('cidade').addEventListener('change', function() {
+      if (this.value.trim() !== '') {
+        this.form.submit();
+      }
+    });
+  </script>
+</body>
+</html>
