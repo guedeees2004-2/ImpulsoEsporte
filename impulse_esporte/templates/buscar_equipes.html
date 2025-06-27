@@ -1,0 +1,136 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buscar Equipes - Impulso Esporte</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'main.css' %}">
+  <link rel="stylesheet" href="{% static 'equipes.css' %}">
+</head>
+<body>
+  {% include 'headers/headerPadrao.html' %}
+
+  <!-- Page title section -->
+  <section class="page-title-section">
+    <div class="title-content">
+      <h1>Buscar Equipes</h1>
+      <p class="subtitle">Encontre equipes abertas para novos atletas e faça parte do time dos seus sonhos</p>
+    </div>
+  </section>
+
+  <main class="equipes-container">
+    <a href="{% url 'pagina_atleta' %}" class="back-link">← Voltar à Página do {{ user_type|capfirst }}</a>
+    
+    <div class="search-bar">
+      <form method="GET" class="search-form">
+        <div class="search-input-group">
+          <input 
+            type="text" 
+            name="search" 
+            placeholder="Buscar equipes..." 
+            value="{{ search_query }}"
+            class="search-input"
+          >
+          <select name="modalidade" class="filter-select">
+            <option value="">Modalidade</option>
+            <option value="Futebol" {% if modalidade_filter == "Futebol" %}selected{% endif %}>Futebol</option>
+            <option value="Vôlei" {% if modalidade_filter == "Vôlei" %}selected{% endif %}>Vôlei</option>
+            <option value="Basquete" {% if modalidade_filter == "Basquete" %}selected{% endif %}>Basquete</option>
+            <option value="Rugby" {% if modalidade_filter == "Rugby" %}selected{% endif %}>Rugby</option>
+            <option value="Natação" {% if modalidade_filter == "Natação" %}selected{% endif %}>Natação</option>
+            <option value="Atletismo" {% if modalidade_filter == "Atletismo" %}selected{% endif %}>Atletismo</option>
+          </select>
+          <select name="cidade" class="filter-select">
+            <option value="">Cidade</option>
+            <option value="São Paulo" {% if cidade_filter == "São Paulo" %}selected{% endif %}>São Paulo</option>
+            <option value="Rio de Janeiro" {% if cidade_filter == "Rio de Janeiro" %}selected{% endif %}>Rio de Janeiro</option>
+            <option value="Belo Horizonte" {% if cidade_filter == "Belo Horizonte" %}selected{% endif %}>Belo Horizonte</option>
+            <option value="Porto Alegre" {% if cidade_filter == "Porto Alegre" %}selected{% endif %}>Porto Alegre</option>
+            <option value="Salvador" {% if cidade_filter == "Salvador" %}selected{% endif %}>Salvador</option>
+            <option value="Brasília" {% if cidade_filter == "Brasília" %}selected{% endif %}>Brasília</option>
+          </select>
+          <button type="submit" class="search-button">Buscar</button>
+          {% if search_query or modalidade_filter or cidade_filter %}
+            <a href="{% url 'buscar_equipes' %}" class="btn-clear">Limpar</a>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+
+    {% if equipes %}
+      <div class="results-info">
+        <p>Encontradas <strong>{{ equipes|length }}</strong> equipes disponíveis</p>
+      </div>
+      
+      <div class="equipes-grid">
+        {% for equipe in equipes %}
+          <div class="equipe-card">
+            <div class="equipe-nome">{{ equipe.nome }}</div>
+            <div class="equipe-modalidade">{{ equipe.modalidade }}</div>
+            <div class="equipe-cidade">{{ equipe.cidade }}</div>
+            
+            <div class="status-disponivel">
+              ✓ Aberta para novos atletas
+            </div>
+            
+            {% if equipe.descricao %}
+              <div class="equipe-descricao">
+                {{ equipe.descricao|truncatewords:25 }}
+              </div>
+            {% else %}
+              <div class="equipe-descricao sem-descricao">
+                Equipe focada em {{ equipe.modalidade }}. Entre em contato para mais informações.
+              </div>
+            {% endif %}
+            
+            <div class="equipe-info">
+              <div class="info-item">
+                <span class="info-label">Fundada em:</span>
+                <span class="info-value">{{ equipe.ano_fundacao|default:"N/A" }}</span>
+              </div>
+              {% if equipe.numero_atletas %}
+                <div class="info-item">
+                  <span class="info-label">Atletas atuais:</span>
+                  <span class="info-value">{{ equipe.numero_atletas }}</span>
+                </div>
+              {% endif %}
+            </div>
+            
+            <button class="contato-btn" onclick="candidatarSeEquipe('{{ equipe.nome }}', '{{ equipe.modalidade }}', '{{ equipe.cidade }}')">
+              Candidatar-se à Equipe
+            </button>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="no-results">
+        {% if search_query or modalidade_filter or cidade_filter %}
+          <h3>Nenhuma equipe encontrada</h3>
+          <p>
+            Não encontramos equipes com os filtros aplicados. 
+            <a href="{% url 'buscar_equipes' %}">Limpar filtros</a> para ver todas as equipes.
+          </p>
+        {% else %}
+          <h3>Nenhuma equipe disponível</h3>
+          <p>Não há equipes abertas para novos atletas no momento.</p>
+        {% endif %}
+      </div>
+    {% endif %}
+  </main>
+
+  <script>
+    function candidatarSeEquipe(nome, modalidade, cidade) {
+      // Aqui você pode implementar a lógica de candidatura
+      // Por exemplo, abrir um modal, redirecionar para uma página de candidatura, etc.
+      alert(`Candidatando-se à equipe: ${nome}\nModalidade: ${modalidade}\nCidade: ${cidade}\n\nEsta funcionalidade será implementada em breve!`);
+      
+      // Exemplo de redirecionamento para página de candidatura (quando implementada):
+      // window.location.href = `/candidatura-equipe/${nome}/`;
+    }
+  </script>
+</body>
+</html>

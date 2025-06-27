@@ -7,7 +7,8 @@ from .models import (
     Jogador,
     Patrocinador,
     PatrocinioEquipe,
-    PatrocinioJogador
+    PatrocinioJogador,
+    EquipeDisponivel
 )
 
 @admin.register(Usuario)
@@ -66,6 +67,28 @@ class PatrocinioJogadorAdmin(admin.ModelAdmin):
     list_display = ('patrocinador', 'jogador')
     search_fields = ('patrocinador__empresa', 'jogador__usuario__username')
 
+@admin.register(EquipeDisponivel)
+class EquipeDisponivelAdmin(admin.ModelAdmin):
+    model = EquipeDisponivel
+    list_display = ('nome', 'modalidade', 'cidade', 'aberta_para_atletas', 'numero_atletas', 'data_atualizacao')
+    list_filter = ('modalidade', 'cidade', 'aberta_para_atletas', 'ano_fundacao')
+    search_fields = ('nome', 'modalidade', 'cidade', 'descricao')
+    ordering = ('-data_atualizacao',)
+    
+    fieldsets = (
+        ('Informações Básicas', {
+            'fields': ('nome', 'modalidade', 'cidade', 'ano_fundacao')
+        }),
+        ('Descrição e Detalhes', {
+            'fields': ('descricao', 'numero_atletas', 'aberta_para_atletas')
+        }),
+        ('Contato', {
+            'fields': ('contato_responsavel', 'email_contato'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    readonly_fields = ('data_criacao', 'data_atualizacao')
 
 # Register Usuario with custom admin class
 # Note: We don't need to call admin.site.register again since we use @admin.register decorator above

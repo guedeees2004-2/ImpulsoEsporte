@@ -1,0 +1,150 @@
+/* ========== CONTACT PAGE STYLES ========== */
+
+.contact-container {
+    max-width: 800px;
+    margin: 3rem auto;
+    padding: 0 2rem;
+}
+
+.contact-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.contact-header h1 {
+    font-size: 3rem;
+    color: #165732;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+}
+
+.contact-header p {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.contact-form-container {
+    background: #fff;
+    border: 2px solid #2E8B57;
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 16px rgba(46, 139, 87, 0.1);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #165732;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Oswald', sans-serif;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #2E8B57;
+    box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.form-actions {
+    text-align: center;
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-submit {
+    background-color: #2E8B57;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    font-family: 'Oswald', sans-serif;
+}
+
+.btn-submit:hover {
+    background-color: #165732;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(22, 87, 50, 0.3);
+}
+
+.btn-back {
+    background-color: transparent;
+    color: #165732;
+    border: 2px solid #165732;
+    padding: 10px 24px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-block;
+    font-family: 'Oswald', sans-serif;
+}
+
+.btn-back:hover {
+    background-color: #165732;
+    color: white;
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .contact-container {
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+    
+    .contact-header h1 {
+        font-size: 2.5rem;
+    }
+    
+    .contact-form-container {
+        padding: 1.5rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .btn-submit,
+    .btn-back {
+        width: 100%;
+        text-align: center;
+    }
+}
