@@ -166,9 +166,18 @@ equipes_cadastradas = [
 
 def gerenciar_equipes(request):
     """
-    View para gerenciar equipes - cadastrar e remover
+    View para gerenciar equipes - cadastrar, editar e remover
     """
     global equipes_cadastradas
+    
+    # Verificar se está editando uma equipe
+    editar_equipe = None
+    if request.GET.get('editar'):
+        nome_editar = request.GET.get('editar')
+        for equipe in equipes_cadastradas:
+            if equipe['nome'].lower() == nome_editar.lower():
+                editar_equipe = equipe
+                break
     
     if request.method == "POST":
         action = request.POST.get('action')
@@ -177,21 +186,32 @@ def gerenciar_equipes(request):
             nome = request.POST.get('nome', '').strip()
             modalidade = request.POST.get('modalidade', '').strip()
             cidade = request.POST.get('cidade', '').strip()
+            nome_original = request.POST.get('nome_original', '').strip()
             
             if nome and modalidade and cidade:
-                # Verificar se a equipe já existe
-                equipe_existe = any(equipe['nome'].lower() == nome.lower() for equipe in equipes_cadastradas)
-                
-                if not equipe_existe:
-                    nova_equipe = {
-                        "nome": nome,
-                        "modalidade": modalidade,
-                        "cidade": cidade,
-                        "ano_fundacao": "2024",  # Ano atual como padrão
-                        "numero_membros": "10"   # Número padrão
-                    }
-                    equipes_cadastradas.append(nova_equipe)
+                if nome_original:  # Editando equipe existente
+                    for i, equipe in enumerate(equipes_cadastradas):
+                        if equipe['nome'].lower() == nome_original.lower():
+                            equipes_cadastradas[i].update({
+                                "nome": nome,
+                                "modalidade": modalidade,
+                                "cidade": cidade,
+                            })
+                            break
+                else:  # Cadastrando nova equipe
+                    # Verificar se a equipe já existe
+                    equipe_existe = any(equipe['nome'].lower() == nome.lower() for equipe in equipes_cadastradas)
                     
+                    if not equipe_existe:
+                        nova_equipe = {
+                            "nome": nome,
+                            "modalidade": modalidade,
+                            "cidade": cidade,
+                            "ano_fundacao": "2025",  # Ano atual como padrão
+                            "numero_membros": "10"   # Número padrão
+                        }
+                        equipes_cadastradas.append(nova_equipe)
+                        
         elif action == 'remover':
             nome_remover = request.POST.get('nome_remover', '').strip()
             if nome_remover:
@@ -205,6 +225,7 @@ def gerenciar_equipes(request):
     context = {
         'title': 'Gerenciar Equipes - Impulso Esporte',
         'equipes': equipes_cadastradas,
+        'editar_equipe': editar_equipe,
     }
     return render(request, 'gerenciar_equipes.html', context)
 

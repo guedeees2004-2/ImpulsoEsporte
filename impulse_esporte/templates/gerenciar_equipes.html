@@ -25,35 +25,58 @@
   <main class="equipes-container">
     <a href="{% url 'home' %}" class="back-link">← Voltar ao Início</a>
     
-    <!-- Formulário para cadastrar nova equipe -->
+    <!-- Formulário para cadastrar/editar equipe -->
     <div class="form-section">
-      <h2>Cadastrar Nova Equipe</h2>
+      {% if editar_equipe %}
+        <h2>Editar Equipe</h2>
+      {% else %}
+        <h2>Cadastrar Nova Equipe</h2>
+      {% endif %}
+      
       <form method="POST" id="form-cadastro">
         {% csrf_token %}
         <input type="hidden" name="action" value="cadastrar">
+        {% if editar_equipe %}
+          <input type="hidden" name="nome_original" value="{{ editar_equipe.nome }}">
+        {% endif %}
         
         <div class="form-group">
           <label for="nome">Nome da Equipe:</label>
-          <input type="text" id="nome" name="nome" placeholder="Ex: Dragões do Futsal" required>
+          <input type="text" id="nome" name="nome" 
+                 placeholder="Ex: Dragões do Futsal" 
+                 value="{% if editar_equipe %}{{ editar_equipe.nome }}{% endif %}" 
+                 required>
         </div>
 
         <div class="form-group">
           <label for="modalidade">Modalidade:</label>
-          <input type="text" id="modalidade" name="modalidade" placeholder="Ex: Futsal, Vôlei, Basquete" required>
+          <input type="text" id="modalidade" name="modalidade" 
+                 placeholder="Ex: Futsal, Vôlei, Basquete" 
+                 value="{% if editar_equipe %}{{ editar_equipe.modalidade }}{% endif %}" 
+                 required>
         </div>
 
         <div class="form-group">
           <label for="cidade">Cidade:</label>
-          <input type="text" id="cidade" name="cidade" placeholder="Ex: São Paulo, Rio de Janeiro" required>
+          <input type="text" id="cidade" name="cidade" 
+                 placeholder="Ex: São Paulo, Rio de Janeiro" 
+                 value="{% if editar_equipe %}{{ editar_equipe.cidade }}{% endif %}" 
+                 required>
         </div>
 
         <div class="form-actions">
-          <button type="submit" class="btn-submit">Cadastrar Equipe</button>
+          {% if editar_equipe %}
+            <button type="submit" class="btn-submit">Salvar Alterações</button>
+            <a href="{% url 'gerenciar_equipes' %}" class="btn-cancel">Cancelar</a>
+          {% else %}
+            <button type="submit" class="btn-submit">Cadastrar Equipe</button>
+          {% endif %}
         </div>
       </form>
     </div>
 
     <!-- Formulário para remover equipe -->
+    {% if not editar_equipe %}
     <div class="form-section">
       <h2>Remover Equipe</h2>
       <form method="POST" id="form-remover">
@@ -61,15 +84,24 @@
         <input type="hidden" name="action" value="remover">
         
         <div class="form-group">
-          <label for="nome-remover">Nome da Equipe a Remover:</label>
-          <input type="text" id="nome-remover" name="nome_remover" placeholder="Digite o nome exato da equipe" required>
+          <label for="nome-remover">Selecione a Equipe para Remover:</label>
+          <select id="nome-remover" name="nome_remover" required>
+            <option value="">-- Selecione uma equipe --</option>
+            {% for equipe in equipes %}
+              <option value="{{ equipe.nome }}">{{ equipe.nome }} ({{ equipe.modalidade }} - {{ equipe.cidade }})</option>
+            {% endfor %}
+          </select>
         </div>
 
         <div class="form-actions">
-          <button type="submit" class="btn-submit" style="background: linear-gradient(135deg, #dc3545, #c82333);">Remover Equipe</button>
+          <button type="submit" class="btn-submit" style="background: linear-gradient(135deg, #dc3545, #c82333);" 
+                  onclick="return confirm('Tem certeza que deseja remover esta equipe?');">
+            Remover Equipe
+          </button>
         </div>
       </form>
     </div>
+    {% endif %}
 
     <!-- Lista de equipes cadastradas -->
     {% if equipes %}
@@ -83,12 +115,16 @@
               <div class="equipe-cidade">{{ equipe.cidade }}</div>
               
               <div class="equipe-actions">
-                <button class="btn-edit" onclick="editarEquipe('{{ equipe.nome }}', '{{ equipe.modalidade }}', '{{ equipe.cidade }}')">
+                <a href="{% url 'gerenciar_equipes' %}?editar={{ equipe.nome }}" class="btn-edit">
                   Editar
-                </button>
-                <button class="btn-remove" onclick="confirmarRemocao('{{ equipe.nome }}')">
-                  Remover
-                </button>
+                </a>
+                <form method="POST" style="display: inline;" 
+                      onsubmit="return confirm('Tem certeza que deseja remover a equipe {{ equipe.nome }}?');">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="remover">
+                  <input type="hidden" name="nome_remover" value="{{ equipe.nome }}">
+                  <button type="submit" class="btn-remove">Remover</button>
+                </form>
               </div>
             </div>
           {% endfor %}
@@ -102,38 +138,27 @@
     {% endif %}
   </main>
 
-  <script>
-    // Função para editar equipe
-    function editarEquipe(nome, modalidade, cidade) {
-      // Preencher o formulário com os dados da equipe
-      document.getElementById('nome').value = nome;
-      document.getElementById('modalidade').value = modalidade;
-      document.getElementById('cidade').value = cidade;
-      
-      // Rolar para o formulário
-      document.querySelector('.form-section').scrollIntoView({ 
-        behavior: 'smooth' 
-      });
-      
-      // Focar no campo nome
-      document.getElementById('nome').focus();
+  <style>
+    .btn-cancel {
+      display: inline-block;
+      padding: 10px 20px;
+      margin-left: 10px;
+      background: linear-gradient(135deg, #6c757d, #5a6268);
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: all 0.3s ease;
     }
-
-    // Função para confirmar remoção
-    function confirmarRemocao(nomeEquipe) {
-      if (confirm(`Tem certeza que deseja remover a equipe "${nomeEquipe}"?`)) {
-        document.getElementById('nome-remover').value = nomeEquipe;
-        document.getElementById('form-remover').submit();
-      }
+    
+    .btn-cancel:hover {
+      background: linear-gradient(135deg, #5a6268, #495057);
+      transform: translateY(-2px);
     }
-
-    // Adicionar confirmação ao formulário de remoção
-    document.getElementById('form-remover').addEventListener('submit', function(e) {
-      const nomeEquipe = document.getElementById('nome-remover').value;
-      if (!confirm(`Tem certeza que deseja remover a equipe "${nomeEquipe}"?`)) {
-        e.preventDefault();
-      }
-    });
-  </script>
+    
+    .equipe-actions form {
+      margin: 0;
+    }
+  </style>
 </body>
 </html>

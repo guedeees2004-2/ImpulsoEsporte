@@ -36,6 +36,7 @@ urlpatterns = [
     path("__reload__/", include("django_browser_reload.urls")),
     path("equipe", pagina_equipe, name="pagina_equipe"),
     path("sobre_nos", pagina_sobre_nos, name="pagina_sobre_nos"),
+    path("gerenciar_equipes/", gerenciar_equipes, name="gerenciar_equipes"),
 ]
 
 if settings.DEBUG:
