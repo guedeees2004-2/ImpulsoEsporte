@@ -70,6 +70,27 @@
                     {% endif %}
                 </div>
 
+                <div id="campos-equipe" style="display:none;">
+                    <label for="id_esporte">Tipo de Esporte</label>
+                    {{ form.esporte }}
+                    {% if form.esporte.errors %}
+                        <div class="alert alert-danger">{{ form.esporte.errors }}</div>
+                    {% endif %}
+                    <label for="id_localizacao">Localização</label>
+                    {{ form.localizacao }}
+                    {% if form.localizacao.errors %}
+                        <div class="alert alert-danger">{{ form.localizacao.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div id="campos-patrocinador" style="display:none;">
+                    <label for="id_cnpj">CNPJ</label>
+                    {{ form.cnpj }}
+                    {% if form.cnpj.errors %}
+                        <div class="alert alert-danger">{{ form.cnpj.errors }}</div>
+                    {% endif %}
+                </div>
+
                 <div class="form-actions" style="margin-top: 25px;">
                     <button type="submit" class="btn-submit">Registrar</button>
                 </div>
@@ -80,5 +101,17 @@
             </div>
         </div>
     </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function toggleCampos() {
+            var tipo = document.getElementById('id_tipo_conta').value;
+            document.getElementById('campos-equipe').style.display = (tipo === 'equipe') ? 'block' : 'none';
+            document.getElementById('campos-patrocinador').style.display = (tipo === 'patrocinador') ? 'block' : 'none';
+        }
+        document.getElementById('id_tipo_conta').addEventListener('change', toggleCampos);
+        toggleCampos();
+    });
+    </script>
 </body>
 </html>

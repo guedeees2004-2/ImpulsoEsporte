@@ -35,11 +35,13 @@ class Usuario(AbstractUser):
 
 
 class Equipe(models.Model):
-    nome_da_equipe = models.CharField(max_length=100)
-    esporte = models.ForeignKey(Esporte, on_delete=models.CASCADE)
+    usuario = models.OneToOneField('Usuario', on_delete=models.CASCADE, related_name='equipe', null=True, blank=True)
+    nome = models.CharField(max_length=100)
+    esporte = models.CharField(max_length=100)
+    localizacao = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.nome_da_equipe
+        return self.nome
 
 
 class Jogador(models.Model):

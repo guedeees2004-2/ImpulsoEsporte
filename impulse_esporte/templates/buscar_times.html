@@ -20,11 +20,13 @@
                     {% for time in resultados %}
                         <li>
                             <strong>
-                                {% if time.nome %}
-                                    {{ time.nome }}
-                                {% else %}
-                                    {{ time.nome_da_equipe }}
-                                {% endif %}
+                                <a href="{% url 'pagina_equipe' time.id %}">
+                                    {% if time.nome %}
+                                        {{ time.nome }}
+                                    {% else %}
+                                        {{ time.nome_da_equipe }}
+                                    {% endif %}
+                                </a>
                             </strong>
                             {% if time.modalidade %}
                                 - {{ time.modalidade }}

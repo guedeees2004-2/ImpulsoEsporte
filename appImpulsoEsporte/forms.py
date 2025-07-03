@@ -18,10 +18,26 @@ class CustomUserCreationForm(UserCreationForm):
         choices=Usuario.TIPOS_USUARIO,
         label="Tipo de Conta"
     )
+    esporte = forms.CharField(required=False, label="Tipo de Esporte")
+    localizacao = forms.CharField(required=False, label="Localização")
+    cnpj = forms.CharField(required=False, label="CNPJ")
 
     class Meta(UserCreationForm.Meta):
         model = Usuario
-        fields = ("username", "email", "tipo_conta")
+        fields = ("username", "email", "tipo_conta", "esporte", "localizacao", "cnpj", "password1", "password2")
+
+    def clean(self):
+        cleaned_data = super().clean()
+        tipo = cleaned_data.get("tipo_conta")
+        if tipo == "equipe":
+            if not cleaned_data.get("esporte"):
+                self.add_error("esporte", "Campo obrigatório para equipes.")
+            if not cleaned_data.get("localizacao"):
+                self.add_error("localizacao", "Campo obrigatório para equipes.")
+        if tipo == "patrocinador":
+            if not cleaned_data.get("cnpj"):
+                self.add_error("cnpj", "Campo obrigatório para patrocinadores.")
+        return cleaned_data
 
 class CustomAuthenticationForm(AuthenticationForm):
     pass

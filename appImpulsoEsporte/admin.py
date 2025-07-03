@@ -37,8 +37,8 @@ class EsporteAdmin(admin.ModelAdmin):
 
 @admin.register(Equipe)
 class EquipeAdmin(admin.ModelAdmin):
-    list_display = ('nome_da_equipe', 'esporte')
-    search_fields = ('nome_da_equipe',)
+    list_display = ('nome', 'esporte', 'localizacao')
+    search_fields = ('nome',)
     list_filter = ('esporte',)
 
 @admin.register(Jogador)

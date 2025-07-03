@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.views import View
 from django.contrib.auth.decorators import login_required
@@ -19,19 +19,22 @@ def index(request):
 class RegisterView(View):
     def get(self, request):
         form = CustomUserCreationForm()
-        return render(request, 'registration/register.html', {'form': form})
+        return render(request, "registration/register.html", {"form": form})
 
     def post(self, request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            # Redirecionar baseado no tipo de conta
-            if user.tipo_conta == 'atleta':
-                return redirect('pagina_atleta')
-            else:
-                return redirect('home')
-        return render(request, 'registration/register.html', {'form': form})
+            usuario = form.save()
+            # Cria a equipe se for do tipo equipe
+            if usuario.tipo_conta == 'equipe':
+                Equipe.objects.create(
+                    usuario=usuario,
+                    nome=usuario.username,
+                    esporte=usuario.esporte,
+                    localizacao=usuario.localizacao
+                )
+            return redirect("login")
+        return render(request, "registration/register.html", {"form": form})
 
 class LoginView(View):
     def get(self, request):
@@ -294,23 +297,11 @@ def pagina_sobre_nos(request):
     }
     return render(request, "paginaSobreNos.html", context)
 
-def pagina_equipe(request):
-    """
-    Página principal da equipe com informações e funcionalidades básicas.
-    """
-    # Verificar se o usuário é equipe
-    if not request.user.is_authenticated or request.user.tipo_conta != 'equipe':
-        return redirect('home')
-    
-    # Buscar patrocinadores disponíveis do banco de dados
-    patrocinadores_disponiveis = Patrocinador.objects.filter(
-        usuario__tipo_conta='patrocinador',
-        aberto_para_oportunidades=True
-    ).select_related('usuario')[:5]  # Mostrar apenas os 5 primeiros
-    
+def pagina_equipe(request, equipe_id):
+    equipe = get_object_or_404(Equipe, id=equipe_id)
     context = {
         "title": "Impulso Esporte - Página da Equipe",
-        'patrocinadores_disponiveis': patrocinadores_disponiveis,
+        "equipe": equipe,
         'user_type': request.user.tipo_conta,
     }
     return render(request, 'paginaEquipe.html', context)
@@ -322,3 +313,16 @@ def buscar_times(request):
     else:
         resultados = EquipeDisponivel.objects.all()
     return render(request, 'buscar_times.html', {'resultados': resultados, 'query': query})
+
+def pagina_equipes(request):
+    equipes = Equipe.objects.all()
+    return render(request, "pagina_equipes.html", {"equipes": equipes})
+
+def pagina_equipe_disponivel(request, equipe_id):
+    equipe = get_object_or_404(EquipeDisponivel, id=equipe_id)
+    context = {
+        "title": "Impulso Esporte - Página da Equipe",
+        "equipe": equipe,
+        'user_type': getattr(request.user, 'tipo_conta', None),
+    }
+    return render(request, 'paginaEquipe.html', context)

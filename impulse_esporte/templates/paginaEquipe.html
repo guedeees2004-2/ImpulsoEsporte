@@ -17,10 +17,14 @@
 
   <main class="main-container">
     <div class="equipe-container">
-      <!-- Header da página -->
+      <!-- Header da página com dados reais -->
       <div class="equipe-header">
-        <h1>Bem-vindo, Equipe!</h1>
-        <p>Gerencie seus atletas, patrocinadores e próximas partidas</p>
+        <h1>{{ equipe.nome }}</h1>
+        <p>
+          <strong>Modalidade:</strong> {{ equipe.modalidade }}<br>
+          <strong>Cidade:</strong> {{ equipe.cidade }}<br>
+          <strong>Descrição:</strong> {{ equipe.descricao }}
+        </p>
       </div>
 
       <!-- Botões de ação principal -->
