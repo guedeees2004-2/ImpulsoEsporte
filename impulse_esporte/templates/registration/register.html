@@ -1,34 +1,84 @@
-{% extends 'headers/base.html' %}
 {% load crispy_forms_tags %}
-{% block content %}
+{% load static %}
 
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h2 class="card-title text-center mb-4">Criar Nova Conta</h2>
-                <form method="post" novalidate>
-                    {% csrf_token %}
-                    {{ form.username|as_crispy_field }}
-                    {{ form.email|as_crispy_field }}
-                    {{ form.password1|as_crispy_field }}
-                    {{ form.password2|as_crispy_field }}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Nova Conta - Impulso Esporte</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'main.css' %}">
+    <link rel="stylesheet" href="{% static 'login.css' %}">
+</head>
+<body>
+    {% include 'headers/headerPadrao.html' %}
 
-                    <div class="mb-3">
-                        <label class="form-label">Tipo de Conta</label>
-                        {{ form.tipo_conta }}
-                    </div>
-
-                    <div class="d-grid gap-2 mt-4">
-                        <button type="submit" class="btn btn-primary btn-block">Registrar</button>
-                    </div>
-                </form>
-                <hr>
-                <div class="text-center">
-                    <p>Já tem uma conta? <a href="{% url 'login' %}">Faça login</a></p>
+    <main class="form-container">
+        <div class="title-content" style="max-width: 450px; margin: 40px auto 0 auto;">
+            <h1>Criar Nova Conta</h1>
+            <p class="subtitle">Cadastre-se para acessar todos os recursos da plataforma</p>
+        </div>
+        <div class="form-section" style="max-width: 450px; margin: 0 auto;">
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
                 </div>
+            {% endif %}
+            <form method="post" novalidate>
+                {% csrf_token %}
+                <label for="id_username">Usuário</label>
+                <div class="form-hint">Use apenas letras, números ou @/./+/-/_</div>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <div class="alert alert-danger">{{ form.username.errors }}</div>
+                {% endif %}
+
+                <label for="id_email">E-mail</label>
+                <div class="form-hint">Informe um e-mail válido para recuperação de senha.</div>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <div class="alert alert-danger">{{ form.email.errors }}</div>
+                {% endif %}
+
+                <label for="id_password1">Senha</label>
+                <div class="form-hint">
+                    Sua senha deve conter pelo menos 8 caracteres, não pode ser totalmente numérica e não pode ser semelhante ao seu nome de usuário ou e-mail.
+                </div>
+                {{ form.password1 }}
+                {% if form.password1.errors %}
+                    <div class="alert alert-danger">{{ form.password1.errors }}</div>
+                {% endif %}
+
+                <label for="id_password2">Confirme a Senha</label>
+                <div class="form-hint">Digite a mesma senha para confirmação.</div>
+                {{ form.password2 }}
+                {% if form.password2.errors %}
+                    <div class="alert alert-danger">{{ form.password2.errors }}</div>
+                {% endif %}
+
+                <div class="mb-3">
+                    <label class="form-label" for="id_tipo_conta">Tipo de Conta</label>
+                    <div class="form-hint">Selecione se você é atleta, treinador, patrocinador, etc.</div>
+                    {{ form.tipo_conta }}
+                    {% if form.tipo_conta.errors %}
+                        <div class="alert alert-danger">{{ form.tipo_conta.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-actions" style="margin-top: 25px;">
+                    <button type="submit" class="btn-submit">Registrar</button>
+                </div>
+            </form>
+            <hr>
+            <div class="text-center">
+                <p>Já tem uma conta? <a href="{% url 'login' %}">Faça login</a></p>
             </div>
         </div>
-    </div>
-</div>
-{% endblock %}
+    </main>
+</body>
+</html>

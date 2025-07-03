@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscar Times - Impulso Esporte</title>
+    <link rel="stylesheet" href="{% static 'main.css' %}">
+    <link rel="stylesheet" href="{% static 'login.css' %}">
+</head>
+<body>
+    {% include 'headers/headerPadrao.html' %}
+    <main class="form-container">
+        <form action="{% url 'buscar_times' %}" method="get" class="search-bar" style="max-width: 500px; margin: 40px auto 30px auto; display: flex;">
+            <input type="text" name="q" placeholder="Buscar time pelo nome..." value="{{ query }}" class="form-control" style="flex:1; padding: 12px; border-radius: 6px 0 0 6px; border: 1.5px solid #d1d5db;">
+            <button type="submit" class="btn-submit" style="border-radius: 0 6px 6px 0; padding: 0 24px;">Buscar</button>
+        </form>
+        <div class="form-section" style="max-width: 600px; margin: 0 auto;">
+            {% if resultados %}
+                <ul>
+                    {% for time in resultados %}
+                        <li>
+                            <strong>
+                                {% if time.nome %}
+                                    {{ time.nome }}
+                                {% else %}
+                                    {{ time.nome_da_equipe }}
+                                {% endif %}
+                            </strong>
+                            {% if time.modalidade %}
+                                - {{ time.modalidade }}
+                            {% elif time.esporte %}
+                                - {{ time.esporte }}
+                            {% endif %}
+                            {% if time.cidade %}
+                                <br><span>{{ time.cidade }}</span>
+                            {% endif %}
+                            {% if time.descricao %}
+                                <br><span>{{ time.descricao }}</span>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% elif query %}
+                <div class="alert alert-danger">Nenhum time encontrado para "{{ query }}".</div>
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>

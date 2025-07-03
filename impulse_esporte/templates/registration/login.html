@@ -1,32 +1,46 @@
-{% extends 'headers/base.html' %}
-{% load crispy_forms_tags %} {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h2 class="card-title text-center mb-4">Login</h2>
-                
-                {% if form.non_field_errors %}
-                    <div class="alert alert-danger">
-                        {% for error in form.non_field_errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Impulso Esporte</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'main.css' %}">
+    <link rel="stylesheet" href="{% static 'login.css' %}">
+</head>
+<body>
+    {% include 'headers/headerPadrao.html' %}
 
-                <form method="post" novalidate>
-                    {% csrf_token %}
-                    
-                    {{ form|crispy }} <div class="d-grid gap-2 mt-3">
-                        <button type="submit" class="btn btn-success btn-block">Entrar</button>
-                    </div>
-                </form>
-                <hr>
-                <div class="text-center">
-                    <p>Não tem uma conta? <a href="{% url 'register' %}">Crie uma agora</a></p>
+    <main class="form-container">
+        <div class="title-content" style="max-width: 450px; margin: 40px auto 0 auto;">
+            <h1>Login</h1>
+            <p class="subtitle">Acesse sua conta para aproveitar todos os recursos da plataforma</p>
+        </div>
+        <div class="form-section" style="max-width: 450px; margin: 0 auto;">
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
                 </div>
+            {% endif %}
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div class="form-actions" style="margin-top: 25px;">
+                    <button type="submit" class="btn-submit">Entrar</button>
+                </div>
+            </form>
+            <hr>
+            <div class="text-center">
+                <p>Não tem uma conta? <a href="{% url 'register' %}">Crie uma agora</a></p>
             </div>
         </div>
-    </div>
-</div>
-{% endblock %}
+    </main>
+</body>
+</html>
