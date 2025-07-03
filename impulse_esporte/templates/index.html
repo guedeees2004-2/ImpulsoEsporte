@@ -2,7 +2,7 @@
 {% load static %}
 
 <!doctype html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,6 +17,11 @@
 
 <body>
     {% include 'headers/headerPadrao.html' %}
+
+    <form action="{% url 'buscar_times' %}" method="get" class="search-bar" style="max-width: 500px; margin: 40px auto 30px auto; display: flex;">
+        <input type="text" name="q" placeholder="Buscar time pelo nome..." class="form-control" style="flex:1; padding: 12px; border-radius: 6px 0 0 6px; border: 1.5px solid #d1d5db;">
+        <button type="submit" class="btn-submit" style="border-radius: 0 6px 6px 0; padding: 0 24px;">Buscar</button>
+    </form>
 
     <main class="main-container">
         {% block content %}

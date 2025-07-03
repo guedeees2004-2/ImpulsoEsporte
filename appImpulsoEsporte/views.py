@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.db import models
 
 from .forms import CustomUserCreationForm, CustomAuthenticationForm
-from .models import Patrocinador, Usuario, EquipeDisponivel
+from .models import Patrocinador, Usuario, EquipeDisponivel, Equipe
 
 
 
@@ -26,7 +26,11 @@ class RegisterView(View):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('home')  
+            # Redirecionar baseado no tipo de conta
+            if user.tipo_conta == 'atleta':
+                return redirect('pagina_atleta')
+            else:
+                return redirect('home')
         return render(request, 'registration/register.html', {'form': form})
 
 class LoginView(View):
@@ -39,7 +43,11 @@ class LoginView(View):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('home')  
+            # Redirecionar baseado no tipo de conta
+            if user.tipo_conta == 'atleta':
+                return redirect('pagina_atleta')
+            else:
+                return redirect('home')
         return render(request, 'registration/login.html', {'form': form})
 
 def user_logout(request):
@@ -87,12 +95,12 @@ def buscar_patrocinadores(request):
 
 def pagina_atleta(request):
     """
-    Página principal do atleta/equipe com informações e funcionalidades básicas.
+    Página principal do atleta com informações e funcionalidades básicas.
     """
     global patrocinadores, partidas, equipes
     
-    # Verificar se o usuário é atleta ou equipe
-    if not request.user.is_authenticated or request.user.tipo_conta not in ['atleta', 'equipe']:
+    # Verificar se o usuário é atleta
+    if not request.user.is_authenticated or request.user.tipo_conta != 'atleta':
         return redirect('home')
     
     filtro_equipe = request.GET.get('filtro_equipe', '')
@@ -154,81 +162,40 @@ def contato(request):
     }
     return render(request, "contato.html", context)
 
-# Lista simulada de equipes para demonstração
-equipes_cadastradas = [
-    {"nome": "Dragões do Futsal", "modalidade": "Futsal", "cidade": "São Paulo", "ano_fundacao": "2018", "numero_membros": "25"},
-    {"nome": "Águias do Vôlei", "modalidade": "Vôlei", "cidade": "Rio de Janeiro", "ano_fundacao": "2020", "numero_membros": "18"},
-    {"nome": "Leões do Basquete", "modalidade": "Basquete", "cidade": "Belo Horizonte", "ano_fundacao": "2019", "numero_membros": "15"},
-    {"nome": "Tubarões da Natação", "modalidade": "Natação", "cidade": "Porto Alegre", "ano_fundacao": "2017", "numero_membros": "12"},
-    {"nome": "Falcões do Atletismo", "modalidade": "Atletismo", "cidade": "Recife", "ano_fundacao": "2021", "numero_membros": "20"},
-]
 
+
+
+from .models import EquipeDisponivel
 
 def gerenciar_equipes(request):
-    """
-    View para gerenciar equipes - cadastrar, editar e remover
-    """
-    global equipes_cadastradas
-    
-    # Verificar se está editando uma equipe
     editar_equipe = None
-    if request.GET.get('editar'):
-        nome_editar = request.GET.get('editar')
-        for equipe in equipes_cadastradas:
-            if equipe['nome'].lower() == nome_editar.lower():
-                editar_equipe = equipe
-                break
-    
     if request.method == "POST":
         action = request.POST.get('action')
-        
         if action == 'cadastrar':
             nome = request.POST.get('nome', '').strip()
             modalidade = request.POST.get('modalidade', '').strip()
             cidade = request.POST.get('cidade', '').strip()
-            nome_original = request.POST.get('nome_original', '').strip()
-            
             if nome and modalidade and cidade:
-                if nome_original:  # Editando equipe existente
-                    for i, equipe in enumerate(equipes_cadastradas):
-                        if equipe['nome'].lower() == nome_original.lower():
-                            equipes_cadastradas[i].update({
-                                "nome": nome,
-                                "modalidade": modalidade,
-                                "cidade": cidade,
-                            })
-                            break
-                else:  # Cadastrando nova equipe
-                    # Verificar se a equipe já existe
-                    equipe_existe = any(equipe['nome'].lower() == nome.lower() for equipe in equipes_cadastradas)
-                    
-                    if not equipe_existe:
-                        nova_equipe = {
-                            "nome": nome,
-                            "modalidade": modalidade,
-                            "cidade": cidade,
-                            "ano_fundacao": "2025",  # Ano atual como padrão
-                            "numero_membros": "10"   # Número padrão
-                        }
-                        equipes_cadastradas.append(nova_equipe)
-                        
+                EquipeDisponivel.objects.create(
+                    nome=nome,
+                    modalidade=modalidade,
+                    cidade=cidade,
+                    aberta_para_atletas=True
+                )
         elif action == 'remover':
+            # Remover por nome (do select) OU por nome do card
             nome_remover = request.POST.get('nome_remover', '').strip()
             if nome_remover:
-                equipes_cadastradas[:] = [
-                    equipe for equipe in equipes_cadastradas 
-                    if equipe['nome'].lower() != nome_remover.lower()
-                ]
-        
+                EquipeDisponivel.objects.filter(nome=nome_remover).delete()
         return redirect('gerenciar_equipes')
-    
+
+    equipes = EquipeDisponivel.objects.all()
     context = {
         'title': 'Gerenciar Equipes - Impulso Esporte',
-        'equipes': equipes_cadastradas,
+        'equipes': equipes,
         'editar_equipe': editar_equipe,
     }
     return render(request, 'gerenciar_equipes.html', context)
-
 
 def lista_equipes(request):
     """
@@ -328,7 +295,30 @@ def pagina_sobre_nos(request):
     return render(request, "paginaSobreNos.html", context)
 
 def pagina_equipe(request):
+    """
+    Página principal da equipe com informações e funcionalidades básicas.
+    """
+    # Verificar se o usuário é equipe
+    if not request.user.is_authenticated or request.user.tipo_conta != 'equipe':
+        return redirect('home')
+    
+    # Buscar patrocinadores disponíveis do banco de dados
+    patrocinadores_disponiveis = Patrocinador.objects.filter(
+        usuario__tipo_conta='patrocinador',
+        aberto_para_oportunidades=True
+    ).select_related('usuario')[:5]  # Mostrar apenas os 5 primeiros
+    
     context = {
-        "title ": "Impulso Esporte - Equipe",
+        "title": "Impulso Esporte - Página da Equipe",
+        'patrocinadores_disponiveis': patrocinadores_disponiveis,
+        'user_type': request.user.tipo_conta,
     }
     return render(request, 'paginaEquipe.html', context)
+
+def buscar_times(request):
+    query = request.GET.get('q', '')
+    if query:
+        resultados = EquipeDisponivel.objects.filter(nome__icontains=query)
+    else:
+        resultados = EquipeDisponivel.objects.all()
+    return render(request, 'buscar_times.html', {'resultados': resultados, 'query': query})

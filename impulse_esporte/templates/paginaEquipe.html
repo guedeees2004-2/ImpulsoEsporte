@@ -2,103 +2,211 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>Equipe</title>
-    <link rel="stylesheet" href="{% static 'equipeFormatacao.css' %}">
+  <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  
+  <title>Página da Equipe - Impulso Esporte</title>
+  
+  <link rel="stylesheet" href="{% static 'main.css' %}">
+  <link rel="stylesheet" href="{% static 'paginaEquipe.css' %}">
 </head>
-
-<script>
-function toggleDescricao(id) {
-    const elem = document.getElementById(id);
-    elem.style.display = (elem.style.display === 'none' || elem.style.display === '') ? 'block' : 'none';
-}
-</script>
-
 <body>
-    <header class="header">
-        <div class="top-bar">
-            <h1 class="welcome">Bem vindo Equipe</h1>
-            <nav class="menu">
-                <ul>
-                    <li><a href="#">Início</a></li>
-                    <li><a href="index.html">Sobre</a></li>
-                    <li><a href="#">Contato</a></li>
-                </ul>
-            </nav>
-        </div>
-        <div class="menu-icon"></div>
-    </header>
+  {% include 'headers/headerPadrao.html' %}
 
-    <main class="main">
-        <div class="actions">
-            <button>Patrocinadores</button>
-            <button>Jogador</button>
-            <button>+ Adicionar partida</button>
-        </div>
+  <main class="main-container">
+    <div class="equipe-container">
+      <!-- Header da página -->
+      <div class="equipe-header">
+        <h1>Bem-vindo, Equipe!</h1>
+        <p>Gerencie seus atletas, patrocinadores e próximas partidas</p>
+      </div>
 
-         <<div class="column">
-    <div class="column">
-    <h3>Patrocinadores</h3>
-
-    <div class="patrocinador">
-        <a href="indexredbull.html" class="sponsor-button" target="_blank">
-            <img src="redbull.png" alt="Red Bull" class="sponsor-logo">
+      <!-- Botões de ação principal -->
+      <div class="equipe-actions">
+        <a href="{% url 'buscar_patrocinadores' %}" class="btn-action">
+          <h3>Buscar Patrocinadores</h3>
+          <p>Encontre novos patrocinadores</p>
         </a>
-    </div>
-
-    <div class="patrocinador">
-        <a href="indexsantander.html" class="sponsor-button" target="_blank">
-            <img src="santander.png" alt="Santander" class="sponsor-logo">
+        <a href="{% url 'buscar_equipes' %}" class="btn-action">
+          <h3>Gerenciar Atletas</h3>
+          <p>Adicione e gerencie seus atletas</p>
         </a>
-    </div>
-</div>
-            <div class="column">
-                <h3>Atletas</h3>
-                <div class="athletes-box">
-                    <p>Lucas Menezes</p>
-                    <p>Rafael Santos</p>
-                    <p>Diego Oliveira</p>
-                    <p>João Silva</p>
-                    <p>Carlos Mendes</p>
-                    <p>Rafael Costa</p>
-                    <p>Bruno Oliveira</p>
-                </div>
+        <a href="#" class="btn-action">
+          <h3>Adicionar Partida</h3>
+          <p>Registre suas próximas partidas</p>
+        </a>
+      </div>
+
+      <!-- Seção de Patrocinadores -->
+      <div class="equipe-section">
+        <h2>Nossos Patrocinadores</h2>
+        <div class="section-content">
+          <div class="patrocinadores-grid">
+            <div class="patrocinador-card">
+              <div class="patrocinador-logo">
+                <img src="{% static 'icones/redbull.png' %}" alt="Red Bull" onerror="this.style.display='none'">
+              </div>
+              <div class="patrocinador-info">
+                <h4>Red Bull</h4>
+                <p>Patrocinador oficial de energia e performance</p>
+                <a href="#" class="btn-sponsor" target="_blank">Ver Detalhes</a>
+              </div>
             </div>
 
-            <div class="column">
-                <h3>Próximos jogos</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Hora</th>
-                            <th>Adversário</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>13/04/2025</td>
-                            <td>16:00</td>
-                            <td>FC Estrela</td>
-                        </tr>
-                        <tr>
-                            <td>17/04/2025</td>
-                            <td>19:30</td>
-                            <td>União Serrana</td>
-                        </tr>
-                        <tr>
-                            <td>21/04/2025</td>
-                            <td>18:00</td>
-                            <td>Atlético Verde</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="patrocinador-card">
+              <div class="patrocinador-logo">
+                <img src="{% static 'icones/santander.png' %}" alt="Santander" onerror="this.style.display='none'">
+              </div>
+              <div class="patrocinador-info">
+                <h4>Santander</h4>
+                <p>Parceiro financeiro da equipe</p>
+                <a href="#" class="btn-sponsor" target="_blank">Ver Detalhes</a>
+              </div>
             </div>
-        </div>
-    </main>
 
-    <footer class="footer">
-        <img src="logo.png" alt="Logo Impulso Esporte" class="logo">
-    </footer>
+            <div class="add-patrocinador-card">
+              <div class="add-content">
+                <h4>+ Adicionar Patrocinador</h4>
+                <p>Busque novos parceiros para sua equipe</p>
+                <a href="{% url 'buscar_patrocinadores' %}" class="btn-add-sponsor">Buscar</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção de Atletas -->
+      <div class="equipe-section">
+        <h2>Nossos Atletas</h2>
+        <div class="section-content">
+          <div class="atletas-grid">
+            <div class="atleta-card">
+              <span class="atleta-name">Lucas Menezes</span>
+              <span class="atleta-position">Atacante</span>
+            </div>
+            <div class="atleta-card">
+              <span class="atleta-name">Rafael Santos</span>
+              <span class="atleta-position">Meio-campo</span>
+            </div>
+            <div class="atleta-card">
+              <span class="atleta-name">Diego Oliveira</span>
+              <span class="atleta-position">Defensor</span>
+            </div>
+            <div class="atleta-card">
+              <span class="atleta-name">João Silva</span>
+              <span class="atleta-position">Goleiro</span>
+            </div>
+            <div class="atleta-card">
+              <span class="atleta-name">Carlos Mendes</span>
+              <span class="atleta-position">Atacante</span>
+            </div>
+            <div class="atleta-card">
+              <span class="atleta-name">Rafael Costa</span>
+              <span class="atleta-position">Meio-campo</span>
+            </div>
+            <div class="atleta-card">
+              <span class="atleta-name">Bruno Oliveira</span>
+              <span class="atleta-position">Defensor</span>
+            </div>
+          </div>
+          
+          <div class="section-footer">
+            <a href="#" class="btn-primary">Adicionar Novo Atleta</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção de Próximas Partidas -->
+      <div class="equipe-section">
+        <h2>Próximas Partidas</h2>
+        <div class="section-content">
+          <div class="partidas-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Horário</th>
+                  <th>Adversário</th>
+                  <th>Local</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>13/04/2025</td>
+                  <td>16:00</td>
+                  <td>FC Estrela</td>
+                  <td>Casa</td>
+                  <td>
+                    <button class="btn-edit-small">Editar</button>
+                    <button class="btn-remove">×</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>17/04/2025</td>
+                  <td>19:30</td>
+                  <td>União Serrana</td>
+                  <td>Fora</td>
+                  <td>
+                    <button class="btn-edit-small">Editar</button>
+                    <button class="btn-remove">×</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>21/04/2025</td>
+                  <td>18:00</td>
+                  <td>Atlético Verde</td>
+                  <td>Casa</td>
+                  <td>
+                    <button class="btn-edit-small">Editar</button>
+                    <button class="btn-remove">×</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="section-footer">
+            <a href="#" class="btn-primary">Adicionar Nova Partida</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção de Estatísticas -->
+      <div class="equipe-section">
+        <h2>Estatísticas da Equipe</h2>
+        <div class="section-content">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number">7</div>
+              <div class="stat-label">Atletas</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">2</div>
+              <div class="stat-label">Patrocinadores</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">3</div>
+              <div class="stat-label">Próximas Partidas</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">2024</div>
+              <div class="stat-label">Ano de Fundação</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="info-box">
+    <h2>Dicas para Equipes</h2>
+    <p>
+      Mantenha sua equipe sempre organizada! Gerencie seus atletas, cultive bons relacionamentos 
+      com patrocinadores e planeje suas partidas com antecedência. O sucesso é resultado de uma boa gestão.
+    </p>
+  </div>
 </body>
 </html>
