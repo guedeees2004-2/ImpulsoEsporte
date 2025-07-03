@@ -1,41 +1,109 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>Sobre nós</title>
-    <link rel="stylesheet" href="{% static 'sobreNosFormatacao.css' %}">
+  <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  
+  <title>Sobre Nós - Impulso Esporte</title>
+  
+  <link rel="stylesheet" href="{% static 'main.css' %}">
+  <link rel="stylesheet" href="{% static 'paginaSobreNos.css' %}">
 </head>
 <body>
-    <header class="header">
-        <div class="menu">
-            <nav>
-                <ul>
-                    <li><a href="index02.html">Início</a></li>
-                    <li><a href="#">Sobre</a></li>
-                    <li><a href="#">Contato</a></li>
-                </ul>
-            </nav>
-        </div>
-        <div class="menu-icon">
-            <div class="circle"></div>
-        </div>
-    </header>
-
-    <main class="main">
+  {% include 'headers/headerPadrao.html' %}
+  <main class="main-container">
+    <div class="sobre-container">
+      <!-- Header da página -->
+      <div class="sobre-header">
         <h1>Sobre Nós</h1>
-        <p>Somos um grupo de estudantes da PUC-Rio apaixonados por esporte, tecnologia e inovação. Criamos esta plataforma com um propósito claro: facilitar o contato entre atletas e patrocinadores, ajudando talentos a serem reconhecidos e impulsionando suas carreiras.</p>
+        <p>Conectando atletas, patrocinadores e fãs em um só lugar</p>
+      </div>
 
-        <p>A ideia da plataforma surgiu a partir da identificação de um problema: a falta de conhecimento e acesso da sociedade a esportes menos conhecidos no Brasil. Nosso objetivo é oferecer uma solução para esse desafio.</p>
+      <!-- Seção Nossa História -->
+      <div class="sobre-section">
+        <h2>Nossa História</h2>
+        <div class="section-content">
+          <p>
+            Somos um grupo de estudantes da PUC-Rio apaixonados por esporte, tecnologia e inovação. 
+            Criamos esta plataforma com um propósito claro: facilitar o contato entre atletas e 
+            patrocinadores, ajudando talentos a serem reconhecidos e impulsionando suas carreiras.
+          </p>
+        </div>
+      </div>
 
-        <p>Nosso site também traz algo novo e essencial para os torcedores: aqui, você pode acompanhar com facilidade quando e onde acontecerão as competições, além de conferir os resultados logo após os eventos. Queremos conectar atletas, patrocinadores e fãs em um só lugar, promovendo o crescimento do esporte de forma acessível e inteligente.</p>
+      <!-- Seção Nossa Missão -->
+      <div class="sobre-section">
+        <h2>Nossa Missão</h2>
+        <div class="section-content">
+          <p>
+            A ideia da plataforma surgiu a partir da identificação de um problema: a falta de 
+            conhecimento e acesso da sociedade a esportes menos conhecidos no Brasil. Nosso 
+            objetivo é oferecer uma solução para esse desafio.
+          </p>
+        </div>
+      </div>
 
-        <div class="photo-box">UMA FOTO DE NÓS 4</div>
-    </main>
+      <!-- Seção Diferenciais -->
+      <div class="sobre-section">
+        <h2>Nossos Diferenciais</h2>
+        <div class="section-content">
+          <div class="diferenciais-grid">
+            <div class="diferencial-card">
+              <h3>Conectividade</h3>
+              <p>Facilitamos o contato entre atletas e patrocinadores de forma eficiente</p>
+            </div>
+            <div class="diferencial-card">
+              <h3>Acessibilidade</h3>
+              <p>Promovemos esportes menos conhecidos e damos visibilidade aos talentos</p>
+            </div>
+            <div class="diferencial-card">
+              <h3>Informação</h3>
+              <p>Você acompanha competições, resultados e eventos esportivos em tempo real</p>
+            </div>
+            <div class="diferencial-card">
+              <h3>Inovação</h3>
+              <p>Utilizamos tecnologia moderna para revolucionar o mercado esportivo</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    <footer class="footer">
-        <img src="logo.png" alt="Logo Impulso Esporte" class="logo">
-    </footer>
+      <!-- Seção Nossa Visão -->
+      <div class="sobre-section">
+        <h2>Nossa Visão</h2>
+        <div class="section-content">
+          <p>
+            Nosso site também traz algo novo e essencial para os torcedores: aqui, você pode 
+            acompanhar com facilidade quando e onde acontecerão as competições, além de conferir 
+            os resultados logo após os eventos. Queremos conectar atletas, patrocinadores e fãs 
+            em um só lugar, promovendo o crescimento do esporte de forma acessível e inteligente.
+          </p>
+        </div>
+      </div>
+
+      <!-- Seção Equipe -->
+      <div class="sobre-section">
+        <h2>Nossa Equipe</h2>
+        <div class="section-content">
+          <div class="equipe-photo">
+            <div class="photo-placeholder">
+              <p>Foto da nossa equipe será adicionada em breve</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="info-box">
+    <h2>Junte-se a Nós</h2>
+    <p>
+      Faça parte da revolução esportiva! Se você é atleta ou patrocinador, 
+      nossa plataforma é o lugar ideal para impulsionar sua carreira ou encontrar novos talentos.
+    </p>
+  </div>
 </body>
 </html>

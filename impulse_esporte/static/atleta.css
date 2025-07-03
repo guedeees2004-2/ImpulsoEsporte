@@ -166,20 +166,3 @@
   max-width: 200px;
   height: auto;
 }
-
-/* Responsividade */
-@media (max-width: 768px) {
-  .atleta-header {
-    flex-direction: column;
-    gap: 1rem;
-    text-align: center;
-  }
-  
-  .atleta-botoes {
-    flex-direction: column;
-  }
-  
-  .atleta-conteudo {
-    grid-template-columns: 1fr;
-  }
-}

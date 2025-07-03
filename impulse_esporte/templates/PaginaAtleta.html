@@ -3,166 +3,223 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Página de Atleta</title>
-  <link rel="stylesheet" href="{% static 'atleta.css' %}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  
+  <title>Página do Atleta - Impulso Esporte</title>
+  
+  <link rel="stylesheet" href="{% static 'main.css' %}">
+  <link rel="stylesheet" href="{% static 'paginaAtleta.css' %}">
 </head>
-<body class="pagina-atleta">
-  <header class="atleta-header">
-    <h1>Bem vindo, Atleta</h1>
-    <nav>
-      <a href="#">Início</a>
-      <a href="#">Sobre</a>
-      <a href="#">Contato</a>
-    </nav>
-  </header>
+<body>
+  {% include 'headers/headerPadrao.html' %}
 
-  <main>
-    <section class="atleta-botoes">
-      <a href="{% url 'buscar_patrocinadores' %}" class="atleta-botao">Buscar Patrocinadores</a>
-      <a href="{% url 'buscar_equipes' %}" class="atleta-botao">Buscar Equipes</a>
-      <a href="?box_aberto=partida" class="atleta-botao">Adicionar partida</a>
-    </section>
-
-    <!-- Box de Patrocinadores -->
-    <div class="atleta-form-box {% if box_aberto == 'patrocinador' %}aberto{% endif %}" id="patrocinadorBox">
-      <form method="POST">
-        {% csrf_token %}
-        <input type="hidden" name="tipo" value="patrocinador">
-        <input type="text" name="novo_patrocinador" placeholder="Nome do patrocinador" required>
-        <button type="submit" name="adicionar_patrocinador" class="atleta-botao">Adicionar</button>
-      </form>
-      <ul class="atleta-lista">
-        {% for p in patrocinadores %}
-        <li>
-          {{ p }}
-          <form method="POST" class="atleta-form-remover" style="display:inline;">
-            {% csrf_token %}
-            <input type="hidden" name="remover" value="1">
-            <input type="hidden" name="item" value="{{ p }}">
-            <input type="hidden" name="lista" value="patrocinadores">
-            <button type="submit" class="atleta-botao-remover" title="Remover">X</button>
-          </form>
-        </li>
-        {% empty %}
-        <li>Nenhum patrocinador cadastrado.</li>
-        {% endfor %}
-      </ul>
-    </div>
-
-    <!-- Box de Equipe -->
-    <div class="atleta-form-box {% if box_aberto == 'equipe' %}aberto{% endif %}" id="equipeBox">
-      <form method="GET">
-        <input type="text" name="filtro_equipe" placeholder="Buscar equipe..." 
-               value="{{ filtro_equipe|default_if_none:'' }}" class="atleta-input">
-        <button type="submit" class="atleta-botao">Filtrar</button>
-        <a href="?" class="atleta-botao">Limpar</a>
-      </form>
-      <ul class="atleta-lista">
-        {% for equipe in equipes %}
-          <li>{{ equipe }}</li>
-        {% empty %}
-          <li>Nenhuma equipe encontrada.</li>
-        {% endfor %}
-      </ul>
-    </div>
-
-    <!-- Box de Partida -->
-    <div class="atleta-form-box {% if box_aberto == 'partida' %}aberto{% endif %}" id="partidaBox">
-      <form method="POST">
-        {% csrf_token %}
-        <input type="text" name="nova_partida" placeholder="Nova partida (ex: 20/06/2025-Adversário)" required>
-        <button type="submit" name="adicionar_partida" class="atleta-botao">Adicionar</button>
-      </form>
-      <ul class="atleta-lista">
-        {% for partida in partidas %}
-        <li>
-          {{ partida }}
-          <form method="POST" class="atleta-form-remover" style="display:inline;">
-            {% csrf_token %}
-            <input type="hidden" name="remover" value="1">
-            <input type="hidden" name="item" value="{{ partida }}">
-            <input type="hidden" name="lista" value="partidas">
-            <button type="submit" class="atleta-botao-remover" title="Remover">X</button>
-          </form>
-        </li>
-        {% empty %}
-        <li>Nenhuma partida cadastrada.</li>
-        {% endfor %}
-      </ul>
-    </div>
-
-    <section class="atleta-conteudo">
-      <div class="atleta-card">
-        <h2>Patrocinadores Disponíveis</h2>
-        {% if patrocinadores_disponiveis %}
-          <ul class="atleta-lista">
-            {% for patrocinador in patrocinadores_disponiveis %}
-            <li>
-              <strong>{{ patrocinador.empresa }}</strong>
-              {% if patrocinador.descricao %}
-                <br><small>{{ patrocinador.descricao|truncatewords:15 }}</small>
-              {% endif %}
-            </li>
-            {% endfor %}
-          </ul>
-          <a href="{% url 'buscar_patrocinadores' %}" class="atleta-botao" style="display: inline-block; margin-top: 10px;">Ver Todos os Patrocinadores</a>
-        {% else %}
-          <p>Nenhum patrocinador disponível no momento.</p>
-          <a href="{% url 'buscar_patrocinadores' %}" class="atleta-botao" style="display: inline-block; margin-top: 10px;">Buscar Patrocinadores</a>
-        {% endif %}
+  <main class="main-container">
+    <div class="atleta-container">
+      <!-- Header da página -->
+      <div class="atleta-header">
+        <h1>Bem-vindo, {{ user.first_name|default:"Atleta" }}!</h1>
+        <p>Gerencie suas informações, equipes e patrocinadores</p>
       </div>
 
-      <div class="atleta-card">
-        <h2>Equipe</h2>
-        <p>
-          {% if equipes %}
-            {{ equipes.0 }}
-          {% else %}
-            Nenhuma equipe cadastrada.
+      <!-- Botões de ação principal -->
+      <div class="atleta-actions">
+        <a href="{% url 'buscar_patrocinadores' %}" class="btn-action">
+          <h3>Buscar Patrocinadores</h3>
+          <p>Encontre patrocinadores disponíveis</p>
+        </a>
+        <a href="{% url 'buscar_equipes' %}" class="btn-action">
+          <h3>Buscar Equipes</h3>
+          <p>Procure por equipes abertas</p>
+        </a>
+        <a href="?box_aberto=partida" class="btn-action">
+          <h3>Adicionar Partida</h3>
+          <p>Registre suas próximas partidas</p>
+        </a>
+      </div>
+
+      <!-- Seção de Patrocinadores -->
+      <div class="atleta-section">
+        <h2>Meus Patrocinadores</h2>
+        <div class="section-content">
+          {% if box_aberto == 'patrocinador' %}
+            <div class="form-container">
+              <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="novo_patrocinador">Adicionar Patrocinador:</label>
+                  <input type="text" id="novo_patrocinador" name="novo_patrocinador" 
+                         placeholder="Nome do patrocinador" required>
+                </div>
+                <div class="form-actions">
+                  <button type="submit" name="adicionar_patrocinador" class="btn-submit">Adicionar</button>
+                  <a href="{% url 'pagina_atleta' %}" class="btn-cancel">Cancelar</a>
+                </div>
+              </form>
+            </div>
           {% endif %}
-        </p>
+          
+          <div class="items-grid">
+            {% for p in patrocinadores %}
+              <div class="item-card">
+                <span class="item-name">{{ p }}</span>
+                <form method="POST" class="remove-form">
+                  {% csrf_token %}
+                  <input type="hidden" name="remover" value="1">
+                  <input type="hidden" name="item" value="{{ p }}">
+                  <input type="hidden" name="lista" value="patrocinadores">
+                  <button type="submit" class="btn-remove" title="Remover">×</button>
+                </form>
+              </div>
+            {% empty %}
+              <div class="empty-state">
+                <p>Nenhum patrocinador cadastrado.</p>
+                <a href="?box_aberto=patrocinador" class="btn-add">Adicionar Primeiro Patrocinador</a>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
       </div>
 
-      <div class="atleta-card">
-        <h2>Próximos jogos</h2>
-        <table class="atleta-tabela">
-          <thead>
-            <tr>
-              <th>Data</th>
-              <th>Adversário</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for partida in partidas %}
-            <tr>
-              <td>
-                {% if '-' in partida %}
-                  {{ partida|cut:' '|cut:'-'|slice:":10" }}
-                {% else %}
-                  {{ partida }}
-                {% endif %}
-              </td>
-              <td>
-                {% if '-' in partida %}
-                  {{ partida|cut:' '|cut:'-'|slice:"10:" }}
-                {% else %}
-                  -
-                {% endif %}
-              </td>
-            </tr>
+      <!-- Seção de Equipes -->
+      <div class="atleta-section">
+        <h2>Equipes Disponíveis</h2>
+        <div class="section-content">
+          <div class="search-container">
+            <form method="GET" class="search-form">
+              <div class="form-group">
+                <input type="text" name="filtro_equipe" placeholder="Buscar equipe..." 
+                       value="{{ filtro_equipe|default_if_none:'' }}">
+                <button type="submit" class="btn-search">Filtrar</button>
+                <a href="{% url 'pagina_atleta' %}" class="btn-clear">Limpar</a>
+              </div>
+            </form>
+          </div>
+          
+          <div class="items-grid">
+            {% for equipe in equipes %}
+              <div class="item-card equipe-card">
+                <span class="item-name">{{ equipe }}</span>
+              </div>
             {% empty %}
-            <tr>
-              <td colspan="2">Nenhuma partida cadastrada.</td>
-            </tr>
+              <div class="empty-state">
+                <p>Nenhuma equipe encontrada.</p>
+              </div>
             {% endfor %}
-          </tbody>
-        </table>
+          </div>
+        </div>
       </div>
-    </section>
+
+      <!-- Seção de Partidas -->
+      <div class="atleta-section">
+        <h2>Próximas Partidas</h2>
+        <div class="section-content">
+          {% if box_aberto == 'partida' %}
+            <div class="form-container">
+              <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="nova_partida">Adicionar Partida:</label>
+                  <input type="text" id="nova_partida" name="nova_partida" 
+                         placeholder="Ex: 20/06/2025 - Adversário" required>
+                </div>
+                <div class="form-actions">
+                  <button type="submit" name="adicionar_partida" class="btn-submit">Adicionar</button>
+                  <a href="{% url 'pagina_atleta' %}" class="btn-cancel">Cancelar</a>
+                </div>
+              </form>
+            </div>
+          {% endif %}
+          
+          <div class="partidas-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Adversário</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for partida in partidas %}
+                <tr>
+                  <td>
+                    {% if '-' in partida %}
+                      {{ partida|cut:' '|cut:'-'|slice:":10" }}
+                    {% else %}
+                      {{ partida }}
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if '-' in partida %}
+                      {{ partida|cut:' '|cut:'-'|slice:"10:" }}
+                    {% else %}
+                      -
+                    {% endif %}
+                  </td>
+                  <td>
+                    <form method="POST" class="remove-form">
+                      {% csrf_token %}
+                      <input type="hidden" name="remover" value="1">
+                      <input type="hidden" name="item" value="{{ partida }}">
+                      <input type="hidden" name="lista" value="partidas">
+                      <button type="submit" class="btn-remove" title="Remover">×</button>
+                    </form>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="3" class="empty-cell">
+                    <div class="empty-state">
+                      <p>Nenhuma partida cadastrada.</p>
+                      <a href="?box_aberto=partida" class="btn-add">Adicionar Primeira Partida</a>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção de Patrocinadores Disponíveis -->
+      <div class="atleta-section">
+        <h2>Patrocinadores Disponíveis</h2>
+        <div class="section-content">
+          {% if patrocinadores_disponiveis %}
+            <div class="patrocinadores-grid">
+              {% for patrocinador in patrocinadores_disponiveis %}
+                <div class="patrocinador-card">
+                  <h4>{{ patrocinador.empresa }}</h4>
+                  {% if patrocinador.descricao %}
+                    <p>{{ patrocinador.descricao|truncatewords:15 }}</p>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+            <div class="section-footer">
+              <a href="{% url 'buscar_patrocinadores' %}" class="btn-primary">Ver Todos os Patrocinadores</a>
+            </div>
+          {% else %}
+            <div class="empty-state">
+              <p>Nenhum patrocinador disponível no momento.</p>
+              <a href="{% url 'buscar_patrocinadores' %}" class="btn-primary">Buscar Patrocinadores</a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
   </main>
 
-  <footer class="atleta-footer">
-    <img src="{% static 'icones/logoImpulse.png' %}" class="logo" alt="Logo Impulso Esporte">
-  </footer>
+  <div class="info-box">
+    <h2>Dicas para Atletas</h2>
+    <p>
+      Mantenha seu perfil sempre atualizado! Cadastre suas partidas, gerencie seus patrocinadores e 
+      esteja sempre em busca de novas oportunidades. O sucesso no esporte também depende de uma boa gestão.
+    </p>
+  </div>
 </body>
 </html>

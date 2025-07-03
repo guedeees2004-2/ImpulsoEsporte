@@ -1,0 +1,403 @@
+/* ========== PÁGINA DO ATLETA STYLES ========== */
+
+/* Layout Principal */
+.atleta-container {
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 0 2rem;
+}
+
+/* Header */
+.atleta-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.atleta-header h1 {
+    font-size: 3rem;
+    color: #165732;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+}
+
+.atleta-header p {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Botões de Ação Principal */
+.atleta-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.btn-action {
+    background: #fff;
+    border: 2px solid #2E8B57;
+    border-radius: 12px;
+    padding: 2rem;
+    text-decoration: none;
+    color: #165732;
+    transition: all 0.3s ease;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(46, 139, 87, 0.1);
+}
+
+.btn-action:hover {
+    background: #2E8B57;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(46, 139, 87, 0.2);
+}
+
+.btn-action h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-action p {
+    margin: 0;
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+/* Seções */
+.atleta-section {
+    background: #fff;
+    border: 2px solid #2E8B57;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 16px rgba(46, 139, 87, 0.1);
+    overflow: hidden;
+}
+
+.atleta-section h2 {
+    background: linear-gradient(135deg, #2E8B57, #165732);
+    color: white;
+    margin: 0;
+    padding: 1.5rem 2rem;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.section-content {
+    padding: 2rem;
+}
+
+/* Formulários */
+.form-container {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #165732;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Oswald', sans-serif;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #2E8B57;
+    box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.1);
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+/* Botões Base */
+.btn-submit,
+.btn-primary {
+    background-color: #2E8B57;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-block;
+    font-family: 'Oswald', sans-serif;
+}
+
+.btn-submit {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-submit:hover,
+.btn-primary:hover {
+    background-color: #165732;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(22, 87, 50, 0.3);
+    text-decoration: none;
+}
+
+.btn-cancel {
+    background-color: transparent;
+    color: #165732;
+    border: 2px solid #165732;
+    padding: 10px 24px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-block;
+    font-family: 'Oswald', sans-serif;
+}
+
+.btn-cancel:hover {
+    background-color: #165732;
+    color: white;
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+.btn-add,
+.btn-search {
+    background-color: #2E8B57;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-block;
+    font-family: 'Oswald', sans-serif;
+}
+
+.btn-search {
+    padding: 10px 20px;
+    font-size: 1rem;
+}
+
+.btn-clear {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-family: 'Oswald', sans-serif;
+}
+
+.btn-add:hover,
+.btn-search:hover {
+    background-color: #165732;
+    text-decoration: none;
+}
+
+.btn-clear:hover {
+    background-color: #5a6268;
+    text-decoration: none;
+}
+
+.btn-remove {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    line-height: 1;
+}
+
+.btn-remove:hover {
+    background-color: #c82333;
+    transform: scale(1.1);
+}
+
+/* Busca */
+.search-container {
+    margin-bottom: 2rem;
+}
+
+.search-form .form-group {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+    margin-bottom: 0;
+}
+
+.search-form input {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+/* Grids e Cards */
+.items-grid,
+.patrocinadores-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.items-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+.patrocinadores-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.item-card,
+.patrocinador-card {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    transition: all 0.3s ease;
+}
+
+.item-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.patrocinador-card {
+    padding: 1.5rem;
+}
+
+.item-card:hover,
+.patrocinador-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.item-name {
+    font-weight: 600;
+    color: #165732;
+    flex: 1;
+}
+
+.equipe-card {
+    justify-content: center;
+    text-align: center;
+}
+
+.equipe-card .item-name {
+    margin: 0;
+}
+
+.patrocinador-card h4 {
+    margin: 0 0 0.5rem 0;
+    color: #165732;
+    font-size: 1.2rem;
+}
+
+.patrocinador-card p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.remove-form {
+    margin: 0;
+}
+
+.section-footer {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #ddd;
+}
+
+/* Tabela de Partidas */
+.partidas-table {
+    overflow-x: auto;
+}
+
+.partidas-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+.partidas-table th {
+    background: linear-gradient(135deg, #2E8B57, #165732);
+    color: white;
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.partidas-table td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    vertical-align: middle;
+}
+
+.partidas-table tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Estados Vazios */
+.empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+    grid-column: 1 / -1;
+}
+
+.empty-state p {
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+}
+
+.empty-cell {
+    text-align: center;
+    padding: 2rem;
+}

@@ -1,0 +1,164 @@
+/* ========== PÁGINA SOBRE NÓS STYLES ========== */
+
+/* Layout Principal */
+.sobre-container {
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 0 2rem;
+}
+
+/* Header */
+.sobre-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.sobre-header h1 {
+    font-size: 3rem;
+    color: #165732;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+}
+
+.sobre-header p {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Seções */
+.sobre-section {
+    background: #fff;
+    border: 2px solid #2E8B57;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 16px rgba(46, 139, 87, 0.1);
+    overflow: hidden;
+}
+
+.sobre-section h2 {
+    background: linear-gradient(135deg, #2E8B57, #165732);
+    color: white;
+    margin: 0;
+    padding: 1.5rem 2rem;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.section-content {
+    padding: 2rem;
+}
+
+.section-content p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #444;
+    margin: 0;
+    text-align: justify;
+}
+
+/* Grid de Diferenciais */
+.diferenciais-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.diferencial-card {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    border-left: 4px solid #2E8B57;
+}
+
+.diferencial-card:hover {
+    box-shadow: 0 6px 20px rgba(46, 139, 87, 0.15);
+    transform: translateY(-3px);
+}
+
+.diferencial-card h3 {
+    color: #165732;
+    font-size: 1.3rem;
+    margin: 0 0 1rem 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.diferencial-card p {
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+    text-align: center;
+}
+
+/* Seção Equipe */
+.equipe-photo {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.photo-placeholder {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border: 2px dashed #2E8B57;
+    border-radius: 12px;
+    padding: 4rem 2rem;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.photo-placeholder p {
+    color: #2E8B57;
+    font-size: 1.1rem;
+    font-style: italic;
+    margin: 0;
+    text-align: center;
+}
+
+/* Animações e Efeitos */
+.sobre-section {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.sobre-section:nth-child(even) {
+    animation-delay: 0.1s;
+}
+
+.sobre-section:nth-child(odd) {
+    animation-delay: 0.2s;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Melhorias Tipográficas */
+.sobre-container h1,
+.sobre-container h2,
+.sobre-container h3 {
+    font-family: 'Oswald', sans-serif;
+}
+
+.sobre-container p {
+    font-family: Arial, sans-serif;
+}
+
+/* Estados Hover para Seções */
+.sobre-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(46, 139, 87, 0.15);
+}

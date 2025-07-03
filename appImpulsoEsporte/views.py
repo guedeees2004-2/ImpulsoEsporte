@@ -26,7 +26,11 @@ class RegisterView(View):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('home')  
+            # Redirecionar baseado no tipo de conta
+            if user.tipo_conta == 'atleta':
+                return redirect('pagina_atleta')
+            else:
+                return redirect('home')
         return render(request, 'registration/register.html', {'form': form})
 
 class LoginView(View):
@@ -39,7 +43,11 @@ class LoginView(View):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('home')  
+            # Redirecionar baseado no tipo de conta
+            if user.tipo_conta == 'atleta':
+                return redirect('pagina_atleta')
+            else:
+                return redirect('home')
         return render(request, 'registration/login.html', {'form': form})
 
 def user_logout(request):
@@ -87,12 +95,12 @@ def buscar_patrocinadores(request):
 
 def pagina_atleta(request):
     """
-    Página principal do atleta/equipe com informações e funcionalidades básicas.
+    Página principal do atleta com informações e funcionalidades básicas.
     """
     global patrocinadores, partidas, equipes
     
-    # Verificar se o usuário é atleta ou equipe
-    if not request.user.is_authenticated or request.user.tipo_conta not in ['atleta', 'equipe']:
+    # Verificar se o usuário é atleta
+    if not request.user.is_authenticated or request.user.tipo_conta != 'atleta':
         return redirect('home')
     
     filtro_equipe = request.GET.get('filtro_equipe', '')
@@ -328,7 +336,22 @@ def pagina_sobre_nos(request):
     return render(request, "paginaSobreNos.html", context)
 
 def pagina_equipe(request):
+    """
+    Página principal da equipe com informações e funcionalidades básicas.
+    """
+    # Verificar se o usuário é equipe
+    if not request.user.is_authenticated or request.user.tipo_conta != 'equipe':
+        return redirect('home')
+    
+    # Buscar patrocinadores disponíveis do banco de dados
+    patrocinadores_disponiveis = Patrocinador.objects.filter(
+        usuario__tipo_conta='patrocinador',
+        aberto_para_oportunidades=True
+    ).select_related('usuario')[:5]  # Mostrar apenas os 5 primeiros
+    
     context = {
-        "title ": "Impulso Esporte - Equipe",
+        "title": "Impulso Esporte - Página da Equipe",
+        'patrocinadores_disponiveis': patrocinadores_disponiveis,
+        'user_type': request.user.tipo_conta,
     }
     return render(request, 'paginaEquipe.html', context)
