@@ -22,7 +22,7 @@ urlpatterns = [
     path("contato/", views.contato, name="contato"),
     path("admin/", admin.site.urls),
     path("__reload__/", include("django_browser_reload.urls")),
-    path("equipe-disponivel/<int:equipe_id>/", views.pagina_equipe_disponivel, name="pagina_equipe"),
+    path("equipe-disponivel/<int:equipe_id>/", views.pagina_equipe_disponivel, name="paginaEquipe"),
     path("sobre_nos", views.pagina_sobre_nos, name="pagina_sobre_nos"),
     path("gerenciar_equipes/", views.gerenciar_equipes, name="gerenciar_equipes"),
     path("buscar-times/", views.buscar_times, name="buscar_times"),

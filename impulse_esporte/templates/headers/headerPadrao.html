@@ -20,7 +20,7 @@
                         </li>
                     {% elif user.tipo_conta == "equipe" and user.equipe %}
                         <li class="nav-item">
-                            <a href="{% url 'pagina_equipe' %}" class="btn">Página da Equipe</a>
+                            <a href="{% url 'paginaEquipe' user.equipe.id %}" class="btn">Página da Equipe</a>
                         </li>
                     {% endif %}
                     <li class="nav-item">

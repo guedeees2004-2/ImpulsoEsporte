@@ -22,7 +22,13 @@
   </section>
 
   <main class="patrocinadores-container">
-    <a href="{% url 'pagina_atleta' %}" class="back-link">← Voltar à Página do {{ user_type|capfirst }}</a>
+    {% if user.tipo_conta == "atleta" %}
+      <a href="{% url 'pagina_atleta' %}" class="back-link">← Voltar à Página do Atleta</a>
+    {% elif user.tipo_conta == "equipe" and user.equipe %}
+      <a href="{% url 'paginaEquipe' user.equipe.id %}" class="back-link">← Voltar à Página da Equipe</a>
+    {% else %}
+      <a href="{% url 'home' %}" class="back-link">← Voltar</a>
+    {% endif %}
     
     <div class="search-bar">
       <form method="GET">
@@ -78,16 +84,5 @@
       </div>
     {% endif %}
   </main>
-
-  <script>
-    function entrarEmContato(empresa, username) {
-      // Aqui você pode implementar a lógica de contato
-      // Por exemplo, abrir um modal, redirecionar para uma página de contato, etc.
-      alert(`Entrando em contato com ${empresa} (${username}). \n\nEsta funcionalidade será implementada em breve!`);
-      
-      // Exemplo de redirecionamento para página de contato (quando implementada):
-      // window.location.href = `/contato/${username}/`;
-    }
-  </script>
 </body>
 </html>

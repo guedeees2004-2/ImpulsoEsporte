@@ -17,13 +17,11 @@
 
   <main class="main-container">
     <div class="equipe-container">
-      <!-- Header da página com dados reais -->
       <div class="equipe-header">
         <h1>{{ equipe.nome }}</h1>
         <p>
           <strong>Modalidade:</strong> {{ equipe.modalidade }}<br>
           <strong>Cidade:</strong> {{ equipe.cidade }}<br>
-          <strong>Descrição:</strong> {{ equipe.descricao }}
         </p>
         {% if not is_owner %}
           <div class="profile-info">
@@ -52,7 +50,7 @@
 
       <!-- Seção de Patrocinadores -->
       <div class="equipe-section">
-        <h2>{% if is_owner %}Nossos Patrocinadores{% else %}Patrocinadores{% endif %}</h2>
+        <h2>Nossos Patrocinadores (Mudar para que não fique estático, e levar para o site do patrocinador)</h2>
         <div class="section-content">
           <div class="patrocinadores-grid">
             <div class="patrocinador-card">
@@ -90,7 +88,7 @@
 
       <!-- Seção de Atletas -->
       <div class="equipe-section">
-        <h2>Nossos Atletas</h2>
+        <h2>Nossos Atletas (Mudar para que não fique estático, podendo editar/adicionar/remover atletas da lista para a equipe)</h2>
         <div class="section-content">
           <div class="atletas-grid">
             <div class="atleta-card">
@@ -124,14 +122,14 @@
           </div>
           
           <div class="section-footer">
-            <a href="#" class="btn-primary">Adicionar Novo Atleta</a>
+            <a href="#" class="btn-primary">Adicionar Novo Atleta (fazer pra levar para lista de atleta)</a>
           </div>
         </div>
       </div>
 
       <!-- Seção de Próximas Partidas -->
       <div class="equipe-section">
-        <h2>Próximas Partidas</h2>
+        <h2>Próximas Partidas (Não deixar estática, fazer possível editar e adicionar partidas com informações da tabela)</h2>
         <div class="section-content">
           <div class="partidas-table">
             <table>
@@ -187,7 +185,7 @@
 
       <!-- Seção de Estatísticas -->
       <div class="equipe-section">
-        <h2>Estatísticas da Equipe</h2>
+        <h2>Estatísticas da Equipe (Mudar de estático. Atualizar automaticamente de acordo com o número de atletas na lista desta página e o número de patrocinador na página)</h2>
         <div class="section-content">
           <div class="stats-grid">
             <div class="stat-card">
@@ -197,10 +195,6 @@
             <div class="stat-card">
               <div class="stat-number">2</div>
               <div class="stat-label">Patrocinadores</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-number">3</div>
-              <div class="stat-label">Próximas Partidas</div>
             </div>
             <div class="stat-card">
               <div class="stat-number">2024</div>
