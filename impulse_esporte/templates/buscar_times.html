@@ -2,50 +2,134 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>Buscar Times - Impulso Esporte</title>
-    <link rel="stylesheet" href="{% static 'main.css' %}">
-    <link rel="stylesheet" href="{% static 'login.css' %}">
+  <meta charset="UTF-8">
+  <title>Buscar Times - Impulso Esporte</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'main.css' %}">
+  <link rel="stylesheet" href="{% static 'equipes.css' %}">
 </head>
 <body>
-    {% include 'headers/headerPadrao.html' %}
-    <main class="form-container">
-        <form action="{% url 'buscar_times' %}" method="get" class="search-bar" style="max-width: 500px; margin: 40px auto 30px auto; display: flex;">
-            <input type="text" name="q" placeholder="Buscar time pelo nome..." value="{{ query }}" class="form-control" style="flex:1; padding: 12px; border-radius: 6px 0 0 6px; border: 1.5px solid #d1d5db;">
-            <button type="submit" class="btn-submit" style="border-radius: 0 6px 6px 0; padding: 0 24px;">Buscar</button>
-        </form>
-        <div class="form-section" style="max-width: 600px; margin: 0 auto;">
-            {% if resultados %}
-                <ul>
-                    {% for time in resultados %}
-                        <li>
-                            <strong>
-                                <a href="{% url 'pagina_equipe' time.id %}">
-                                    {% if time.nome %}
-                                        {{ time.nome }}
-                                    {% else %}
-                                        {{ time.nome_da_equipe }}
-                                    {% endif %}
-                                </a>
-                            </strong>
-                            {% if time.modalidade %}
-                                - {{ time.modalidade }}
-                            {% elif time.esporte %}
-                                - {{ time.esporte }}
-                            {% endif %}
-                            {% if time.cidade %}
-                                <br><span>{{ time.cidade }}</span>
-                            {% endif %}
-                            {% if time.descricao %}
-                                <br><span>{{ time.descricao }}</span>
-                            {% endif %}
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% elif query %}
-                <div class="alert alert-danger">Nenhum time encontrado para "{{ query }}".</div>
-            {% endif %}
+  {% include 'headers/headerPadrao.html' %}
+
+  <!-- Page title section -->
+  <section class="page-title-section">
+    <div class="title-content">
+      <h1>Buscar Times</h1>
+      <p class="subtitle">Encontre times e equipes para acompanhar e tudo sobre seus esportes favoritos</p>
+    </div>
+  </section>
+
+  <main class="equipes-container">
+    {% if user_type == 'atleta' %}
+      <a href="{% url 'pagina_atleta' %}" class="back-link">← Voltar à Página do Atleta</a>
+    {% elif user_type == 'equipe' %}
+      <a href="{% url 'pagina_equipe' %}" class="back-link">← Voltar à Página da Equipe</a>
+    {% else %}
+      <a href="{% url 'home' %}" class="back-link">← Voltar ao Início</a>
+    {% endif %}
+    
+    <div class="search-bar">
+      <form method="GET" class="search-form">
+        <div class="search-input-group">
+          <input 
+            type="text" 
+            name="q" 
+            placeholder="Buscar times pelo nome..." 
+            value="{{ query }}"
+            class="search-input"
+          >
+          <button type="submit" class="search-button">Buscar</button>
+          {% if query %}
+            <a href="{% url 'buscar_times' %}" class="btn-clear">Limpar</a>
+          {% endif %}
         </div>
-    </main>
+      </form>
+    </div>
+
+    {% if resultados %}
+      <div class="results-info">
+        <p>Encontrados <strong>{{ resultados|length }}</strong> times</p>
+      </div>
+      
+      <div class="equipes-grid">
+        {% for time in resultados %}
+          <div class="equipe-card">
+            <div class="equipe-nome">
+              <a href="{% url 'visualizar_perfil_equipe' time.id %}">
+                {% if time.nome %}
+                  {{ time.nome }}
+                {% else %}
+                  {{ time.nome_da_equipe }}
+                {% endif %}
+              </a>
+            </div>
+            
+            {% if time.modalidade %}
+              <div class="equipe-modalidade">{{ time.modalidade }}</div>
+            {% elif time.esporte %}
+              <div class="equipe-modalidade">{{ time.esporte }}</div>
+            {% endif %}
+            
+            {% if time.cidade %}
+              <div class="equipe-cidade">{{ time.cidade }}</div>
+            {% endif %}
+            
+            {% if time.descricao %}
+              <div class="equipe-descricao">
+                {{ time.descricao|truncatewords:25 }}
+              </div>
+            {% else %}
+              <div class="equipe-descricao sem-descricao">
+                Time de 
+                {% if time.modalidade %}
+                  {{ time.modalidade }}
+                {% elif time.esporte %}
+                  {{ time.esporte }}
+                {% else %}
+                  esportes
+                {% endif %}. 
+                Clique para ver mais informações.
+              </div>
+            {% endif %}
+            
+            <div class="equipe-info">
+              {% if time.ano_fundacao %}
+                <div class="info-item">
+                  <span class="info-label">Fundado em:</span>
+                  <span class="info-value">{{ time.ano_fundacao }}</span>
+                </div>
+              {% endif %}
+              {% if time.numero_atletas %}
+                <div class="info-item">
+                  <span class="info-label">Atletas:</span>
+                  <span class="info-value">{{ time.numero_atletas }}</span>
+                </div>
+              {% endif %}
+            </div>
+            
+            <a href="{% url 'visualizar_perfil_equipe' time.id %}" class="contato-btn">
+              Ver Perfil do Time
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="no-results">
+        {% if query %}
+          <h3>Nenhum time encontrado</h3>
+          <p>
+            Não encontramos times com o termo "{{ query }}". 
+            <a href="{% url 'buscar_times' %}">Limpar busca</a> para ver todos os times.
+          </p>
+        {% else %}
+          <h3>Busque por times</h3>
+          <p>Use a barra de busca acima para encontrar times específicos por nome.</p>
+        {% endif %}
+      </div>
+    {% endif %}
+  </main>
+
 </body>
 </html>

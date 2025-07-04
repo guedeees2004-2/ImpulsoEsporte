@@ -25,9 +25,15 @@
           <strong>Cidade:</strong> {{ equipe.cidade }}<br>
           <strong>Descrição:</strong> {{ equipe.descricao }}
         </p>
+        {% if not is_owner %}
+          <div class="profile-info">
+            <em>Visualizando perfil da equipe</em>
+          </div>
+        {% endif %}
       </div>
 
-      <!-- Botões de ação principal -->
+      <!-- Botões de ação principal - apenas para donos -->
+      {% if is_owner %}
       <div class="equipe-actions">
         <a href="{% url 'buscar_patrocinadores' %}" class="btn-action">
           <h3>Buscar Patrocinadores</h3>
@@ -42,10 +48,11 @@
           <p>Registre suas próximas partidas</p>
         </a>
       </div>
+      {% endif %}
 
       <!-- Seção de Patrocinadores -->
       <div class="equipe-section">
-        <h2>Nossos Patrocinadores</h2>
+        <h2>{% if is_owner %}Nossos Patrocinadores{% else %}Patrocinadores{% endif %}</h2>
         <div class="section-content">
           <div class="patrocinadores-grid">
             <div class="patrocinador-card">

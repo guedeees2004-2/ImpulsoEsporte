@@ -138,8 +138,10 @@
               <thead>
                 <tr>
                   <th>Data</th>
+                  <th>Horário</th>
                   <th>Adversário</th>
-                  <th>Ações</th>
+                  <th>Local</th>
+                  {% if is_owner %}<th>Ações</th>{% endif %}
                 </tr>
               </thead>
               <tbody>
@@ -152,6 +154,7 @@
                       {{ partida }}
                     {% endif %}
                   </td>
+                  <td>16:00</td> <!-- Horário padrão, pode ser melhorado depois -->
                   <td>
                     {% if '-' in partida %}
                       {{ partida|cut:' '|cut:'-'|slice:"10:" }}
@@ -159,8 +162,11 @@
                       -
                     {% endif %}
                   </td>
+                  <td>Casa</td> <!-- Local padrão, pode ser melhorado depois -->
+                  {% if is_owner %}
                   <td>
-                    <form method="POST" class="remove-form">
+                    <button class="btn-edit-small">Editar</button>
+                    <form method="POST" class="remove-form" style="display: inline;">
                       {% csrf_token %}
                       <input type="hidden" name="remover" value="1">
                       <input type="hidden" name="item" value="{{ partida }}">
@@ -168,13 +174,16 @@
                       <button type="submit" class="btn-remove" title="Remover">×</button>
                     </form>
                   </td>
+                  {% endif %}
                 </tr>
                 {% empty %}
                 <tr>
-                  <td colspan="3" class="empty-cell">
+                  <td colspan="{% if is_owner %}5{% else %}4{% endif %}" class="empty-cell">
                     <div class="empty-state">
                       <p>Nenhuma partida cadastrada.</p>
+                      {% if is_owner %}
                       <a href="?box_aberto=partida" class="btn-add">Adicionar Primeira Partida</a>
+                      {% endif %}
                     </div>
                   </td>
                 </tr>
@@ -182,6 +191,12 @@
               </tbody>
             </table>
           </div>
+          
+          {% if is_owner %}
+          <div class="section-footer">
+            <a href="?box_aberto=partida" class="btn-primary">Adicionar Nova Partida</a>
+          </div>
+          {% endif %}
         </div>
       </div>
 
