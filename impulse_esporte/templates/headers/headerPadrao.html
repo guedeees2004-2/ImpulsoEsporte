@@ -18,9 +18,9 @@
                         <li class="nav-item">
                             <a href="{% url 'pagina_atleta' %}" class="btn">Página do Atleta</a>
                         </li>
-                    {% elif user.tipo_conta == "equipe" %}
+                    {% elif user.tipo_conta == "equipe" and user.equipe %}
                         <li class="nav-item">
-                            <a href="{% url 'pagina_equipe' %}" class="btn">Página da Equipe</a>
+                            <a href="{% url 'pagina_equipe' user.equipe.id %}" class="btn">Página da Equipe</a>
                         </li>
                     {% endif %}
                     <li class="nav-item">

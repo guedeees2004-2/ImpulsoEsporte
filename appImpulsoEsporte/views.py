@@ -25,13 +25,20 @@ class RegisterView(View):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             usuario = form.save()
-            # Cria a equipe se for do tipo equipe
+            # Cria uma equipe se o usuário for do tipo equipe
             if usuario.tipo_conta == 'equipe':
-                Equipe.objects.create(
+                equipe = Equipe.objects.create(
                     usuario=usuario,
                     nome=usuario.username,
-                    esporte=usuario.esporte,
-                    localizacao=usuario.localizacao
+                    esporte=form.cleaned_data.get('esporte', ''),
+                    localizacao=form.cleaned_data.get('localizacao', '')
+                )
+                # Cria também no EquipeDisponivel
+                EquipeDisponivel.objects.create(
+                    nome=equipe.nome,
+                    modalidade=equipe.esporte,
+                    cidade=equipe.localizacao,
+                    aberta_para_atletas=True
                 )
             return redirect("login")
         return render(request, "registration/register.html", {"form": form})
