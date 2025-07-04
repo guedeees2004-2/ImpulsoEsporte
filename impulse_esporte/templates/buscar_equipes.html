@@ -22,7 +22,11 @@
   </section>
 
   <main class="equipes-container">
-    <a href="{% url 'pagina_atleta' %}" class="back-link">← Voltar à Página do {{ user_type|capfirst }}</a>
+    {% if user_type == 'atleta' %}
+      <a href="{% url 'pagina_atleta' %}" class="back-link">← Voltar à Página do Atleta</a>
+    {% else %}
+      <a href="{% url 'home' %}" class="back-link">← Voltar ao Início</a>
+    {% endif %}
     
     <div class="search-bar">
       <form method="GET" class="search-form">
@@ -121,15 +125,5 @@
     {% endif %}
   </main>
 
-  <script>
-    function candidatarSeEquipe(nome, modalidade, cidade) {
-      // Aqui você pode implementar a lógica de candidatura
-      // Por exemplo, abrir um modal, redirecionar para uma página de candidatura, etc.
-      alert(`Candidatando-se à equipe: ${nome}\nModalidade: ${modalidade}\nCidade: ${cidade}\n\nEsta funcionalidade será implementada em breve!`);
-      
-      // Exemplo de redirecionamento para página de candidatura (quando implementada):
-      // window.location.href = `/candidatura-equipe/${nome}/`;
-    }
-  </script>
 </body>
 </html>

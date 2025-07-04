@@ -11,7 +11,8 @@
 
     <title>{% block title %}Impulso Esporte{% endblock %}</title>
     
-    <link rel="stylesheet" href="{% static 'main.css' %}">
+    <link rel="stylesheet" href="{% static 'main.css' %}?v=2">>
+    
 </head>
 
 
@@ -35,11 +36,24 @@
     </main>
     
     <div>
-        <div class="info-box">
-            <h2>O que oferecemos?</h2>
-            <p>
-                Um ambiente para conectar atletas e equipes com empresas partrocinadoras, com foco em esportes menos conhecidos. Esses podem inclui: Rugby, Canoagem, Críquete, Basebol e Skate.
-            </p>
+        <div class="info-section">
+            <div class="info-box">
+                <h2>O que oferecemos?</h2>
+                <p>
+                    Um ambiente para conectar atletas e equipes com empresas partrocinadoras, com foco em esportes menos conhecidos. Esses podem inclui: Rugby, Canoagem, Críquete, Basebol e Skate.
+                </p>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="{% url 'lista_atletas' %}" class="action-btn">
+                    <span class="btn-icon">👤</span>
+                    VER ATLETAS
+                </a>
+                <a href="{% url 'lista_equipes' %}" class="action-btn">
+                    <span class="btn-icon">🏆</span>
+                    VER EQUIPES
+                </a>
+            </div>
         </div>
     </div>
 

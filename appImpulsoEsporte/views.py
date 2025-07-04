@@ -14,7 +14,7 @@ def index(request):
     context = {
         "title": "Impulso Esporte",
     }
-    return render(request, "index.html", context)
+    return render(request, "paginaPrincipal.html", context)
 
 class RegisterView(View):
     def get(self, request):
@@ -25,13 +25,20 @@ class RegisterView(View):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             usuario = form.save()
-            # Cria a equipe se for do tipo equipe
+            # Cria uma equipe se o usuário for do tipo equipe
             if usuario.tipo_conta == 'equipe':
-                Equipe.objects.create(
+                equipe = Equipe.objects.create(
                     usuario=usuario,
                     nome=usuario.username,
-                    esporte=usuario.esporte,
-                    localizacao=usuario.localizacao
+                    esporte=form.cleaned_data.get('esporte', ''),
+                    localizacao=form.cleaned_data.get('localizacao', '')
+                )
+                # Cria também no EquipeDisponivel
+                EquipeDisponivel.objects.create(
+                    nome=equipe.nome,
+                    modalidade=equipe.esporte,
+                    cidade=equipe.localizacao,
+                    aberta_para_atletas=True
                 )
             return redirect("login")
         return render(request, "registration/register.html", {"form": form})
@@ -55,7 +62,7 @@ class LoginView(View):
 
 def user_logout(request):
     logout(request)
-    return render(request, 'index.html')
+    return render(request, 'paginaPrincipal.html')
 
 patrocinadores = ["Nike", "Adidas", "Puma"]
 equipes = ["Time A", "Time B", "Time C"]
@@ -148,6 +155,8 @@ def pagina_atleta(request):
     ).select_related('usuario')[:5]  # Mostrar apenas os 5 primeiros
     
     context = {
+        'atleta': request.user,  # Adicionar o atleta atual
+        'is_owner': True,  # Sempre True pois é a própria página do atleta
         'patrocinadores': sorted(patrocinadores),
         'patrocinadores_disponiveis': patrocinadores_disponiveis,
         'equipes': sorted(equipes_filtradas if filtro_equipe else equipes),
@@ -200,54 +209,6 @@ def gerenciar_equipes(request):
     }
     return render(request, 'gerenciar_equipes.html', context)
 
-def lista_equipes(request):
-    """
-    View para listar todas as equipes com filtros
-    """
-    global equipes_cadastradas
-    
-    # Obter filtros da URL
-    search_query = request.GET.get('search', '').strip()
-    modalidade_filter = request.GET.get('modalidade', '').strip()
-    cidade_filter = request.GET.get('cidade', '').strip()
-    
-    # Filtrar equipes
-    equipes_filtradas = equipes_cadastradas.copy()
-    
-    if search_query:
-        equipes_filtradas = [
-            equipe for equipe in equipes_filtradas
-            if search_query.lower() in equipe['nome'].lower()
-        ]
-    
-    if modalidade_filter:
-        equipes_filtradas = [
-            equipe for equipe in equipes_filtradas
-            if modalidade_filter.lower() in equipe['modalidade'].lower()
-        ]
-    
-    if cidade_filter:
-        equipes_filtradas = [
-            equipe for equipe in equipes_filtradas
-            if cidade_filter.lower() in equipe['cidade'].lower()
-        ]
-    
-    # Calcular estatísticas
-    modalidades_unicas = set(equipe['modalidade'] for equipe in equipes_cadastradas)
-    cidades_unicas = set(equipe['cidade'] for equipe in equipes_cadastradas)
-    
-    context = {
-        'title': 'Lista de Equipes - Impulso Esporte',
-        'equipes': equipes_filtradas,
-        'search_query': search_query,
-        'modalidade_filter': modalidade_filter,
-        'cidade_filter': cidade_filter,
-        'total_equipes': len(equipes_cadastradas),
-        'total_modalidades': len(modalidades_unicas),
-        'total_cidades': len(cidades_unicas),
-    }
-    return render(request, 'lista_equipes.html', context)
-
 @login_required
 def buscar_equipes(request):
     """
@@ -299,10 +260,15 @@ def pagina_sobre_nos(request):
 
 def pagina_equipe(request, equipe_id):
     equipe = get_object_or_404(Equipe, id=equipe_id)
+    
+    # Verificar se é o dono da equipe
+    is_owner = request.user.is_authenticated and request.user == equipe.usuario
+    
     context = {
-        "title": "Impulso Esporte - Página da Equipe",
+        "title": f"Impulso Esporte - {equipe.nome}",
         "equipe": equipe,
-        'user_type': request.user.tipo_conta,
+        'is_owner': is_owner,
+        'user_type': getattr(request.user, 'tipo_conta', None),
     }
     return render(request, 'paginaEquipe.html', context)
 
@@ -320,9 +286,151 @@ def pagina_equipes(request):
 
 def pagina_equipe_disponivel(request, equipe_id):
     equipe = get_object_or_404(EquipeDisponivel, id=equipe_id)
+    
+    # Verificar se é o dono da equipe (se existir uma equipe oficial relacionada)
+    is_owner = False
+    if request.user.is_authenticated:
+        try:
+            equipe_oficial = Equipe.objects.get(nome=equipe.nome)
+            is_owner = request.user == equipe_oficial.usuario
+        except Equipe.DoesNotExist:
+            is_owner = False
+    
     context = {
-        "title": "Impulso Esporte - Página da Equipe",
+        "title": f"Impulso Esporte - {equipe.nome}",
         "equipe": equipe,
-        'user_type': getattr(request.user, 'tipo_conta', None),
+        'is_owner': is_owner,
+        'user_type': getattr(request.user, 'tipo_conta', None) if request.user.is_authenticated else None,
     }
     return render(request, 'paginaEquipe.html', context)
+
+@login_required
+def minha_equipe(request):
+    """
+    Página da equipe para o usuário logado do tipo 'equipe'.
+    """
+    # Verificar se o usuário é do tipo equipe
+    if request.user.tipo_conta != 'equipe':
+        return redirect('home')
+    
+    try:
+        # Tentar encontrar a equipe do usuário
+        equipe = request.user.equipe
+        context = {
+            "title": f"Impulso Esporte - {equipe.nome}",
+            "equipe": equipe,
+            'is_owner': True,  # Sempre True pois é a própria equipe do usuário
+            'user_type': request.user.tipo_conta,
+        }
+        return render(request, 'paginaEquipe.html', context)
+    except AttributeError:
+        # Se o usuário não tem uma equipe associada, redirecionar ou mostrar mensagem
+        context = {
+            "title": "Impulso Esporte - Configurar Equipe",
+            "error_message": "Você ainda não tem uma equipe configurada. Entre em contato com o suporte.",
+            'is_owner': True,
+            'user_type': request.user.tipo_conta,
+        }
+        return render(request, 'paginaEquipe.html', context)
+
+def visualizar_perfil_atleta(request, atleta_id):
+    """
+    View para visualizar o perfil de um atleta específico.
+    Qualquer usuário pode visualizar, mas apenas o próprio atleta pode editar.
+    """
+    atleta = get_object_or_404(Usuario, id=atleta_id, tipo_conta='atleta')
+    
+    # Verificar se é o próprio atleta (pode editar) ou visitante (apenas visualizar)
+    is_owner = request.user.is_authenticated and request.user == atleta
+    
+    context = {
+        'atleta': atleta,
+        'is_owner': is_owner,
+        'user_type': getattr(request.user, 'tipo_conta', None) if request.user.is_authenticated else None,
+        'title': f'Perfil de {atleta.first_name or atleta.username} - Impulso Esporte',
+        # Se for o dono, incluir dados editáveis
+        'patrocinadores': patrocinadores if is_owner else [],  # Usar dados globais se for o dono
+        'partidas': partidas if is_owner else [],  # Usar dados globais se for o dono
+        'equipes': equipes if is_owner else [],  # Usar dados globais se for o dono
+    }
+    
+    return render(request, 'PaginaAtleta.html', context)
+
+def visualizar_perfil_equipe(request, equipe_id):
+    """
+    View para visualizar o perfil de uma equipe específica.
+    Qualquer usuário pode visualizar, mas apenas membros da equipe podem editar.
+    """
+    try:
+        # Tentar buscar na tabela EquipeDisponivel primeiro
+        equipe_disponivel = get_object_or_404(EquipeDisponivel, id=equipe_id)
+        
+        # Verificar se existe uma equipe relacionada no modelo Equipe
+        try:
+            equipe_oficial = Equipe.objects.get(nome=equipe_disponivel.nome)
+            is_owner = request.user.is_authenticated and request.user == equipe_oficial.usuario
+            equipe_data = {
+                'nome': equipe_oficial.nome,
+                'modalidade': equipe_oficial.esporte,
+                'cidade': equipe_oficial.localizacao,
+                'descricao': equipe_disponivel.descricao or 'Sem descrição disponível',
+                'ano_fundacao': equipe_disponivel.ano_fundacao,
+                'numero_atletas': equipe_disponivel.numero_atletas,
+            }
+        except Equipe.DoesNotExist:
+            # Se não existe na tabela Equipe, é apenas uma equipe disponível
+            is_owner = False
+            equipe_data = {
+                'nome': equipe_disponivel.nome,
+                'modalidade': equipe_disponivel.modalidade,
+                'cidade': equipe_disponivel.cidade,
+                'descricao': equipe_disponivel.descricao or 'Sem descrição disponível',
+                'ano_fundacao': equipe_disponivel.ano_fundacao,
+                'numero_atletas': equipe_disponivel.numero_atletas,
+            }
+    except EquipeDisponivel.DoesNotExist:
+        # Se não encontrar, tentar buscar diretamente na tabela Equipe
+        equipe_oficial = get_object_or_404(Equipe, id=equipe_id)
+        is_owner = request.user.is_authenticated and request.user == equipe_oficial.usuario
+        equipe_data = {
+            'nome': equipe_oficial.nome,
+            'modalidade': equipe_oficial.esporte,
+            'cidade': equipe_oficial.localizacao,
+            'descricao': 'Sem descrição disponível',
+            'ano_fundacao': None,
+            'numero_atletas': None,
+        }
+    
+    context = {
+        'equipe': type('obj', (object,), equipe_data),  # Criar objeto dinâmico
+        'is_owner': is_owner,
+        'user_type': getattr(request.user, 'tipo_conta', None) if request.user.is_authenticated else None,
+        'title': f'{equipe_data["nome"]} - Impulso Esporte',
+    }
+    
+    return render(request, 'paginaEquipe.html', context)
+
+def lista_atletas(request):
+    """
+    View para listar atletas disponíveis para visualização de perfil.
+    """
+    # Buscar todos os atletas
+    atletas = Usuario.objects.filter(tipo_conta='atleta')
+    
+    # Filtro de busca (opcional)
+    search_query = request.GET.get('search', '')
+    if search_query:
+        atletas = atletas.filter(
+            models.Q(username__icontains=search_query) |
+            models.Q(first_name__icontains=search_query) |
+            models.Q(last_name__icontains=search_query)
+        )
+    
+    context = {
+        'atletas': atletas,
+        'search_query': search_query,
+        'user_type': getattr(request.user, 'tipo_conta', None) if request.user.is_authenticated else None,
+        'title': 'Lista de Atletas - Impulso Esporte',
+    }
+    
+    return render(request, 'lista_atletas.html', context)

@@ -20,7 +20,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from appImpulsoEsporte.views import index, RegisterView, LoginView, user_logout, pagina_atleta, buscar_patrocinadores, contato, buscar_equipes, gerenciar_equipes, lista_equipes,  pagina_sobre_nos, pagina_equipe_disponivel, buscar_times
+from appImpulsoEsporte.views import index, RegisterView, LoginView, user_logout, pagina_atleta, buscar_patrocinadores, contato, buscar_equipes, gerenciar_equipes, pagina_sobre_nos, pagina_equipe_disponivel, buscar_times, minha_equipe, visualizar_perfil_atleta, visualizar_perfil_equipe, lista_atletas
 
 
 urlpatterns = [
@@ -29,12 +29,17 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('logout/', user_logout, name='logout'),
     path("atleta/", pagina_atleta, name="pagina_atleta"),
+    path("atleta/<int:atleta_id>/", visualizar_perfil_atleta, name="visualizar_perfil_atleta"),
+    path("atletas/", lista_atletas, name="lista_atletas"),
+    path("minha-equipe/", minha_equipe, name="minha_equipe"),
+    path("equipe/<int:equipe_id>/", visualizar_perfil_equipe, name="visualizar_perfil_equipe"),
+    path("equipes/", buscar_times, name="lista_equipes"),  # Redirecionado para buscar_times
     path("patrocinadores/", buscar_patrocinadores, name="buscar_patrocinadores"),
     path("equipes/buscar/", buscar_equipes, name="buscar_equipes"),
     path("contato/", contato, name="contato"),
     path("admin/", admin.site.urls),
     path("__reload__/", include("django_browser_reload.urls")),
-    path("equipe/<int:equipe_id>/", pagina_equipe_disponivel, name="pagina_equipe"),
+    path("equipe-disponivel/<int:equipe_id>/", pagina_equipe_disponivel, name="pagina_equipe"),
     path("sobre_nos", pagina_sobre_nos, name="pagina_sobre_nos"),
     path("gerenciar_equipes/", gerenciar_equipes, name="gerenciar_equipes"),
     path("buscar-times/", buscar_times, name="buscar_times"),
