@@ -1,0 +1,238 @@
+/* ========== PÁGINA DE SERVIÇOS STYLES ========== */
+
+/* Layout Principal */
+.servicos-container {
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 0 2rem;
+}
+
+/* Header */
+.servicos-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.servicos-header h1 {
+    font-size: 3rem;
+    color: #165732;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+}
+
+.servicos-header p {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Seções */
+.servicos-section {
+    background: #fff;
+    border: 2px solid #2E8B57;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 16px rgba(46, 139, 87, 0.1);
+    overflow: hidden;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.servicos-section:nth-child(even) {
+    animation-delay: 0.1s;
+}
+
+.servicos-section:nth-child(odd) {
+    animation-delay: 0.2s;
+}
+
+.servicos-section h2 {
+    background: linear-gradient(135deg, #2E8B57, #165732);
+    color: white;
+    margin: 0;
+    padding: 1.5rem 2rem;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.section-content {
+    padding: 2rem;
+}
+
+.servico-content p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #444;
+    margin: 0 0 1.5rem 0;
+    text-align: justify;
+}
+
+/* Botões dos Serviços */
+.btn-servico {
+    display: inline-block;
+    background: linear-gradient(135deg, #2E8B57, #165732);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-servico:hover {
+    background: linear-gradient(135deg, #165732, #0d3d20);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(46, 139, 87, 0.3);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-servico-small {
+    display: inline-block;
+    background: linear-gradient(135deg, #2E8B57, #165732);
+    color: white;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.btn-servico-small:hover {
+    background: linear-gradient(135deg, #165732, #0d3d20);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(46, 139, 87, 0.3);
+    color: white;
+    text-decoration: none;
+}
+
+/* Grid de Diferenciais */
+.diferenciais-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.diferencial-card {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    border-left: 4px solid #2E8B57;
+}
+
+.diferencial-card:hover {
+    box-shadow: 0 6px 20px rgba(46, 139, 87, 0.15);
+    transform: translateY(-3px);
+}
+
+.diferencial-card h3 {
+    color: #165732;
+    font-size: 1.3rem;
+    margin: 0 0 1rem 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.diferencial-card p {
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+    text-align: center;
+}
+
+/* Call to Action na info-box */
+.cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    text-align: center;
+}
+
+.btn-primary {
+    background: #2E8B57;
+    color: white;
+    border-color: #2E8B57;
+}
+
+.btn-primary:hover {
+    background: #165732;
+    border-color: #165732;
+    text-decoration: none;
+    color: white;
+}
+
+.btn-secondary {
+    background: transparent;
+    color: #2E8B57;
+    border-color: #2E8B57;
+}
+
+.btn-secondary:hover {
+    background: #2E8B57;
+    color: white;
+    text-decoration: none;
+}
+
+/* Animações */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estados Hover para Seções */
+.servicos-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(46, 139, 87, 0.15);
+}
+
+/* Melhorias Tipográficas */
+.servicos-container h1,
+.servicos-container h2,
+.servicos-container h3 {
+    font-family: 'Oswald', sans-serif;
+}
+
+.servicos-container p {
+    font-family: Arial, sans-serif;
+}
+
+

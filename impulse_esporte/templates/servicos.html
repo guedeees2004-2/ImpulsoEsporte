@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Serviços | Impulso Esporte</title>
+  
+  <!-- Fonte Oswald do Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  
+  <!-- CSS Base do Site -->
+  <link rel="stylesheet" href="{% static 'main.css' %}" />
+  <link rel="stylesheet" href="{% static 'styleserviços.css' %}" />
+</head>
+<body>
+  {% include 'headers/headerPadrao.html' %}
+
+  <main class="main-container">
+    <div class="servicos-container">
+      <!-- Header da página -->
+      <div class="servicos-header">
+        <h1>🏅 Serviços Oferecidos</h1>
+        <p>Descubra como nossa plataforma pode impulsionar sua carreira esportiva</p>
+      </div>
+
+      <!-- Seção de Serviços -->
+      <div class="servicos-section">
+        <h2>Conexão com Patrocinadores</h2>
+        <div class="section-content">
+          <div class="servico-content">
+            <p>📌 Ajudamos atletas a encontrarem empresas interessadas em apoiar seu esporte. Nossa plataforma facilita a criação de perfis profissionais com histórico, conquistas e metas.</p>
+            <a href="{% url 'buscar_patrocinadores' %}" class="btn-servico">Buscar Patrocinadores</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="servicos-section">
+        <h2>Gerenciamento de Equipes</h2>
+        <div class="section-content">
+          <div class="servico-content">
+            <p>🧑‍🤝‍🧑 Plataforma completa para técnicos e dirigentes criarem, gerenciarem e divulgarem suas equipes. Inclui ferramentas para convocação, calendários de treinos e organização de competições.</p>
+            <a href="{% url 'buscar_equipes' %}" class="btn-servico">Ver Equipes</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="servicos-section">
+        <h2>Visibilidade para Talentos</h2>
+        <div class="section-content">
+          <div class="servico-content">
+            <p>🔍 Divulgação de atletas e equipes em destaque na plataforma. Criamos parcerias com mídias esportivas alternativas para aumentar o alcance dos nossos usuários.</p>
+            <a href="{% url 'lista_atletas' %}" class="btn-servico">Ver Atletas</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="servicos-section">
+        <h2>Intermediação de Contratos</h2>
+        <div class="section-content">
+          <div class="servico-content">
+            <p>🤝 Oferecemos suporte na formalização de parcerias entre atletas e patrocinadores, incluindo modelos de contratos e orientação jurídica básica.</p>
+            <a href="{% url 'contato' %}" class="btn-servico">Fale Conosco</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção Diferenciais -->
+      <div class="servicos-section">
+        <h2>Nossos Diferenciais</h2>
+        <div class="section-content">
+          <div class="diferenciais-grid">
+            <div class="diferencial-card">
+              <h3>📊 Painel de Desempenho</h3>
+              <p>Relatórios e métricas de desempenho dos atletas com acompanhamento de evolução em treinos e competições.</p>
+              {% if user.is_authenticated and user.tipo_conta == 'atleta' %}
+                <a href="{% url 'pagina_atleta' %}" class="btn-servico-small">Meu Perfil</a>
+              {% else %}
+                <a href="{% url 'register' %}" class="btn-servico-small">Cadastre-se</a>
+              {% endif %}
+            </div>
+            <div class="diferencial-card">
+              <h3>🌍 Eventos e Competições</h3>
+              <p>Calendário nacional e regional de eventos esportivos como Rugby, Canoagem, Críquete, Beisebol e Skate.</p>
+              <a href="{% url 'buscar_times' %}" class="btn-servico-small">Ver Eventos</a>
+            </div>
+            <div class="diferencial-card">
+              <h3>📚 Conteúdo Educacional</h3>
+              <p>Dicas para captação de patrocínio, marketing pessoal e noções de finanças esportivas.</p>
+              <a href="{% url 'pagina_sobre_nos' %}" class="btn-servico-small">Saiba Mais</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="info-box">
+      <h2>Pronto para começar?</h2>
+      <p>
+        Junte-se à nossa comunidade e impulsione sua carreira esportiva! 
+        {% if user.is_authenticated %}
+          Acesse seu dashboard para explorar todas as funcionalidades.
+        {% else %}
+          Cadastre-se gratuitamente e comece a conectar-se com patrocinadores e equipes.
+        {% endif %}
+      </p>
+      <div class="cta-buttons">
+        {% if user.is_authenticated %}
+          <a href="{% url 'home' %}" class="btn btn-primary">Ir para Dashboard</a>
+        {% else %}
+          <a href="{% url 'register' %}" class="btn btn-primary">Cadastre-se Grátis</a>
+          <a href="{% url 'login' %}" class="btn btn-secondary">Já tenho conta</a>
+        {% endif %}
+      </div>
+    </div>
+  </main>
+</body>
+</html>
