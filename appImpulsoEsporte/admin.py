@@ -49,18 +49,18 @@ class JogadorAdmin(admin.ModelAdmin):
 
 @admin.register(Patrocinador)
 class PatrocinadorAdmin(admin.ModelAdmin):
-    list_display = ('usuario', 'empresa', 'cnpj', 'aberto_para_oportunidades')
-    search_fields = ('empresa', 'cnpj')
-    list_filter = ('aberto_para_oportunidades',)
+    list_display = ('usuario', 'empresa', 'cnpj', 'email_empresa')
+    search_fields = ('empresa', 'cnpj', 'email_empresa')
     fieldsets = (
-        (None, {'fields': ('usuario', 'empresa', 'cnpj')}),
-        ('Disponibilidade', {'fields': ('aberto_para_oportunidades', 'descricao')}),
+        ('Informações Básicas', {'fields': ('usuario', 'empresa', 'cnpj')}),
+        ('Contato', {'fields': ('email_empresa', 'site_empresa')}),
+        ('Informações Adicionais', {'fields': ('descricao',)}),
     )
 
 @admin.register(PatrocinioEquipe)
 class PatrocinioEquipeAdmin(admin.ModelAdmin):
     list_display = ('patrocinador', 'equipe')
-    search_fields = ('patrocinador__empresa', 'equipe__nome_da_equipe')
+    search_fields = ('patrocinador__empresa', 'equipe__nome')
 
 @admin.register(PatrocinioJogador)
 class PatrocinioJogadorAdmin(admin.ModelAdmin):

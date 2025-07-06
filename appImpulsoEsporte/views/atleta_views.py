@@ -61,8 +61,7 @@ def pagina_atleta(request):
     
     # Buscar patrocinadores disponíveis do banco de dados
     patrocinadores_disponiveis = Patrocinador.objects.filter(
-        usuario__tipo_conta='patrocinador',
-        aberto_para_oportunidades=True
+        usuario__tipo_conta='patrocinador'
     ).select_related('usuario')[:5]
     
     context = {
