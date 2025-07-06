@@ -49,11 +49,11 @@ class JogadorAdmin(admin.ModelAdmin):
 
 @admin.register(Patrocinador)
 class PatrocinadorAdmin(admin.ModelAdmin):
-    list_display = ('usuario', 'empresa', 'cnpj', 'email_empresa')
-    search_fields = ('empresa', 'cnpj', 'email_empresa')
+    list_display = ('usuario', 'empresa', 'cnpj', 'site_empresa')
+    search_fields = ('empresa', 'cnpj')
     fieldsets = (
         ('Informações Básicas', {'fields': ('usuario', 'empresa', 'cnpj')}),
-        ('Contato', {'fields': ('email_empresa', 'site_empresa')}),
+        ('Contato', {'fields': ('site_empresa',)}),
         ('Informações Adicionais', {'fields': ('descricao',)}),
     )
 

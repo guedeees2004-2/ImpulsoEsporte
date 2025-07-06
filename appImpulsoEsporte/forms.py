@@ -22,12 +22,11 @@ class CustomUserCreationForm(UserCreationForm):
     localizacao = forms.CharField(required=False, label="Localização")
     empresa = forms.CharField(required=False, label="Nome da Empresa")
     cnpj = forms.CharField(required=False, label="CNPJ")
-    email_empresa = forms.EmailField(required=False, label="E-mail da Empresa")
     site_empresa = forms.URLField(required=False, label="Site da Empresa")
 
     class Meta(UserCreationForm.Meta):
         model = Usuario
-        fields = ("username", "email", "tipo_conta", "esporte", "localizacao", "empresa", "cnpj", "email_empresa", "site_empresa", "password1", "password2")
+        fields = ("username", "email", "tipo_conta", "esporte", "localizacao", "empresa", "cnpj", "site_empresa", "password1", "password2")
 
     def clean(self):
         cleaned_data = super().clean()
@@ -42,8 +41,8 @@ class CustomUserCreationForm(UserCreationForm):
                 self.add_error("empresa", "Campo obrigatório para patrocinadores.")
             if not cleaned_data.get("cnpj"):
                 self.add_error("cnpj", "Campo obrigatório para patrocinadores.")
-            if not cleaned_data.get("email_empresa"):
-                self.add_error("email_empresa", "Campo obrigatório para patrocinadores.")
+            if not cleaned_data.get("site_empresa"):
+                self.add_error("site_empresa", "Campo obrigatório para patrocinadores.")
         return cleaned_data
 
 class CustomAuthenticationForm(AuthenticationForm):

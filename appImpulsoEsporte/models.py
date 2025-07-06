@@ -59,15 +59,7 @@ class Patrocinador(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
     empresa = models.CharField(max_length=100)
     cnpj = models.CharField(max_length=20)
-    email_empresa = models.EmailField(
-        blank=True, 
-        null=True,
-        verbose_name="E-mail da empresa",
-        help_text="E-mail corporativo da empresa"
-    )
     site_empresa = models.URLField(
-        blank=True, 
-        null=True,
         verbose_name="Site da empresa",
         help_text="Website oficial da empresa"
     )

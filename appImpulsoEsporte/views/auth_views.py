@@ -36,7 +36,6 @@ class RegisterView(View):
                     usuario=usuario,
                     empresa=form.cleaned_data.get('empresa', ''),
                     cnpj=form.cleaned_data.get('cnpj', ''),
-                    email_empresa=form.cleaned_data.get('email_empresa', ''),
                     site_empresa=form.cleaned_data.get('site_empresa', ''),
                     descricao=''
                 )

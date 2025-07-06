@@ -52,8 +52,8 @@
             <div class="patrocinador-nome">{{ patrocinador.empresa }}</div>
             <div class="patrocinador-usuario">Usuário: {{ patrocinador.usuario.username }}</div>
             
-            {% if patrocinador.email_empresa %}
-              <div class="patrocinador-email">📧 {{ patrocinador.email_empresa }}</div>
+            {% if patrocinador.usuario.email %}
+              <div class="patrocinador-email">📧 {{ patrocinador.usuario.email }}</div>
             {% endif %}
             
             {% if patrocinador.descricao %}
@@ -71,7 +71,7 @@
                 🌐 Visitar Site da Empresa
               </a>
             {% else %}
-              <button class="contato-btn" onclick="entrarEmContato('{{ patrocinador.empresa }}', '{{ patrocinador.usuario.username }}', '{{ patrocinador.email_empresa }}')">
+              <button class="contato-btn" onclick="entrarEmContato('{{ patrocinador.empresa }}', '{{ patrocinador.usuario.username }}', '{{ patrocinador.usuario.email }}')">
                 📧 Entrar em Contato
               </button>
             {% endif %}

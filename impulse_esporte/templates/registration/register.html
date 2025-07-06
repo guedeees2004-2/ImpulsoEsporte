@@ -94,13 +94,8 @@
                     {% if form.cnpj.errors %}
                         <div class="alert alert-danger">{{ form.cnpj.errors }}</div>
                     {% endif %}
-                    <label for="id_email_empresa">E-mail da Empresa</label>
-                    {{ form.email_empresa }}
-                    {% if form.email_empresa.errors %}
-                        <div class="alert alert-danger">{{ form.email_empresa.errors }}</div>
-                    {% endif %}
                     <label for="id_site_empresa">Site da Empresa</label>
-                    <div class="form-hint">Opcional - URL do website da empresa (ex: https://exemplo.com)</div>
+                    <div class="form-hint">URL do website da empresa (ex: https://exemplo.com)</div>
                     {{ form.site_empresa }}
                     {% if form.site_empresa.errors %}
                         <div class="alert alert-danger">{{ form.site_empresa.errors }}</div>
