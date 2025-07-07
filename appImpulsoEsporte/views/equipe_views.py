@@ -234,7 +234,7 @@ def listar_atletas_da_equipe(request, equipe_id):
         'equipe': equipe,
         'jogadores': jogadores,
     }
-    return render(request, 'listar_atletas_equipe.html', context)
+   return render(request, 'lista_atletas.html', context)
 @login_required
 def adicionar_partida(request, equipe_id):
     equipe = get_object_or_404(Equipe, id=equipe_id)
