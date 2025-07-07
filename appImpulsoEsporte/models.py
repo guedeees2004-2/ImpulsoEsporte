@@ -70,7 +70,8 @@ class Patrocinador(models.Model):
         verbose_name="Descrição da empresa",
         help_text="Breve descrição sobre a empresa e o que oferece"
     )
-    
+    logo = models.ImageField(upload_to='logos_patrocinadores/', blank=True, null=True)
+    site = models.URLField(max_length=200, blank=True, null=True, verbose_name="Site da empresa")
     def __str__(self):
         return self.empresa
 

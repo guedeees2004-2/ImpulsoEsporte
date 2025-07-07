@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import models
 
 from ..models import EquipeDisponivel, Equipe
+from ..models import Patrocinador, PatrocinioEquipe
 
 
 @login_required
@@ -78,21 +79,22 @@ def gerenciar_equipes(request):
 
 
 def pagina_equipe(request, equipe_id):
-    """
-    View para visualizar página de uma equipe específica.
-    """
     equipe = get_object_or_404(Equipe, id=equipe_id)
-    
-    # Verificar se é o dono da equipe
     is_owner = request.user.is_authenticated and request.user == equipe.usuario
-    
+
+    # Buscar os patrocinadores vinculados a essa equipe
+    patrocinios = PatrocinioEquipe.objects.filter(equipe=equipe).select_related('patrocinador')
+    patrocinadores = [p.patrocinador for p in patrocinios]
+
     context = {
         "title": f"Impulso Esporte - {equipe.nome}",
         "equipe": equipe,
         'is_owner': is_owner,
         'user_type': getattr(request.user, 'tipo_conta', None),
+        'patrocinadores': patrocinadores  
     }
     return render(request, 'paginaEquipe.html', context)
+
 
 
 def buscar_times(request):

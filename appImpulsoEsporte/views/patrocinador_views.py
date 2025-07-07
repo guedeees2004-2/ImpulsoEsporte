@@ -34,3 +34,14 @@ def buscar_patrocinadores(request):
     }
     
     return render(request, 'buscar_patrocinadores.html', context)
+def listar_patrocinadores_publicos(request):
+    """
+    Página pública de patrocinadores com logo e link para o site.
+    """
+    patrocinadores = Patrocinador.objects.filter(aberto_para_oportunidades=True)
+    
+    context = {
+        'patrocinadores': patrocinadores
+    }
+    
+    return render(request, 'pagina_patrocinadores.html', context)

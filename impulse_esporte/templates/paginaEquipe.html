@@ -30,7 +30,6 @@
         {% endif %}
       </div>
 
-      <!-- Botões de ação principal - apenas para donos -->
       {% if is_owner %}
       <div class="equipe-actions">
         <a href="{% url 'buscar_patrocinadores' %}" class="btn-action">
@@ -48,33 +47,33 @@
       </div>
       {% endif %}
 
-      <!-- Seção de Patrocinadores -->
+      <!-- SEÇÃO DE PATROCINADORES DINÂMICA -->
       <div class="equipe-section">
-        <h2>Nossos Patrocinadores (Mudar para que não fique estático, e levar para o site do patrocinador)</h2>
+        <h2>Nossos Patrocinadores</h2>
         <div class="section-content">
           <div class="patrocinadores-grid">
+            {% for patrocinador in patrocinadores %}
             <div class="patrocinador-card">
               <div class="patrocinador-logo">
-                <img src="{% static 'icones/redbull.png' %}" alt="Red Bull" onerror="this.style.display='none'">
+                {% if patrocinador.logo %}
+                  <img src="{{ patrocinador.logo.url }}" alt="{{ patrocinador.empresa }}">
+                {% else %}
+                  <p>{{ patrocinador.empresa }}</p>
+                {% endif %}
               </div>
               <div class="patrocinador-info">
-                <h4>Red Bull</h4>
-                <p>Patrocinador oficial de energia e performance</p>
-                <a href="#" class="btn-sponsor" target="_blank">Ver Detalhes</a>
+                <h4>{{ patrocinador.empresa }}</h4>
+                <p>{{ patrocinador.descricao|default:"Patrocinador da equipe" }}</p>
+                {% if patrocinador.site %}
+                  <a href="{{ patrocinador.site }}" class="btn-sponsor" target="_blank">Ver Detalhes</a>
+                {% endif %}
               </div>
             </div>
+            {% empty %}
+              <p style="text-align: center;">Nenhum patrocinador vinculado a esta equipe.</p>
+            {% endfor %}
 
-            <div class="patrocinador-card">
-              <div class="patrocinador-logo">
-                <img src="{% static 'icones/santander.png' %}" alt="Santander" onerror="this.style.display='none'">
-              </div>
-              <div class="patrocinador-info">
-                <h4>Santander</h4>
-                <p>Parceiro financeiro da equipe</p>
-                <a href="#" class="btn-sponsor" target="_blank">Ver Detalhes</a>
-              </div>
-            </div>
-
+            {% if is_owner %}
             <div class="add-patrocinador-card">
               <div class="add-content">
                 <h4>+ Adicionar Patrocinador</h4>
@@ -82,124 +81,60 @@
                 <a href="{% url 'buscar_patrocinadores' %}" class="btn-add-sponsor">Buscar</a>
               </div>
             </div>
+            {% endif %}
           </div>
         </div>
       </div>
 
-      <!-- Seção de Atletas -->
+      <!-- SEÇÃO DE ATLETAS (ainda estática) -->
       <div class="equipe-section">
-        <h2>Nossos Atletas (Mudar para que não fique estático, podendo editar/adicionar/remover atletas da lista para a equipe)</h2>
+        <h2>Nossos Atletas</h2>
         <div class="section-content">
           <div class="atletas-grid">
-            <div class="atleta-card">
-              <span class="atleta-name">Lucas Menezes</span>
-              <span class="atleta-position">Atacante</span>
-            </div>
-            <div class="atleta-card">
-              <span class="atleta-name">Rafael Santos</span>
-              <span class="atleta-position">Meio-campo</span>
-            </div>
-            <div class="atleta-card">
-              <span class="atleta-name">Diego Oliveira</span>
-              <span class="atleta-position">Defensor</span>
-            </div>
-            <div class="atleta-card">
-              <span class="atleta-name">João Silva</span>
-              <span class="atleta-position">Goleiro</span>
-            </div>
-            <div class="atleta-card">
-              <span class="atleta-name">Carlos Mendes</span>
-              <span class="atleta-position">Atacante</span>
-            </div>
-            <div class="atleta-card">
-              <span class="atleta-name">Rafael Costa</span>
-              <span class="atleta-position">Meio-campo</span>
-            </div>
-            <div class="atleta-card">
-              <span class="atleta-name">Bruno Oliveira</span>
-              <span class="atleta-position">Defensor</span>
-            </div>
+            <div class="atleta-card"><span class="atleta-name">Lucas Menezes</span><span class="atleta-position">Atacante</span></div>
+            <div class="atleta-card"><span class="atleta-name">Rafael Santos</span><span class="atleta-position">Meio-campo</span></div>
+            <div class="atleta-card"><span class="atleta-name">Diego Oliveira</span><span class="atleta-position">Defensor</span></div>
+            <div class="atleta-card"><span class="atleta-name">João Silva</span><span class="atleta-position">Goleiro</span></div>
+            <div class="atleta-card"><span class="atleta-name">Carlos Mendes</span><span class="atleta-position">Atacante</span></div>
+            <div class="atleta-card"><span class="atleta-name">Rafael Costa</span><span class="atleta-position">Meio-campo</span></div>
+            <div class="atleta-card"><span class="atleta-name">Bruno Oliveira</span><span class="atleta-position">Defensor</span></div>
           </div>
-          
           <div class="section-footer">
-            <a href="lista_atletas.html" class="btn-primary">Adicionar Novo Atleta (fazer pra levar para lista de atleta)</a>
+            <a href="lista_atletas.html" class="btn-primary">Adicionar Novo Atleta</a>
           </div>
         </div>
       </div>
 
-      <!-- Seção de Próximas Partidas -->
+      <!-- SEÇÃO DE PARTIDAS -->
       <div class="equipe-section">
-        <h2>Próximas Partidas (Não deixar estática, fazer possível editar e adicionar partidas com informações da tabela)</h2>
+        <h2>Próximas Partidas</h2>
         <div class="section-content">
           <div class="partidas-table">
             <table>
               <thead>
-                <tr>
-                  <th>Data</th>
-                  <th>Horário</th>
-                  <th>Adversário</th>
-                  <th>Local</th>
-                  <th>Ações</th>
-                </tr>
+                <tr><th>Data</th><th>Horário</th><th>Adversário</th><th>Local</th><th>Ações</th></tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>13/04/2025</td>
-                  <td>16:00</td>
-                  <td>FC Estrela</td>
-                  <td>Casa</td>
-                  <td>
-                    <button class="btn-edit-small">Editar</button>
-                    <button class="btn-remove">×</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>17/04/2025</td>
-                  <td>19:30</td>
-                  <td>União Serrana</td>
-                  <td>Fora</td>
-                  <td>
-                    <button class="btn-edit-small">Editar</button>
-                    <button class="btn-remove">×</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>21/04/2025</td>
-                  <td>18:00</td>
-                  <td>Atlético Verde</td>
-                  <td>Casa</td>
-                  <td>
-                    <button class="btn-edit-small">Editar</button>
-                    <button class="btn-remove">×</button>
-                  </td>
-                </tr>
+                <tr><td>13/04/2025</td><td>16:00</td><td>FC Estrela</td><td>Casa</td><td><button class="btn-edit-small">Editar</button><button class="btn-remove">×</button></td></tr>
+                <tr><td>17/04/2025</td><td>19:30</td><td>União Serrana</td><td>Fora</td><td><button class="btn-edit-small">Editar</button><button class="btn-remove">×</button></td></tr>
+                <tr><td>21/04/2025</td><td>18:00</td><td>Atlético Verde</td><td>Casa</td><td><button class="btn-edit-small">Editar</button><button class="btn-remove">×</button></td></tr>
               </tbody>
             </table>
           </div>
-          
           <div class="section-footer">
             <a href="#" class="btn-primary">Adicionar Nova Partida</a>
           </div>
         </div>
       </div>
 
-      <!-- Seção de Estatísticas -->
+      <!-- SEÇÃO DE ESTATÍSTICAS -->
       <div class="equipe-section">
-        <h2>Estatísticas da Equipe (Mudar de estático. Atualizar automaticamente de acordo com o número de atletas na lista desta página e o número de patrocinador na página)</h2>
+        <h2>Estatísticas da Equipe</h2>
         <div class="section-content">
           <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-number">7</div>
-              <div class="stat-label">Atletas</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-number">2</div>
-              <div class="stat-label">Patrocinadores</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-number">2024</div>
-              <div class="stat-label">Ano de Fundação</div>
-            </div>
+            <div class="stat-card"><div class="stat-number">7</div><div class="stat-label">Atletas</div></div>
+            <div class="stat-card"><div class="stat-number">{{ patrocinadores|length }}</div><div class="stat-label">Patrocinadores</div></div>
+            <div class="stat-card"><div class="stat-number">2024</div><div class="stat-label">Ano de Fundação</div></div>
           </div>
         </div>
       </div>
