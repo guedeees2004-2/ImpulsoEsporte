@@ -59,10 +59,6 @@ class Patrocinador(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
     empresa = models.CharField(max_length=100)
     cnpj = models.CharField(max_length=20)
-    site_empresa = models.URLField(
-        verbose_name="Site da empresa",
-        help_text="Website oficial da empresa"
-    )
     descricao = models.TextField(
         blank=True, 
         null=True,
@@ -70,7 +66,14 @@ class Patrocinador(models.Model):
         help_text="Breve descrição sobre a empresa e o que oferece"
     )
     logo = models.ImageField(upload_to='logos_patrocinadores/', blank=True, null=True)
-    site = models.URLField(max_length=200, blank=True, null=True, verbose_name="Site da empresa")
+    site = models.URLField(
+        max_length=200,
+        blank=True,
+        null=True,
+        verbose_name="Site da empresa",
+        help_text="Website oficial da empresa"
+    )
+
     def __str__(self):
         return self.empresa
 
