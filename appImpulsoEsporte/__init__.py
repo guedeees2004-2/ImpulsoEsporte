@@ -1,5 +1,5 @@
 # Views modulares do Impulso Esporte
-from .auth_views import RegisterView, LoginView, user_logout
+from appImpulsoEsporte.views.auth_views import RegisterView, LoginView, user_logout
 from .main_views import index, contato, pagina_sobre_nos, servicos
 from .atleta_views import pagina_atleta, visualizar_perfil_atleta, lista_atletas
 from .equipe_views import (
