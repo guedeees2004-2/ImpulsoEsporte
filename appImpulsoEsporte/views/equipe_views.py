@@ -2,11 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db import models
 
-from ..models import EquipeDisponivel, Equipe, Atleta
+from ..models import EquipeDisponivel, Equipe, Jogador
 from ..models import Patrocinador, PatrocinioEquipe
 from ..models import Jogador
 from appImpulsoEsporte.forms import PartidaForm
 from ..models import Partida
+
 
 @login_required
 def buscar_equipes(request):
@@ -225,7 +226,7 @@ from ..models import Jogador
 @login_required
 def listar_atletas_da_equipe(request, equipe_id):
     equipe = get_object_or_404(Equipe, id=equipe_id)
-    atletas = Atleta.objects.filter(equipe=equipe)
+    atletas = Jogador.objects.filter(equipe=equipe)
     context = {
         'equipe': equipe,
         'atletas': atletas,

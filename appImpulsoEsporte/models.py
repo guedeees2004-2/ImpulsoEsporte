@@ -44,6 +44,7 @@ class Equipe(models.Model):
         return self.nome
 
 
+# Modelo Jogador representa os Atletas do sistema
 class Jogador(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
     posicao = models.CharField(max_length=50)
@@ -53,6 +54,8 @@ class Jogador(models.Model):
 
     def __str__(self):
         return self.usuario.username
+
+
 class Partida(models.Model):
     equipe = models.ForeignKey(Equipe, on_delete=models.CASCADE, related_name='partidas')
     data = models.DateField()
@@ -98,9 +101,6 @@ class PatrocinioJogador(models.Model):
 
 
 class EquipeDisponivel(models.Model):
-    """
-    Modelo para equipes que estão abertas para novos atletas
-    """
     nome = models.CharField(max_length=100, verbose_name="Nome da Equipe")
     modalidade = models.CharField(max_length=50, verbose_name="Modalidade Esportiva")
     cidade = models.CharField(max_length=100, verbose_name="Cidade")
