@@ -5,7 +5,7 @@ from django.db import models
 from ..models import EquipeDisponivel, Equipe
 from ..models import Patrocinador, PatrocinioEquipe
 from ..models import Jogador
-from .forms import PartidaForm
+from appImpulsoEsporte.forms import PartidaForm
 from ..models import Partida
 
 @login_required
