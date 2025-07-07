@@ -15,6 +15,7 @@ urlpatterns = [
     path("atleta/<int:atleta_id>/", views.visualizar_perfil_atleta, name="visualizar_perfil_atleta"),
     path("atletas/", views.lista_atletas, name="lista_atletas"),
     path("minha-equipe/", views.minha_equipe, name="minha_equipe"),
+    path("equipe/<int:equipe_id>/partida/nova/", views.adicionar_partida, name="adicionar_partida"),
     path("equipe/<int:equipe_id>/", views.visualizar_perfil_equipe, name="visualizar_perfil_equipe"),
     path("equipe/<int:equipe_id>/atletas/", views.listar_atletas_da_equipe, name="listar_atletas"),
     path("equipes/", views.buscar_times, name="lista_equipes"),
