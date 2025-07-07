@@ -225,16 +225,13 @@ from ..models import Jogador
 @login_required
 def listar_atletas_da_equipe(request, equipe_id):
     equipe = get_object_or_404(Equipe, id=equipe_id)
-    if request.user != equipe.usuario:
-        return redirect('home')
-
-    jogadores = Jogador.objects.filter(equipe=equipe)
-
+    atletas = Atleta.objects.filter(equipe=equipe)
     context = {
         'equipe': equipe,
-        'jogadores': jogadores,
+        'atletas': atletas,
     }
-   return render(request, 'lista_atletas.html', context)
+    return render(request, 'lista_atletas.html', context)
+
 @login_required
 def adicionar_partida(request, equipe_id):
     equipe = get_object_or_404(Equipe, id=equipe_id)
