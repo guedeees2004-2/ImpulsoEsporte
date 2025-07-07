@@ -49,21 +49,12 @@ class JogadorAdmin(admin.ModelAdmin):
 
 @admin.register(Patrocinador)
 class PatrocinadorAdmin(admin.ModelAdmin):
-<<<<<<< HEAD
-    list_display = ('usuario', 'empresa', 'cnpj', 'aberto_para_oportunidades','site')
-=======
     list_display = ('usuario', 'empresa', 'cnpj', 'site_empresa')
->>>>>>> cfa3559e18942aaf24e8e64ad8730dfd37312b12
     search_fields = ('empresa', 'cnpj')
     fieldsets = (
-<<<<<<< HEAD
-        (None, {'fields': ('usuario', 'empresa', 'cnpj', 'site', 'logo')}),
-        ('Disponibilidade', {'fields': ('aberto_para_oportunidades', 'descricao')}),
-=======
         ('Informações Básicas', {'fields': ('usuario', 'empresa', 'cnpj')}),
         ('Contato', {'fields': ('site_empresa',)}),
         ('Informações Adicionais', {'fields': ('descricao',)}),
->>>>>>> cfa3559e18942aaf24e8e64ad8730dfd37312b12
     )
 
 @admin.register(PatrocinioEquipe)
@@ -98,6 +89,9 @@ class EquipeDisponivelAdmin(admin.ModelAdmin):
     )
     
     readonly_fields = ('data_criacao', 'data_atualizacao')
+
+class MinhaClasseAdmin(admin.ModelAdmin):
+    pass  # ou o conteúdo da classe
 
 # Register Usuario with custom admin class
 # Note: We don't need to call admin.site.register again since we use @admin.register decorator above
