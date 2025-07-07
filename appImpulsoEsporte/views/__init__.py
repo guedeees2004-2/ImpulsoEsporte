@@ -15,5 +15,5 @@ __all__ = [
     'pagina_atleta', 'visualizar_perfil_atleta', 'lista_atletas',
     'buscar_equipes', 'gerenciar_equipes', 'pagina_equipe',
     'buscar_times', 'pagina_equipe_disponivel', 'minha_equipe', 'visualizar_perfil_equipe',
-    'buscar_patrocinadores'
+    'buscar_patrocinadores','listar_atletas_da_equipe',
 ]
