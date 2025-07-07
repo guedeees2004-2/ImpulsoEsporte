@@ -4,7 +4,9 @@ from django.db import models
 
 from ..models import EquipeDisponivel, Equipe
 from ..models import Patrocinador, PatrocinioEquipe
-
+from ..models import Jogador
+from .forms import PartidaForm
+from ..models import Partida
 
 @login_required
 def buscar_equipes(request):
@@ -86,14 +88,19 @@ def pagina_equipe(request, equipe_id):
     patrocinios = PatrocinioEquipe.objects.filter(equipe=equipe).select_related('patrocinador')
     patrocinadores = [p.patrocinador for p in patrocinios]
 
+    # Buscar os jogadores vinculados à equipe
+    jogadores = Jogador.objects.filter(equipe=equipe)
+
     context = {
         "title": f"Impulso Esporte - {equipe.nome}",
         "equipe": equipe,
+        "jogadores": jogadores,  
         'is_owner': is_owner,
         'user_type': getattr(request.user, 'tipo_conta', None),
-        'patrocinadores': patrocinadores  
+        'patrocinadores': patrocinadores,
     }
     return render(request, 'paginaEquipe.html', context)
+
 
 
 
@@ -135,29 +142,31 @@ def pagina_equipe_disponivel(request, equipe_id):
 
 @login_required
 def minha_equipe(request):
-    """
-    Página da equipe para o usuário logado do tipo 'equipe'.
-    """
-    if request.user.tipo_conta != 'equipe':
-        return redirect('home')
-    
+    usuario = request.user
+
     try:
-        equipe = request.user.equipe
-        context = {
-            "title": f"Impulso Esporte - {equipe.nome}",
-            "equipe": equipe,
-            'is_owner': True,
-            'user_type': request.user.tipo_conta,
-        }
-        return render(request, 'paginaEquipe.html', context)
-    except AttributeError:
-        context = {
-            "title": "Impulso Esporte - Configurar Equipe",
-            "error_message": "Você ainda não tem uma equipe configurada. Entre em contato com o suporte.",
-            'is_owner': True,
-            'user_type': request.user.tipo_conta,
-        }
-        return render(request, 'paginaEquipe.html', context)
+        equipe = Equipe.objects.get(usuario=usuario)
+    except Equipe.DoesNotExist:
+        return redirect("home")
+
+    # Jogadores da equipe
+    jogadores = Jogador.objects.filter(equipe=equipe)
+
+    # Patrocinadores vinculados a essa equipe
+    patrocinadores = Patrocinador.objects.filter(patrocinioequipe__equipe=equipe).distinct()
+
+    # Partidas da equipe
+    partidas = Partida.objects.filter(equipe=equipe).order_by('data', 'horario')
+
+    context = {
+        "equipe": equipe,
+        "is_owner": True,
+        "jogadores": jogadores,
+        "patrocinadores": patrocinadores,
+        "partidas": partidas,  
+    }
+
+    return render(request, "paginaEquipe.html", context)
 
 
 def visualizar_perfil_equipe(request, equipe_id):
@@ -211,3 +220,33 @@ def visualizar_perfil_equipe(request, equipe_id):
     }
     
     return render(request, 'paginaEquipe.html', context)
+from ..models import Jogador
+
+@login_required
+def listar_atletas_da_equipe(request, equipe_id):
+    equipe = get_object_or_404(Equipe, id=equipe_id)
+    if request.user != equipe.usuario:
+        return redirect('home')
+
+    jogadores = Jogador.objects.filter(equipe=equipe)
+
+    context = {
+        'equipe': equipe,
+        'jogadores': jogadores,
+    }
+    return render(request, 'listar_atletas_equipe.html', context)
+@login_required
+def adicionar_partida(request, equipe_id):
+    equipe = get_object_or_404(Equipe, id=equipe_id)
+
+    if request.method == "POST":
+        form = PartidaForm(request.POST)
+        if form.is_valid():
+            partida = form.save(commit=False)
+            partida.equipe = equipe
+            partida.save()
+            return redirect('minha_equipe')  # ou 'paginaEquipe', equipe_id=equipe.id
+    else:
+        form = PartidaForm()
+
+    return render(request, 'form_partida.html', {'form': form, 'equipe': equipe})

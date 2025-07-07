@@ -16,6 +16,7 @@ urlpatterns = [
     path("atletas/", views.lista_atletas, name="lista_atletas"),
     path("minha-equipe/", views.minha_equipe, name="minha_equipe"),
     path("equipe/<int:equipe_id>/", views.visualizar_perfil_equipe, name="visualizar_perfil_equipe"),
+    path("equipe/<int:equipe_id>/atletas/", views.listar_atletas_da_equipe, name="listar_atletas"),
     path("equipes/", views.buscar_times, name="lista_equipes"),
     path("patrocinadores/", views.buscar_patrocinadores, name="buscar_patrocinadores"),
     path("patrocinadores/publico/", listar_patrocinadores_publicos, name="pagina_patrocinadores"),  

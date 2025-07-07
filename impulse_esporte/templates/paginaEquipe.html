@@ -86,46 +86,71 @@
         </div>
       </div>
 
-      <!-- SEÇÃO DE ATLETAS (ainda estática) -->
-      <div class="equipe-section">
-        <h2>Nossos Atletas</h2>
-        <div class="section-content">
-          <div class="atletas-grid">
-            <div class="atleta-card"><span class="atleta-name">Lucas Menezes</span><span class="atleta-position">Atacante</span></div>
-            <div class="atleta-card"><span class="atleta-name">Rafael Santos</span><span class="atleta-position">Meio-campo</span></div>
-            <div class="atleta-card"><span class="atleta-name">Diego Oliveira</span><span class="atleta-position">Defensor</span></div>
-            <div class="atleta-card"><span class="atleta-name">João Silva</span><span class="atleta-position">Goleiro</span></div>
-            <div class="atleta-card"><span class="atleta-name">Carlos Mendes</span><span class="atleta-position">Atacante</span></div>
-            <div class="atleta-card"><span class="atleta-name">Rafael Costa</span><span class="atleta-position">Meio-campo</span></div>
-            <div class="atleta-card"><span class="atleta-name">Bruno Oliveira</span><span class="atleta-position">Defensor</span></div>
-          </div>
-          <div class="section-footer">
-            <a href="lista_atletas.html" class="btn-primary">Adicionar Novo Atleta</a>
-          </div>
+<!-- SEÇÃO DE ATLETAS (DINÂMICA) -->
+<div class="equipe-section">
+  <h2>Nossos Atletas</h2>
+  <div class="section-content">
+    <div class="atletas-grid">
+      {% for atleta in jogadores %}
+        <div class="atleta-card">
+          <span class="atleta-name">{{ atleta.usuario.username }}</span>
+          <span class="atleta-position">{{ atleta.posicao }}</span>
         </div>
-      </div>
+      {% empty %}
+        <p style="text-align: center;">Nenhum atleta vinculado à equipe ainda.</p>
+      {% endfor %}
+    </div>
+    <div class="section-footer">
+      <a href="{% url 'listar_atletas' equipe.id %}" class="btn-primary">Adicionar Novo Atleta </a>
+    </div>
+  </div>
+</div>
 
-      <!-- SEÇÃO DE PARTIDAS -->
-      <div class="equipe-section">
-        <h2>Próximas Partidas</h2>
-        <div class="section-content">
-          <div class="partidas-table">
-            <table>
-              <thead>
-                <tr><th>Data</th><th>Horário</th><th>Adversário</th><th>Local</th><th>Ações</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>13/04/2025</td><td>16:00</td><td>FC Estrela</td><td>Casa</td><td><button class="btn-edit-small">Editar</button><button class="btn-remove">×</button></td></tr>
-                <tr><td>17/04/2025</td><td>19:30</td><td>União Serrana</td><td>Fora</td><td><button class="btn-edit-small">Editar</button><button class="btn-remove">×</button></td></tr>
-                <tr><td>21/04/2025</td><td>18:00</td><td>Atlético Verde</td><td>Casa</td><td><button class="btn-edit-small">Editar</button><button class="btn-remove">×</button></td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="section-footer">
-            <a href="#" class="btn-primary">Adicionar Nova Partida</a>
-          </div>
-        </div>
-      </div>
+
+<!-- SEÇÃO DE PARTIDAS (DINÂMICA) -->
+<div class="equipe-section">
+  <h2>Próximas Partidas</h2>
+  <div class="section-content">
+    {% if partidas %}
+    <div class="partidas-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Horário</th>
+            <th>Adversário</th>
+            <th>Local</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for partida in partidas %}
+          <tr>
+            <td>{{ partida.data|date:"d/m/Y" }}</td>
+            <td>{{ partida.horario|time:"H:i" }}</td>
+            <td>{{ partida.adversario }}</td>
+            <td>{{ partida.local }}</td>
+            <td>
+              <a href="{% url 'editar_partida' partida.id %}" class="btn-edit-small">Editar</a>
+              <form action="{% url 'excluir_partida' partida.id %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn-remove" onclick="return confirm('Tem certeza que deseja excluir esta partida?');">×</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p style="text-align: center;">Nenhuma partida cadastrada.</p>
+    {% endif %}
+    <div class="section-footer">
+      <a href="{% url 'criar_partida' equipe.id %}" class="btn-primary">Adicionar Nova Partida</a>
+    </div>
+  </div>
+</div>
+
 
       <!-- SEÇÃO DE ESTATÍSTICAS -->
       <div class="equipe-section">

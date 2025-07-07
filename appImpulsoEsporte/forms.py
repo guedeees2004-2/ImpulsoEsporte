@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import Usuario
+from .models import Partida
 
 class CustomUserCreationForm(UserCreationForm):
     username = forms.CharField(
@@ -47,3 +48,12 @@ class CustomUserCreationForm(UserCreationForm):
 
 class CustomAuthenticationForm(AuthenticationForm):
     pass
+    
+class PartidaForm(forms.ModelForm):
+    class Meta:
+        model = Partida
+        fields = ['data', 'horario', 'adversario', 'local']
+        widgets = {
+            'data': forms.DateInput(attrs={'type': 'date'}),
+            'horario': forms.TimeInput(attrs={'type': 'time'}),
+        }

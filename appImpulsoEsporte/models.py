@@ -53,6 +53,15 @@ class Jogador(models.Model):
 
     def __str__(self):
         return self.usuario.username
+class Partida(models.Model):
+    equipe = models.ForeignKey(Equipe, on_delete=models.CASCADE, related_name='partidas')
+    data = models.DateField()
+    horario = models.TimeField()
+    adversario = models.CharField(max_length=100)
+    local = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.equipe.nome} x {self.adversario} - {self.data}"
 
 
 class Patrocinador(models.Model):
