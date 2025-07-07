@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db import models
 
-from ..models import EquipeDisponivel, Equipe
+from ..models import EquipeDisponivel, Equipe, Atleta
 from ..models import Patrocinador, PatrocinioEquipe
 from ..models import Jogador
 from appImpulsoEsporte.forms import PartidaForm
