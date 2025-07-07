@@ -4,7 +4,7 @@ from .main_views import index, contato, pagina_sobre_nos, servicos
 from .atleta_views import pagina_atleta, visualizar_perfil_atleta, lista_atletas
 from .equipe_views import (
     buscar_equipes, gerenciar_equipes, pagina_equipe, 
-    buscar_times, pagina_equipe_disponivel, minha_equipe, visualizar_perfil_equipe
+    buscar_times, pagina_equipe_disponivel, minha_equipe, visualizar_perfil_equipe,listar_atletas_da_equipe,
 )
 from .patrocinador_views import buscar_patrocinadores
 
