@@ -84,10 +84,21 @@
                 </div>
 
                 <div id="campos-patrocinador" style="display:none;">
+                    <label for="id_empresa">Nome da Empresa</label>
+                    {{ form.empresa }}
+                    {% if form.empresa.errors %}
+                        <div class="alert alert-danger">{{ form.empresa.errors }}</div>
+                    {% endif %}
                     <label for="id_cnpj">CNPJ</label>
                     {{ form.cnpj }}
                     {% if form.cnpj.errors %}
                         <div class="alert alert-danger">{{ form.cnpj.errors }}</div>
+                    {% endif %}
+                    <label for="id_site_empresa">Site da Empresa</label>
+                    <div class="form-hint">URL do website da empresa (ex: https://exemplo.com)</div>
+                    {{ form.site_empresa }}
+                    {% if form.site_empresa.errors %}
+                        <div class="alert alert-danger">{{ form.site_empresa.errors }}</div>
                     {% endif %}
                 </div>
 

@@ -22,8 +22,18 @@
         <p>Queremos ouvir você! Envie sua mensagem e entraremos em contato em breve.</p>
       </div>
 
+      {% if messages %}
+        <div class="messages-container">
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
       <div class="contact-form-container">
-        <form method="post">
+        <form method="post" id="contactForm">
           {% csrf_token %}
           <div class="form-group">
             <label for="nome">Seu Nome:</label>
@@ -57,5 +67,6 @@
       </p>
     </div>
   </div>
+
 </body>
 </html>

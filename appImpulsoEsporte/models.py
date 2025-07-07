@@ -59,10 +59,9 @@ class Patrocinador(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
     empresa = models.CharField(max_length=100)
     cnpj = models.CharField(max_length=20)
-    aberto_para_oportunidades = models.BooleanField(
-        default=True, 
-        verbose_name="Aberto para oportunidades de patrocínio",
-        help_text="Indica se o patrocinador está disponível para novas parcerias"
+    site_empresa = models.URLField(
+        verbose_name="Site da empresa",
+        help_text="Website oficial da empresa"
     )
     descricao = models.TextField(
         blank=True, 

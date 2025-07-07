@@ -14,10 +14,9 @@ def buscar_patrocinadores(request):
     if request.user.tipo_conta not in ['atleta', 'equipe']:
         return redirect('home')
     
-    # Buscar patrocinadores que estão abertos para oportunidades
+    # Buscar todos os patrocinadores
     patrocinadores_disponiveis = Patrocinador.objects.filter(
-        usuario__tipo_conta='patrocinador',
-        aberto_para_oportunidades=True
+        usuario__tipo_conta='patrocinador'
     ).select_related('usuario')
     
     # Filtro de busca (opcional)

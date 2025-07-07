@@ -268,12 +268,17 @@
     letter-spacing: 0.5px;
     transition: all 0.3s ease;
     font-family: 'Oswald', Arial, sans-serif;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
 }
 
 .contato-btn:hover {
     background: linear-gradient(135deg, #165732, #0d3d1f);
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(22, 87, 50, 0.3);
+    color: white;
+    text-decoration: none;
 }
 
 .contato-btn:active {

@@ -3,7 +3,7 @@ from django.contrib.auth import login, logout
 from django.views import View
 
 from ..forms import CustomUserCreationForm, CustomAuthenticationForm
-from ..models import Equipe, EquipeDisponivel
+from ..models import Equipe, EquipeDisponivel, Patrocinador
 
 
 class RegisterView(View):
@@ -29,6 +29,15 @@ class RegisterView(View):
                     modalidade=equipe.esporte,
                     cidade=equipe.localizacao,
                     aberta_para_atletas=True
+                )
+            # Cria um patrocinador se o usuário for do tipo patrocinador
+            elif usuario.tipo_conta == 'patrocinador':
+                Patrocinador.objects.create(
+                    usuario=usuario,
+                    empresa=form.cleaned_data.get('empresa', ''),
+                    cnpj=form.cleaned_data.get('cnpj', ''),
+                    site_empresa=form.cleaned_data.get('site_empresa', ''),
+                    descricao=''
                 )
             return redirect("login")
         return render(request, "registration/register.html", {"form": form})
