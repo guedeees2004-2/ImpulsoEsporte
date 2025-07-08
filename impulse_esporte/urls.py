@@ -30,9 +30,9 @@ urlpatterns = [
     path("gerenciar_equipes/", views.gerenciar_equipes, name="gerenciar_equipes"),
     path("buscar-times/", views.buscar_times, name="buscar_times"),
     path("servicos/", views.servicos, name="servicos"),
-    path('equipe/<int:equipe_id>/partida/adicionar/', adicionar_partida, name='adicionar_partida'),
-    path('equipe/<int:equipe_id>/partida/<int:partida_id>/editar/', editar_partida, name='editar_partida'),
-    path('equipe/<int:equipe_id>/partida/<int:partida_id>/excluir/', excluir_partida, name='excluir_partida'),
+    path('equipe/<int:equipe_id>/partida/adicionar/', views.adicionar_partida, name='adicionar_partida'),
+    path('equipe/<int:equipe_id>/partida/<int:partida_id>/editar/', views.editar_partida, name='editar_partida'),
+    path('equipe/<int:equipe_id>/partida/<int:partida_id>/excluir/', views.excluir_partida, name='excluir_partida'),
 ]
 
 if settings.DEBUG:
