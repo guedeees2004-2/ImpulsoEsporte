@@ -7,6 +7,7 @@ from ..models import Patrocinador, PatrocinioEquipe
 from ..models import Jogador
 from appImpulsoEsporte.forms import PartidaForm
 from ..models import Partida
+from appImpulsoEsporte.views.equipe_views import minha_equipe
 
 
 @login_required
