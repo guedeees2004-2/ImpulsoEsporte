@@ -150,21 +150,27 @@ def minha_equipe(request):
     except Equipe.DoesNotExist:
         return redirect("home")
 
-    # Jogadores da equipe
     jogadores = Jogador.objects.filter(equipe=equipe)
-
-    # Patrocinadores vinculados a essa equipe
     patrocinadores = Patrocinador.objects.filter(patrocinioequipe__equipe=equipe).distinct()
-
-    # Partidas da equipe
     partidas = Partida.objects.filter(equipe=equipe).order_by('data', 'horario')
+
+    mostrar_form_partida = request.GET.get('inline') == 'true'
+    form = PartidaForm(request.POST or None)
+
+    if request.method == 'POST' and mostrar_form_partida and form.is_valid():
+        partida = form.save(commit=False)
+        partida.equipe = equipe
+        partida.save()
+        return redirect('minha_equipe')
 
     context = {
         "equipe": equipe,
         "is_owner": True,
         "jogadores": jogadores,
         "patrocinadores": patrocinadores,
-        "partidas": partidas,  
+        "partidas": partidas,
+        "form": form if mostrar_form_partida else None,
+        "mostrar_form_partida": mostrar_form_partida,
     }
 
     return render(request, "paginaEquipe.html", context)
@@ -248,7 +254,7 @@ def adicionar_partida(request, equipe_id):
         form = PartidaForm()
 
     return render(request, 'form_partida.html', {'form': form, 'equipe': equipe})
-    
+
 @login_required
 def editar_partida(request, equipe_id, partida_id):
     equipe = get_object_or_404(Equipe, id=equipe_id)

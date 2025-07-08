@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="form-container">
+  <h2>Adicionar Nova Partida</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn-primary">Salvar Partida</button>
+    <a href="{% url 'minha_equipe' %}" class="btn-secondary">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

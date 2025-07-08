@@ -54,6 +54,8 @@ class PartidaForm(forms.ModelForm):
         model = Partida
         fields = ['data', 'horario', 'adversario', 'local']
         widgets = {
-            'data': forms.DateInput(attrs={'type': 'date'}),
-            'horario': forms.TimeInput(attrs={'type': 'time'}),
+            'data': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'horario': forms.TimeInput(attrs={'type': 'time', 'class': 'form-control'}),
+            'adversario': forms.TextInput(attrs={'placeholder': 'Adversário', 'class': 'form-control'}),
+            'local': forms.TextInput(attrs={'placeholder': 'Local da partida', 'class': 'form-control'}),
         }
