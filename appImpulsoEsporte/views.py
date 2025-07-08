@@ -10,6 +10,7 @@ from .views.equipe_views import (
 )
 from .views.patrocinador_views import buscar_patrocinadores
 
+
 # Manter todas as funções disponíveis para importação
 __all__ = [
     'RegisterView', 'LoginView', 'user_logout',
