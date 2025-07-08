@@ -107,29 +107,77 @@
 </div>
 
 
-<!-- SEÇÃO DE PARTIDAS (DINÂMICA) -->
-<div class="section-footer">
-  {% if mostrar_form_partida %}
-    <div class="form-container" style="margin-top: 20px;">
-      <h3>Nova Partida</h3>
-      <form method="post">
-        {% csrf_token %}
-        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+<!-- SEÇÃO DE PARTIDAS (DINÂMICA COM FORMULÁRIO) -->
+<div class="equipe-section">
+  <h2>Próximas Partidas</h2>
+  <div class="section-content">
+
+    <!-- Formulário para adicionar nova partida -->
+    <form method="post" action="{% url 'adicionar_partida' equipe.id %}">
+      {% csrf_token %}
+      <div class="partida-form-grid">
+        <div class="form-group">
+          <label for="id_data">Data</label>
           {{ form.data }}
+        </div>
+        <div class="form-group">
+          <label for="id_horario">Horário</label>
           {{ form.horario }}
+        </div>
+        <div class="form-group">
+          <label for="id_adversario">Adversário</label>
           {{ form.adversario }}
+        </div>
+        <div class="form-group">
+          <label for="id_local">Local</label>
           {{ form.local }}
         </div>
-        <div style="margin-top: 10px;">
-          <button type="submit" class="btn-primary">Salvar</button>
-          <a href="{% url 'minha_equipe' %}" class="btn-secondary">Cancelar</a>
-        </div>
-      </form>
-    </div>
-  {% else %}
-    <a href="{% url 'adicionar_partida' equipe.id %}?inline=true" class="btn-primary">Adicionar Nova Partida</a>
-  {% endif %}
+      </div>
+      <div class="section-footer">
+        <button type="submit" class="btn-primary">Salvar Partida</button>
+      </div>
+    </form>
+
+    <!-- Lista de partidas cadastradas -->
+    {% if partidas %}
+      <div class="partidas-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Horário</th>
+              <th>Adversário</th>
+              <th>Local</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for partida in partidas %}
+              <tr>
+                <td>{{ partida.data|date:"d/m/Y" }}</td>
+                <td>{{ partida.horario|time:"H:i" }}</td>
+                <td>{{ partida.adversario }}</td>
+                <td>{{ partida.local }}</td>
+                <td>
+                  <a href="{% url 'editar_partida' partida.id %}" class="btn-edit-small">Editar</a>
+                  <form action="{% url 'excluir_partida' partida.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-remove" onclick="return confirm('Tem certeza que deseja excluir esta partida?');">×</button>
+                  </form>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p style="text-align: center;">Nenhuma partida cadastrada.</p>
+    {% endif %}
+
+  </div>
 </div>
+
+
 
 
       <!-- SEÇÃO DE ESTATÍSTICAS -->
