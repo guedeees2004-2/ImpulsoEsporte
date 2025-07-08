@@ -248,3 +248,29 @@ def adicionar_partida(request, equipe_id):
         form = PartidaForm()
 
     return render(request, 'form_partida.html', {'form': form, 'equipe': equipe})
+    
+@login_required
+def editar_partida(request, equipe_id, partida_id):
+    equipe = get_object_or_404(Equipe, id=equipe_id)
+    partida = get_object_or_404(Partida, id=partida_id, equipe=equipe)
+
+    if request.method == "POST":
+        form = PartidaForm(request.POST, instance=partida)
+        if form.is_valid():
+            form.save()
+            return redirect('minha_equipe')
+    else:
+        form = PartidaForm(instance=partida)
+
+    return render(request, 'form_partida.html', {'form': form, 'equipe': equipe, 'editar': True})
+
+@login_required
+def excluir_partida(request, equipe_id, partida_id):
+    equipe = get_object_or_404(Equipe, id=equipe_id)
+    partida = get_object_or_404(Partida, id=partida_id, equipe=equipe)
+
+    if request.method == "POST":
+        partida.delete()
+        return redirect('minha_equipe')
+
+    return render(request, 'confirmar_exclusao.html', {'partida': partida, 'equipe': equipe})
