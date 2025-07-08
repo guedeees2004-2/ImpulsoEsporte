@@ -130,9 +130,9 @@
             <td>{{ partida.horario|time:"H:i" }}</td>
             <td>{{ partida.adversario }}</td>
             <td>{{ partida.local }}</td>
-            <td>
-              <a href="{% url 'editar_partida' partida.id %}" class="btn-edit-small">Editar</a>
-              <form action="{% url 'excluir_partida' partida.id %}" method="post" style="display:inline;">
+           <td>
+              <a href="{% url 'editar_partida' equipe.id partida.id %}" class="btn-edit-small">Editar</a>
+              <form action="{% url 'excluir_partida' equipe.id partida.id %}" method="post" style="display:inline;">
                 {% csrf_token %}
                 <button type="submit" class="btn-remove" onclick="return confirm('Tem certeza que deseja excluir esta partida?');">×</button>
               </form>
