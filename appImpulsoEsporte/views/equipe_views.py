@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db import models
+from django.contrib.auth import login
+from django.contrib import messages
 
-from ..models import EquipeDisponivel, Equipe, Jogador
+from ..models import EquipeDisponivel, Equipe, Jogador, Usuario
 from ..models import Patrocinador, PatrocinioEquipe
 from ..models import Jogador
 from appImpulsoEsporte.forms import PartidaForm
@@ -53,31 +55,119 @@ def buscar_equipes(request):
 
 def gerenciar_equipes(request):
     """
-    View para gerenciar equipes (CRUD).
+    View para gerenciar equipes (CRUD) e criar contas de usuário do tipo equipe.
     """
+    form_data = {}
+    form_errors = {}
+    
     if request.method == "POST":
         action = request.POST.get('action')
+        
+        # Preservar dados do formulário para reexibir em caso de erro
+        form_data = {
+            'nome': request.POST.get('nome', '').strip(),
+            'modalidade': request.POST.get('modalidade', '').strip(),
+            'cidade': request.POST.get('cidade', '').strip(),
+            'criar_usuario': request.POST.get('criar_usuario') == 'on',
+            'username': request.POST.get('username', '').strip(),
+            'email': request.POST.get('email', '').strip(),
+            'password1': request.POST.get('password1', '').strip(),
+            'password2': request.POST.get('password2', '').strip(),
+        }
+        
         if action == 'cadastrar':
-            nome = request.POST.get('nome', '').strip()
-            modalidade = request.POST.get('modalidade', '').strip()
-            cidade = request.POST.get('cidade', '').strip()
-            if nome and modalidade and cidade:
-                EquipeDisponivel.objects.create(
-                    nome=nome,
-                    modalidade=modalidade,
-                    cidade=cidade,
-                    aberta_para_atletas=True
-                )
+            # Validação dos campos obrigatórios da equipe
+            if not form_data['nome']:
+                form_errors['nome'] = 'Nome da equipe é obrigatório.'
+            if not form_data['modalidade']:
+                form_errors['modalidade'] = 'Modalidade é obrigatória.'
+            if not form_data['cidade']:
+                form_errors['cidade'] = 'Cidade é obrigatória.'
+                
+            # Se solicitado criar usuário, validar campos do usuário
+            if form_data['criar_usuario']:
+                if not form_data['username']:
+                    form_errors['username'] = 'Nome de usuário é obrigatório.'
+                elif Usuario.objects.filter(username=form_data['username']).exists():
+                    form_errors['username'] = 'Este nome de usuário já está em uso.'
+                    
+                if not form_data['email']:
+                    form_errors['email'] = 'E-mail é obrigatório.'
+                elif Usuario.objects.filter(email=form_data['email']).exists():
+                    form_errors['email'] = 'Este e-mail já está em uso.'
+                    
+                if not form_data['password1']:
+                    form_errors['password1'] = 'Senha é obrigatória.'
+                elif len(form_data['password1']) < 8:
+                    form_errors['password1'] = 'A senha deve ter pelo menos 8 caracteres.'
+                    
+                if not form_data['password2']:
+                    form_errors['password2'] = 'Confirmação de senha é obrigatória.'
+                elif form_data['password1'] != form_data['password2']:
+                    form_errors['password2'] = 'As senhas não coincidem.'
+            
+            # Se não há erros, processar o cadastro
+            if not form_errors:
+                try:
+                    # Criar a equipe disponível
+                    equipe_disponivel = EquipeDisponivel.objects.create(
+                        nome=form_data['nome'],
+                        modalidade=form_data['modalidade'],
+                        cidade=form_data['cidade'],
+                        aberta_para_atletas=True
+                    )
+                    
+                    # Se solicitado, criar também um usuário do tipo equipe
+                    if form_data['criar_usuario']:
+                        # Criar o usuário
+                        usuario = Usuario.objects.create_user(
+                            username=form_data['username'],
+                            email=form_data['email'],
+                            password=form_data['password1'],
+                            tipo_conta='equipe'
+                        )
+                        
+                        # Criar a equipe oficial vinculada ao usuário
+                        Equipe.objects.create(
+                            usuario=usuario,
+                            nome=form_data['nome'],
+                            esporte=form_data['modalidade'],
+                            localizacao=form_data['cidade']
+                        )
+                        
+                        messages.success(request, f'Equipe "{form_data["nome"]}" e conta de usuário criadas com sucesso!')
+                    else:
+                        messages.success(request, f'Equipe "{form_data["nome"]}" cadastrada com sucesso!')
+                        
+                    return redirect('gerenciar_equipes')
+                    
+                except Exception as e:
+                    messages.error(request, f'Erro ao criar equipe/usuário: {str(e)}')
+                    
         elif action == 'remover':
             nome_remover = request.POST.get('nome_remover', '').strip()
             if nome_remover:
                 EquipeDisponivel.objects.filter(nome=nome_remover).delete()
-        return redirect('gerenciar_equipes')
+                messages.success(request, f'Equipe "{nome_remover}" removida com sucesso!')
+                return redirect('gerenciar_equipes')
 
+    # GET request - listar equipes e mostrar formulário
     equipes = EquipeDisponivel.objects.all()
+    editar_equipe_nome = request.GET.get('editar')
+    editar_equipe = None
+    
+    if editar_equipe_nome:
+        try:
+            editar_equipe = EquipeDisponivel.objects.get(nome=editar_equipe_nome)
+        except EquipeDisponivel.DoesNotExist:
+            pass
+    
     context = {
         'title': 'Gerenciar Equipes - Impulso Esporte',
         'equipes': equipes,
+        'editar_equipe': editar_equipe,
+        'form_data': form_data,
+        'form_errors': form_errors,
     }
     return render(request, 'gerenciar_equipes.html', context)
 

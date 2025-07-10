@@ -24,6 +24,15 @@
   <main class="equipes-container">
     <a href="{% url 'home' %}" class="back-link">← Voltar ao Início</a>
     
+    <!-- Mensagens de feedback -->
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    
     <!-- Formulário para cadastrar/editar equipe -->
     <div class="form-section">
       {% if editar_equipe %}
@@ -42,65 +51,37 @@
         <div class="form-group">
           <label for="nome">Nome da Equipe:</label>
           <input type="text" id="nome" name="nome" 
-                 placeholder="Ex: Dragões do Futsal" 
-                 value="{% if editar_equipe %}{{ editar_equipe.nome }}{% endif %}" 
+                 placeholder="Nome da Equipe" 
+                 value="{% if editar_equipe %}{{ editar_equipe.nome }}{% else %}{{ form_data.nome }}{% endif %}" 
                  required>
+          {% if form_errors.nome %}
+            <div class="alert alert-error">{{ form_errors.nome }}</div>
+          {% endif %}
         </div>
 
         <div class="form-group">
           <label for="modalidade">Modalidade:</label>
           <input type="text" id="modalidade" name="modalidade" 
                  placeholder="Ex: Futsal, Vôlei, Basquete" 
-                 value="{% if editar_equipe %}{{ editar_equipe.modalidade }}{% endif %}" 
+                 value="{% if editar_equipe %}{{ editar_equipe.modalidade }}{% else %}{{ form_data.modalidade }}{% endif %}" 
                  required>
+          {% if form_errors.modalidade %}
+            <div class="alert alert-error">{{ form_errors.modalidade }}</div>
+          {% endif %}
         </div>
 
         <div class="form-group">
           <label for="cidade">Cidade:</label>
           <input type="text" id="cidade" name="cidade" 
                  placeholder="Ex: São Paulo, Rio de Janeiro" 
-                 value="{% if editar_equipe %}{{ editar_equipe.cidade }}{% endif %}" 
+                 value="{% if editar_equipe %}{{ editar_equipe.cidade }}{% else %}{{ form_data.cidade }}{% endif %}" 
                  required>
-        </div>
-
-        <div class="form-actions">
-          {% if editar_equipe %}
-            <button type="submit" class="btn-submit">Salvar Alterações</button>
-            <a href="{% url 'gerenciar_equipes' %}" class="btn-cancel">Cancelar</a>
-          {% else %}
-            <button type="submit" class="btn-submit">Cadastrar Equipe</button>
+          {% if form_errors.cidade %}
+            <div class="alert alert-error">{{ form_errors.cidade }}</div>
           {% endif %}
         </div>
       </form>
     </div>
-
-    <!-- Formulário para remover equipe -->
-    {% if not editar_equipe %}
-    <div class="form-section">
-      <h2>Remover Equipe</h2>
-      <form method="POST" id="form-remover">
-        {% csrf_token %}
-        <input type="hidden" name="action" value="remover">
-        
-        <div class="form-group">
-          <label for="nome-remover">Selecione a Equipe para Remover:</label>
-          <select id="nome-remover" name="nome_remover" required>
-            <option value="">-- Selecione uma equipe --</option>
-            {% for equipe in equipes %}
-              <option value="{{ equipe.nome }}">{{ equipe.nome }} ({{ equipe.modalidade }} - {{ equipe.cidade }})</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <div class="form-actions">
-          <button type="submit" class="btn-submit" style="background: linear-gradient(135deg, #dc3545, #c82333);" 
-                  onclick="return confirm('Tem certeza que deseja remover esta equipe?');">
-            Remover Equipe
-          </button>
-        </div>
-      </form>
-    </div>
-    {% endif %}
 
     <!-- Lista de equipes cadastradas -->
     {% if equipes %}
@@ -137,27 +118,5 @@
     {% endif %}
   </main>
 
-  <style>
-    .btn-cancel {
-      display: inline-block;
-      padding: 10px 20px;
-      margin-left: 10px;
-      background: linear-gradient(135deg, #6c757d, #5a6268);
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-      font-weight: bold;
-      transition: all 0.3s ease;
-    }
-    
-    .btn-cancel:hover {
-      background: linear-gradient(135deg, #5a6268, #495057);
-      transform: translateY(-2px);
-    }
-    
-    .equipe-actions form {
-      margin: 0;
-    }
-  </style>
 </body>
 </html>

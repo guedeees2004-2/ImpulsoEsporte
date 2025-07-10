@@ -19,7 +19,7 @@
     <main class="form-container">
         <div class="title-content" style="max-width: 450px; margin: 40px auto 0 auto;">
             <h1>Criar Nova Conta</h1>
-            <p class="subtitle">Cadastre-se para acessar todos os recursos da plataforma</p>
+            <p class="subtitle">Conta tipo: <strong>{{ tipo_conta|capfirst }}</strong></p>
         </div>
         <div class="form-section" style="max-width: 450px; margin: 0 auto;">
             {% if form.non_field_errors %}
@@ -62,22 +62,8 @@
                     <div class="alert alert-danger">{{ form.password2.errors }}</div>
                 {% endif %}
 
-                <div class="mb-3">
-                    <label class="form-label" for="id_tipo_conta">Tipo de Conta</label>
-                    <div class="form-hint">Selecione se você é atleta, treinador, patrocinador, etc.</div>
-                    <select name="tipo_conta" id="id_tipo_conta" class="form-control" onchange="this.form.submit()">
-                        <option value="">Selecione o tipo de conta</option>
-                        <option value="atleta" {% if form.data.tipo_conta == 'atleta' %}selected{% endif %}>Atleta</option>
-                        <option value="equipe" {% if form.data.tipo_conta == 'equipe' %}selected{% endif %}>Equipe</option>
-                        <option value="patrocinador" {% if form.data.tipo_conta == 'patrocinador' %}selected{% endif %}>Patrocinador</option>
-                    </select>
-                    {% if form.tipo_conta.errors %}
-                        <div class="alert alert-danger">{{ form.tipo_conta.errors }}</div>
-                    {% endif %}
-                </div>
-
                 <!-- Campos específicos para equipe -->
-                {% if form.data.tipo_conta == 'equipe' %}
+                {% if 'esporte' in form.fields %}
                 <div id="campos-equipe">
                     <label for="id_esporte">Tipo de Esporte</label>
                     {{ form.esporte }}
@@ -93,7 +79,7 @@
                 {% endif %}
 
                 <!-- Campos específicos para patrocinador -->
-                {% if form.data.tipo_conta == 'patrocinador' %}
+                {% if 'empresa' in form.fields %}
                 <div id="campos-patrocinador">
                     <label for="id_empresa">Nome da Empresa</label>
                     {{ form.empresa }}
@@ -121,6 +107,7 @@
             <hr>
             <div class="text-center">
                 <p>Já tem uma conta? <a href="{% url 'login' %}">Faça login</a></p>
+                <p><a href="{% url 'select_account_type' %}">← Voltar para seleção de tipo de conta</a></p>
             </div>
         </div>
     </main>
