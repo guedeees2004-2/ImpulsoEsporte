@@ -83,11 +83,22 @@
           <div class="atletas-grid">
             {% for atleta in jogadores %}
               <div class="atleta-card">
-                <span class="atleta-name">{{ atleta.usuario.username }}</span>
-                <span class="atleta-position">{{ atleta.posicao }}</span>
+                <div class="atleta-info">
+                  <span class="atleta-name">{{ atleta.usuario.first_name|default:atleta.usuario.username }}</span>
+                  <span class="atleta-username">@{{ atleta.usuario.username }}</span>
+                </div>
+                <div class="atleta-details">
+                  <span class="atleta-position">{{ atleta.posicao }}</span>
+                  <span class="atleta-age">{{ atleta.idade }} anos</span>
+                </div>
+                <div class="atleta-actions">
+                  <a href="{% url 'visualizar_perfil_atleta' atleta.usuario.id %}" class="btn-view-profile">Ver Perfil</a>
+                </div>
               </div>
             {% empty %}
-              <p>Nenhum atleta vinculado à equipe ainda.</p>
+              <div class="empty-state">
+                <p>Nenhum atleta vinculado à equipe ainda.</p>
+              </div>
             {% endfor %}
           </div>
         </div>
@@ -170,8 +181,7 @@
                       <td>{{ partida.adversario }}</td>
                       <td>{{ partida.local }}</td>
                       <td>
-                        <a href="{% url 'editar_partida' partida.id %}" class="btn-edit-small">Editar</a>
-                        <form action="{% url 'excluir_partida' partida.id %}" method="post" style="display:inline;">
+                        <form action="{% url 'excluir_partida' equipe.id partida.id %}" method="post" style="display:inline;">
                           {% csrf_token %}
                           <button type="submit" class="btn-remove" onclick="return confirm('Tem certeza que deseja excluir esta partida?');">×</button>
                         </form>
@@ -196,9 +206,8 @@
               <h2>Estatísticas da Equipe</h2>
               <div class="section-content">
                 <div class="stats-grid">
-                  <div class="stat-card"><div class="stat-number">7</div><div class="stat-label">Atletas</div></div>
+                  <div class="stat-card"><div class="stat-number">{{ jogadores|length }}</div><div class="stat-label">Atletas</div></div>
                   <div class="stat-card"><div class="stat-number">{{ patrocinadores|length }}</div><div class="stat-label">Patrocinadores</div></div>
-                  <div class="stat-card"><div class="stat-number">2024</div><div class="stat-label">Ano de Fundação</div></div>
                 </div>
               </div>
             </div>

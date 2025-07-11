@@ -46,6 +46,19 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 
+# Configurações de sessão e cookies
+SESSION_COOKIE_AGE = 1209600  # 2 semanas
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = False  # Para desenvolvimento local
+SESSION_SAVE_EVERY_REQUEST = True
+
+# Configurações para CSRF
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SECURE = False  # Para desenvolvimento local
+CSRF_USE_SESSIONS = False
+CSRF_COOKIE_SAMESITE = 'Lax'
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -170,4 +183,5 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 AUTH_USER_MODEL = 'appImpulsoEsporte.Usuario'
+LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/minha-equipe/'

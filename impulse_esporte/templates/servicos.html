@@ -20,7 +20,7 @@
     <div class="servicos-container">
       <!-- Header da página -->
       <div class="servicos-header">
-        <h1>🏅 Serviços Oferecidos</h1>
+        <h1>Serviços Oferecidos</h1>
         <p>Descubra como nossa plataforma pode impulsionar sua carreira esportiva</p>
       </div>
 
@@ -29,7 +29,7 @@
         <h2>Conexão com Patrocinadores</h2>
         <div class="section-content">
           <div class="servico-content">
-            <p>📌 Ajudamos atletas a encontrarem empresas interessadas em apoiar seu esporte. Nossa plataforma facilita a criação de perfis profissionais com histórico, conquistas e metas.</p>
+            <p>Ajudamos atletas a encontrarem empresas interessadas em apoiar seu esporte. Nossa plataforma facilita a criação de perfis profissionais com histórico, conquistas e metas.</p>
             <a href="{% url 'buscar_patrocinadores' %}" class="btn-servico">Buscar Patrocinadores</a>
           </div>
         </div>
@@ -39,8 +39,8 @@
         <h2>Gerenciamento de Equipes</h2>
         <div class="section-content">
           <div class="servico-content">
-            <p>🧑‍🤝‍🧑 Plataforma completa para técnicos e dirigentes criarem, gerenciarem e divulgarem suas equipes. Inclui ferramentas para convocação, calendários de treinos e organização de competições.</p>
-            <a href="{% url 'buscar_equipes' %}" class="btn-servico">Ver Equipes</a>
+            <p>Plataforma completa para técnicos e dirigentes criarem, gerenciarem e divulgarem suas equipes. Inclui ferramentas para convocação, calendários de treinos e organização de competições.</p>
+            <a href="{% url 'buscar_times' %}" class="btn-servico">Ver Equipes</a>
           </div>
         </div>
       </div>
@@ -49,7 +49,7 @@
         <h2>Visibilidade para Talentos</h2>
         <div class="section-content">
           <div class="servico-content">
-            <p>🔍 Divulgação de atletas e equipes em destaque na plataforma. Criamos parcerias com mídias esportivas alternativas para aumentar o alcance dos nossos usuários.</p>
+            <p>Divulgação de atletas e equipes em destaque na plataforma. Criamos parcerias com mídias esportivas alternativas para aumentar o alcance dos nossos usuários.</p>
             <a href="{% url 'lista_atletas' %}" class="btn-servico">Ver Atletas</a>
           </div>
         </div>
@@ -59,7 +59,7 @@
         <h2>Intermediação de Contratos</h2>
         <div class="section-content">
           <div class="servico-content">
-            <p>🤝 Oferecemos suporte na formalização de parcerias entre atletas e patrocinadores, incluindo modelos de contratos e orientação jurídica básica.</p>
+            <p>Oferecemos suporte na formalização de parcerias entre atletas e patrocinadores, incluindo modelos de contratos e orientação jurídica básica.</p>
             <a href="{% url 'contato' %}" class="btn-servico">Fale Conosco</a>
           </div>
         </div>
@@ -71,7 +71,7 @@
         <div class="section-content">
           <div class="diferenciais-grid">
             <div class="diferencial-card">
-              <h3>📊 Painel de Desempenho</h3>
+              <h3>Painel de Desempenho</h3>
               <p>Relatórios e métricas de desempenho dos atletas com acompanhamento de evolução em treinos e competições.</p>
               {% if user.is_authenticated and user.tipo_conta == 'atleta' %}
                 <a href="{% url 'pagina_atleta' %}" class="btn-servico-small">Meu Perfil</a>
@@ -80,14 +80,9 @@
               {% endif %}
             </div>
             <div class="diferencial-card">
-              <h3>🌍 Eventos e Competições</h3>
+              <h3>Eventos e Competições</h3>
               <p>Calendário nacional e regional de eventos esportivos como Rugby, Canoagem, Críquete, Beisebol e Skate.</p>
               <a href="{% url 'buscar_times' %}" class="btn-servico-small">Ver Eventos</a>
-            </div>
-            <div class="diferencial-card">
-              <h3>📚 Conteúdo Educacional</h3>
-              <p>Dicas para captação de patrocínio, marketing pessoal e noções de finanças esportivas.</p>
-              <a href="{% url 'pagina_sobre_nos' %}" class="btn-servico-small">Saiba Mais</a>
             </div>
           </div>
         </div>

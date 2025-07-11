@@ -17,7 +17,7 @@
   <section class="page-title-section">
     <div class="title-content">
       <h1>Buscar Equipes</h1>
-      <p class="subtitle">Encontre equipes abertas para novos atletas e faça parte do time dos seus sonhos</p>
+      <p class="subtitle">Encontre equipes para novos atletas e faça parte do time dos seus sonhos</p>
     </div>
   </section>
 
@@ -71,10 +71,6 @@
             <div class="equipe-modalidade">{{ equipe.modalidade }}</div>
             <div class="equipe-cidade">{{ equipe.cidade }}</div>
             
-            <div class="status-disponivel">
-              ✓ Aberta para novos atletas
-            </div>
-            
             {% if equipe.descricao %}
               <div class="equipe-descricao">
                 {{ equipe.descricao|truncatewords:25 }}
@@ -113,8 +109,8 @@
             <a href="{% url 'buscar_equipes' %}">Limpar filtros</a> para ver todas as equipes.
           </p>
         {% else %}
-          <h3>Nenhuma equipe disponível</h3>
-          <p>Não há equipes abertas para novos atletas no momento.</p>
+          <h3>Nenhuma equipe cadastrada</h3>
+          <p>Não há equipes cadastradas no momento.</p>
         {% endif %}
       </div>
     {% endif %}

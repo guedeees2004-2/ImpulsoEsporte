@@ -30,6 +30,21 @@ class Usuario(AbstractUser):
         verbose_name='nome de usuário'
     )
 
+    def clean(self):
+        """Validação customizada para impedir superusers de serem atletas"""
+        from django.core.exceptions import ValidationError
+        super().clean()
+        
+        if self.is_superuser and self.tipo_conta == 'atleta':
+            raise ValidationError({
+                'tipo_conta': 'Superusers não podem ter tipo de conta "atleta". Escolha outro tipo.'
+            })
+    
+    def save(self, *args, **kwargs):
+        """Override do save para garantir validação"""
+        self.clean()
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.username
 
@@ -44,7 +59,19 @@ class Equipe(models.Model):
         return self.nome
 
 
-# Modelo Jogador representa os Atletas do sistema
+# Modelo Atleta representa os Atletas do sistema
+class Atleta(models.Model):
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
+    posicao = models.CharField(max_length=50)
+    idade = models.PositiveIntegerField()
+    esporte = models.ForeignKey(Esporte, on_delete=models.CASCADE)
+    equipe = models.ForeignKey(Equipe, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return self.usuario.username
+
+
+# Modelo Jogador representa os Jogadores do sistema (similar ao Atleta, mas com estrutura diferente)
 class Jogador(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
     posicao = models.CharField(max_length=50)
@@ -95,6 +122,11 @@ class PatrocinioEquipe(models.Model):
     equipe = models.ForeignKey(Equipe, on_delete=models.CASCADE)
 
 
+class PatrocinioAtleta(models.Model):
+    patrocinador = models.ForeignKey(Patrocinador, on_delete=models.CASCADE)
+    Atleta = models.ForeignKey(Atleta, on_delete=models.CASCADE)
+
+
 class PatrocinioJogador(models.Model):
     patrocinador = models.ForeignKey(Patrocinador, on_delete=models.CASCADE)
     jogador = models.ForeignKey(Jogador, on_delete=models.CASCADE)
@@ -119,11 +151,6 @@ class EquipeDisponivel(models.Model):
         blank=True, 
         null=True,
         verbose_name="Número atual de atletas"
-    )
-    aberta_para_atletas = models.BooleanField(
-        default=True,
-        verbose_name="Aberta para novos atletas",
-        help_text="Indica se a equipe está recrutando novos membros"
     )
     contato_responsavel = models.CharField(
         max_length=100,

@@ -191,8 +191,7 @@ def gerenciar_equipes(request):
                 EquipeDisponivel.objects.create(
                     nome=nome,
                     modalidade=modalidade,
-                    cidade=cidade,
-                    aberta_para_atletas=True
+                    cidade=cidade
                 )
         elif action == 'remover':
             # Remover por nome (do select) OU por nome do card
@@ -219,8 +218,8 @@ def buscar_equipes(request):
     if request.user.tipo_conta != 'atleta':
         return redirect('home')
     
-    # Buscar equipes que estão abertas para novos atletas
-    equipes_disponiveis = EquipeDisponivel.objects.filter(aberta_para_atletas=True)
+    # Buscar todas as equipes
+    equipes_disponiveis = EquipeDisponivel.objects.all()
     
     # Filtros de busca
     search_query = request.GET.get('search', '')

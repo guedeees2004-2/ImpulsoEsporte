@@ -16,18 +16,20 @@ from ..models import Partida
 def buscar_equipes(request):
     """
     View para buscar equipes disponíveis para novos atletas.
+    Combina equipes de EquipeDisponivel e Equipe (usuários cadastrados como equipe).
     """
     if request.user.tipo_conta != 'atleta':
         return redirect('home')
-    
-    equipes_disponiveis = EquipeDisponivel.objects.filter(aberta_para_atletas=True)
     
     # Filtros de busca
     search_query = request.GET.get('search', '')
     modalidade_filter = request.GET.get('modalidade', '')
     cidade_filter = request.GET.get('cidade', '')
     
-    # Aplicar filtros
+    # Buscar em EquipeDisponivel
+    equipes_disponiveis = EquipeDisponivel.objects.all()
+    
+    # Aplicar filtros para EquipeDisponivel
     if search_query:
         equipes_disponiveis = equipes_disponiveis.filter(
             models.Q(nome__icontains=search_query) |
@@ -42,8 +44,54 @@ def buscar_equipes(request):
     if cidade_filter:
         equipes_disponiveis = equipes_disponiveis.filter(cidade__icontains=cidade_filter)
     
+    # Buscar em Equipe (equipes cadastradas como usuários)
+    equipes_usuarios = Equipe.objects.all()
+    
+    # Aplicar filtros para Equipe
+    if search_query:
+        equipes_usuarios = equipes_usuarios.filter(
+            models.Q(nome__icontains=search_query) |
+            models.Q(esporte__icontains=search_query) |
+            models.Q(localizacao__icontains=search_query)
+        )
+    
+    if modalidade_filter:
+        equipes_usuarios = equipes_usuarios.filter(esporte__icontains=modalidade_filter)
+    
+    if cidade_filter:
+        equipes_usuarios = equipes_usuarios.filter(localizacao__icontains=cidade_filter)
+    
+    # Criar lista unificada com estrutura padronizada
+    equipes_combinadas = []
+    
+    # Adicionar equipes disponíveis
+    for equipe in equipes_disponiveis:
+        equipes_combinadas.append({
+            'id': equipe.id,
+            'nome': equipe.nome,
+            'modalidade': equipe.modalidade,
+            'cidade': equipe.cidade,
+            'descricao': equipe.descricao,
+            'ano_fundacao': equipe.ano_fundacao,
+            'numero_atletas': equipe.numero_atletas,
+            'tipo_fonte': 'disponivel'
+        })
+    
+    # Adicionar equipes de usuários
+    for equipe in equipes_usuarios:
+        equipes_combinadas.append({
+            'id': equipe.id,
+            'nome': equipe.nome,
+            'modalidade': equipe.esporte,
+            'cidade': equipe.localizacao,
+            'descricao': f"Equipe oficial cadastrada por {equipe.usuario.username}",
+            'ano_fundacao': None,
+            'numero_atletas': None,
+            'tipo_fonte': 'usuario'
+        })
+    
     context = {
-        'equipes': equipes_disponiveis,
+        'equipes': equipes_combinadas,
         'search_query': search_query,
         'modalidade_filter': modalidade_filter,
         'cidade_filter': cidade_filter,
@@ -113,8 +161,7 @@ def gerenciar_equipes(request):
                     equipe_disponivel = EquipeDisponivel.objects.create(
                         nome=form_data['nome'],
                         modalidade=form_data['modalidade'],
-                        cidade=form_data['cidade'],
-                        aberta_para_atletas=True
+                        cidade=form_data['cidade']
                     )
                     
                     # Se solicitado, criar também um usuário do tipo equipe
@@ -152,7 +199,34 @@ def gerenciar_equipes(request):
                 return redirect('gerenciar_equipes')
 
     # GET request - listar equipes e mostrar formulário
-    equipes = EquipeDisponivel.objects.all()
+    equipes_disponiveis = EquipeDisponivel.objects.all()
+    equipes_usuarios = Equipe.objects.all()
+    
+    # Combinar as equipes em uma lista unificada
+    equipes_combinadas = []
+    
+    # Adicionar equipes disponíveis
+    for equipe in equipes_disponiveis:
+        equipes_combinadas.append({
+            'id': equipe.id,
+            'nome': equipe.nome,
+            'modalidade': equipe.modalidade,
+            'cidade': equipe.cidade,
+            'tipo_fonte': 'disponivel'
+        })
+    
+    # Adicionar equipes de usuários
+    for equipe in equipes_usuarios:
+        equipes_combinadas.append({
+            'id': equipe.id,
+            'nome': equipe.nome,
+            'modalidade': equipe.esporte,
+            'cidade': equipe.localizacao,
+            'tipo_fonte': 'usuario'
+        })
+    
+    # Ordenar por nome
+    equipes_combinadas.sort(key=lambda x: x['nome'])
     editar_equipe_nome = request.GET.get('editar')
     editar_equipe = None
     
@@ -164,7 +238,7 @@ def gerenciar_equipes(request):
     
     context = {
         'title': 'Gerenciar Equipes - Impulso Esporte',
-        'equipes': equipes,
+        'equipes': equipes_combinadas,
         'editar_equipe': editar_equipe,
         'form_data': form_data,
         'form_errors': form_errors,
@@ -223,12 +297,49 @@ def pagina_equipe(request, equipe_id):
 def buscar_times(request):
     """
     View para buscar times/equipes.
+    Combina equipes de EquipeDisponivel e Equipe (usuários cadastrados como equipe).
     """
     query = request.GET.get('q', '')
+    
+    # Buscar em EquipeDisponivel
+    equipes_disponiveis = EquipeDisponivel.objects.all()
     if query:
-        resultados = EquipeDisponivel.objects.filter(nome__icontains=query)
-    else:
-        resultados = EquipeDisponivel.objects.all()
+        equipes_disponiveis = equipes_disponiveis.filter(nome__icontains=query)
+    
+    # Buscar em Equipe (equipes cadastradas como usuários)
+    equipes_usuarios = Equipe.objects.all()
+    if query:
+        equipes_usuarios = equipes_usuarios.filter(nome__icontains=query)
+    
+    # Criar lista unificada com estrutura padronizada
+    resultados = []
+    
+    # Adicionar equipes disponíveis
+    for equipe in equipes_disponiveis:
+        resultados.append({
+            'id': equipe.id,
+            'nome': equipe.nome,
+            'modalidade': equipe.modalidade,
+            'cidade': equipe.cidade,
+            'descricao': equipe.descricao,
+            'ano_fundacao': equipe.ano_fundacao,
+            'numero_atletas': equipe.numero_atletas,
+            'tipo_fonte': 'disponivel'
+        })
+    
+    # Adicionar equipes de usuários
+    for equipe in equipes_usuarios:
+        resultados.append({
+            'id': equipe.id,
+            'nome': equipe.nome,
+            'modalidade': equipe.esporte,  # Campo 'esporte' na tabela Equipe
+            'cidade': equipe.localizacao,  # Campo 'localizacao' na tabela Equipe
+            'descricao': f"Equipe oficial cadastrada por {equipe.usuario.username}",
+            'ano_fundacao': None,
+            'numero_atletas': None,
+            'tipo_fonte': 'usuario'
+        })
+    
     return render(request, 'buscar_times.html', {'resultados': resultados, 'query': query})
 
 
@@ -259,6 +370,15 @@ def pagina_equipe_disponivel(request, equipe_id):
 @login_required
 def minha_equipe(request):
     usuario = request.user
+    
+    # Redirecionar baseado no tipo de conta
+    if usuario.tipo_conta == 'atleta':
+        return redirect('pagina_atleta')
+    elif usuario.tipo_conta == 'patrocinador':
+        # Por enquanto redirecionar para buscar patrocinadores, mas pode ser uma página específica no futuro
+        return redirect('buscar_patrocinadores')
+    elif usuario.tipo_conta != 'equipe':
+        return redirect('home')
 
     try:
         equipe = Equipe.objects.get(usuario=usuario)

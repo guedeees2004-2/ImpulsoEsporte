@@ -84,7 +84,6 @@ class CustomUserCreationForm(UserCreationForm):
                     modalidade=self.cleaned_data.get('esporte', ''),
                     cidade=self.cleaned_data.get('localizacao', ''),
                     descricao=f"Equipe cadastrada através do registro de usuário {user.username}",
-                    aberta_para_atletas=True,
                     contato_responsavel=user.username,
                     email_contato=user.email
                 )

@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,10 +19,11 @@
     <div class="atleta-container">
       <!-- Header da página -->
       <div class="atleta-header">
-        <h1>Bem-vindo, {{ user.first_name|default:"Atleta" }}!</h1>
-        <p>Gerencie suas informações, equipes e patrocinadores</p>
+        <h1>{{ atleta.first_name|default:atleta.username }}</h1>
+        <p>{% if is_owner %}Gerencie suas informações, equipes e patrocinadores{% else %}Perfil do atleta{% endif %}</p>
       </div>
 
+      {% if is_owner %}
       <!-- Botões de ação principal -->
       <div class="atleta-actions">
         <a href="{% url 'buscar_patrocinadores' %}" class="btn-action">
@@ -34,198 +34,229 @@
           <h3>Buscar Equipes</h3>
           <p>Procure por equipes abertas</p>
         </a>
-        <a href="?box_aberto=partida" class="btn-action">
+        <a href="{% url 'visualizar_perfil_atleta' atleta.id %}?adicionar_partida=true#partidas-section" class="btn-action">
           <h3>Adicionar Partida</h3>
-          <p>Registre suas próximas partidas</p>
+          <p>Registre suas partidas</p>
         </a>
       </div>
+      {% endif %}
 
       <!-- Seção de Patrocinadores -->
-      <div class="atleta-section">
-        <h2>Meus Patrocinadores</h2>
+      <div class="atleta-section" id="patrocinadores-section">
+        <h2>{% if is_owner %}Meus Patrocinadores{% else %}Patrocinadores{% endif %}</h2>
         <div class="section-content">
-          {% if box_aberto == 'patrocinador' %}
-            <div class="form-container">
-              <form method="POST">
-                {% csrf_token %}
-                <div class="form-group">
-                  <label for="novo_patrocinador">Adicionar Patrocinador:</label>
-                  <input type="text" id="novo_patrocinador" name="novo_patrocinador" 
-                         placeholder="Nome do patrocinador" required>
-                </div>
-                <div class="form-actions">
-                  <button type="submit" name="adicionar_patrocinador" class="btn-submit">Adicionar</button>
-                  <a href="{% url 'pagina_atleta' %}" class="btn-cancel">Cancelar</a>
-                </div>
-              </form>
-            </div>
-          {% endif %}
-          
-          <div class="items-grid">
-            {% for p in patrocinadores %}
-              <div class="item-card">
-                <span class="item-name">{{ p }}</span>
-                <form method="POST" class="remove-form">
-                  {% csrf_token %}
-                  <input type="hidden" name="remover" value="1">
-                  <input type="hidden" name="item" value="{{ p }}">
-                  <input type="hidden" name="lista" value="patrocinadores">
-                  <button type="submit" class="btn-remove" title="Remover">×</button>
-                </form>
-              </div>
-            {% empty %}
-              <div class="empty-state">
-                <p>Nenhum patrocinador cadastrado.</p>
-                <a href="?box_aberto=patrocinador" class="btn-add">Adicionar Primeiro Patrocinador</a>
-              </div>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-
-      <!-- Seção de Equipes -->
-      <div class="atleta-section">
-        <h2>Equipe (mudar tabela para fazer display da equipe que ta participando)</h2>
-        <div class="section-content">
-          <div class="search-container">
-            <form method="GET" class="search-form">
+          {% if is_owner and mostrar_form_patrocinador %}
+          <!-- Formulário para adicionar novo patrocinador -->
+          <div id="patrocinador-form-container" style="margin-bottom: 30px; padding: 20px; border: 2px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
+            <h3>Adicionar Novo Patrocinador</h3>
+            <form method="post" action="{% url 'visualizar_perfil_atleta' atleta.id %}">
+              {% csrf_token %}
               <div class="form-group">
-                <input type="text" name="filtro_equipe" placeholder="Buscar equipe..." 
-                       value="{{ filtro_equipe|default_if_none:'' }}">
-                <button type="submit" class="btn-search">Filtrar</button>
-                <a href="{% url 'pagina_atleta' %}" class="btn-clear">Limpar</a>
+                <label for="novo_patrocinador">Nome do Patrocinador:</label>
+                <input type="text" id="novo_patrocinador" name="novo_patrocinador" 
+                       placeholder="Nome do patrocinador" required>
+              </div>
+              <div class="form-actions">
+                <button type="submit" name="adicionar_patrocinador" class="btn-submit">Adicionar</button>
+                <a href="{% url 'visualizar_perfil_atleta' atleta.id %}#patrocinadores-section" class="btn-cancel">Cancelar</a>
               </div>
             </form>
           </div>
+          {% endif %}
           
           <div class="items-grid">
-            {% for equipe in equipes %}
-              <div class="item-card equipe-card">
-                <span class="item-name">{{ equipe }}</span>
-              </div>
-            {% empty %}
-              <div class="empty-state">
-                <p>Nenhuma equipe encontrada.</p>
+            <!-- Patrocinadores reais do banco de dados (sempre visíveis) -->
+            {% for patrocinador in patrocinadores_reais %}
+              <div class="item-card">
+                <span class="item-name">{{ patrocinador.empresa }}</span>
+                {% if patrocinador.logo %}
+                  <img src="{{ patrocinador.logo.url }}" alt="{{ patrocinador.empresa }}" class="patrocinador-logo" style="max-width: 50px; height: auto; margin-top: 5px;">
+                {% endif %}
+                <div class="patrocinador-actions" style="margin-top: 10px;">
+                  {% if patrocinador.site_empresa %}
+                    <a href="{{ patrocinador.site_empresa }}" target="_blank" rel="noopener" class="btn-contact" style="font-size: 12px; color: #28a745; text-decoration: none; padding: 4px 8px; border: 1px solid #28a745; border-radius: 4px; display: inline-block;">
+                      Entrar em Contato
+                    </a>
+                  {% else %}
+                    <span style="font-size: 12px; color: #6c757d; font-style: italic;">Site não disponível</span>
+                  {% endif %}
+                </div>
               </div>
             {% endfor %}
-          </div>
-        </div>
-      </div>
-
-      <!-- Seção de Partidas -->
-      <div class="atleta-section">
-        <h2>Próximas Partidas (Fazer adição/edição por coluna invés de só texto)</h2>
-        <div class="section-content">
-          {% if box_aberto == 'partida' %}
-            <div class="form-container">
-              <form method="POST">
-                {% csrf_token %}
-                <div class="form-group">
-                  <label for="nova_partida">Adicionar Partida:</label>
-                  <input type="text" id="nova_partida" name="nova_partida" 
-                         placeholder="Ex: 20/06/2025 - Adversário" required>
-                </div>
-                <div class="form-actions">
-                  <button type="submit" name="adicionar_partida" class="btn-submit">Adicionar</button>
-                  <a href="{% url 'pagina_atleta' %}" class="btn-cancel">Cancelar</a>
-                </div>
-              </form>
-            </div>
-          {% endif %}
-          
-          <div class="partidas-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>Data</th>
-                  <th>Horário</th>
-                  <th>Adversário</th>
-                  <th>Local</th>
-                  {% if is_owner %}<th>Ações</th>{% endif %}
-                </tr>
-              </thead>
-              <tbody>
-                {% for partida in partidas %}
-                <tr>
-                  <td>
-                    {% if '-' in partida %}
-                      {{ partida|cut:' '|cut:'-'|slice:":10" }}
-                    {% else %}
-                      {{ partida }}
-                    {% endif %}
-                  </td>
-                  <td>16:00</td> <!-- Horário padrão, pode ser melhorado depois -->
-                  <td>
-                    {% if '-' in partida %}
-                      {{ partida|cut:' '|cut:'-'|slice:"10:" }}
-                    {% else %}
-                      -
-                    {% endif %}
-                  </td>
-                  <td>Casa</td> <!-- Local padrão, pode ser melhorado depois -->
-                  {% if is_owner %}
-                  <td>
-                    <button class="btn-edit-small">Editar</button>
-                    <form method="POST" class="remove-form" style="display: inline;">
-                      {% csrf_token %}
-                      <input type="hidden" name="remover" value="1">
-                      <input type="hidden" name="item" value="{{ partida }}">
-                      <input type="hidden" name="lista" value="partidas">
-                      <button type="submit" class="btn-remove" title="Remover">×</button>
-                    </form>
-                  </td>
-                  {% endif %}
-                </tr>
-                {% empty %}
-                <tr>
-                  <td colspan="{% if is_owner %}5{% else %}4{% endif %}" class="empty-cell">
-                    <div class="empty-state">
-                      <p>Nenhuma partida cadastrada.</p>
-                      {% if is_owner %}
-                      <a href="?box_aberto=partida" class="btn-add">Adicionar Primeira Partida</a>
-                      {% endif %}
-                    </div>
-                  </td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-          
-          {% if is_owner %}
-          <div class="section-footer">
-            <a href="?box_aberto=partida" class="btn-primary">Adicionar Nova Partida</a>
-          </div>
-          {% endif %}
-        </div>
-      </div>
-
-      <!-- Seção de Patrocinadores Disponíveis -->
-      <div class="atleta-section">
-        <h2>Patrocinadores Disponíveis</h2>
-        <div class="section-content">
-          {% if patrocinadores_disponiveis %}
-            <div class="patrocinadores-grid">
-              {% for patrocinador in patrocinadores_disponiveis %}
-                <div class="patrocinador-card">
-                  <h4>{{ patrocinador.empresa }}</h4>
-                  {% if patrocinador.descricao %}
-                    <p>{{ patrocinador.descricao|truncatewords:15 }}</p>
-                  {% endif %}
+            
+            <!-- Patrocinadores da lista global (apenas para o dono) -->
+            {% if is_owner %}
+              {% for p in patrocinadores %}
+                <div class="item-card">
+                  <span class="item-name">{{ p }}</span>
+                  <form method="POST" class="remove-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="remover" value="1">
+                    <input type="hidden" name="item" value="{{ p }}">
+                    <input type="hidden" name="lista" value="patrocinadores">
+                    <button type="submit" class="btn-remove" title="Remover">×</button>
+                  </form>
                 </div>
               {% endfor %}
-            </div>
-            <div class="section-footer">
-              <a href="{% url 'buscar_patrocinadores' %}" class="btn-primary">Ver Todos os Patrocinadores</a>
+            {% endif %}
+            
+            <!-- Mensagem se não há patrocinadores -->
+            {% if not patrocinadores_reais and not patrocinadores %}
+              <div class="empty-state">
+                <p>Nenhum patrocinador cadastrado.</p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção de Equipe -->
+      <div class="atleta-section" id="equipe-section">
+        <h2>{% if is_owner %}Minha Equipe{% else %}Equipe{% endif %}</h2>
+        <div class="section-content">
+          {% if atleta_equipe %}
+            <div class="equipe-info-card">
+              <div class="equipe-header">
+                <div class="equipe-title">
+                  <h3>{{ atleta_equipe.nome }}</h3>
+                  <span class="equipe-status">{% if is_owner %}✓ Membro ativo{% else %}Membro da equipe{% endif %}</span>
+                </div>
+              </div>
+              <div class="equipe-details">
+                <div class="detail-item">
+                  <div class="detail-content">
+                    <span class="detail-label">Modalidade:</span>
+                    <span class="detail-value">{{ atleta_equipe.esporte|default:"Não informado" }}</span>
+                  </div>
+                </div>
+                <div class="detail-item">
+                  <div class="detail-content">
+                    <span class="detail-label">Localização:</span>
+                    <span class="detail-value">{{ atleta_equipe.localizacao|default:"Não informada" }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="equipe-actions">
+                <a href="{% url 'pagina_equipe' atleta_equipe.id %}" class="btn-view-team">
+                  Ver Página da Equipe
+                </a>
+              </div>
             </div>
           {% else %}
             <div class="empty-state">
-              <p>Nenhum patrocinador disponível no momento.</p>
-              <a href="{% url 'buscar_patrocinadores' %}" class="btn-primary">Buscar Patrocinadores</a>
+              <p>{% if is_owner %}Não tem equipe vinculada.{% else %}Não tem equipe vinculada.{% endif %}</p>
+              {% if is_owner %}
+                <a href="{% url 'buscar_equipes' %}" class="btn-add">Buscar Equipes</a>
+              {% endif %}
             </div>
           {% endif %}
         </div>
       </div>
+
+      {% if is_owner %}
+      <!-- SEÇÃO DE PARTIDAS (DINÂMICA COM FORMULÁRIO) -->
+      <div class="atleta-section" id="partidas-section">
+        <h2>Minhas Partidas</h2>
+        <div class="section-content">
+
+          {% if is_owner and mostrar_form_partida %}
+          <!-- Formulário para adicionar nova partida -->
+          <div id="partida-form-container" style="margin-bottom: 30px; padding: 20px; border: 2px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
+            <h3>Adicionar Nova Partida</h3>
+            {% if form.errors %}
+              <div class="alert alert-danger">
+                <strong>Erro:</strong> Por favor, corrija os erros abaixo.
+              </div>
+            {% endif %}
+            
+            <form method="post" action="{% url 'visualizar_perfil_atleta' atleta.id %}">
+              {% csrf_token %}
+              <div class="partida-form-grid">
+                <div class="form-group">
+                  <label for="id_data">Data</label>
+                  {{ form.data }}
+                  {% if form.data.errors %}
+                    <div class="alert alert-danger">{{ form.data.errors }}</div>
+                  {% endif %}
+                </div>
+                <div class="form-group">
+                  <label for="id_horario">Horário</label>
+                  {{ form.horario }}
+                  {% if form.horario.errors %}
+                    <div class="alert alert-danger">{{ form.horario.errors }}</div>
+                  {% endif %}
+                </div>
+                <div class="form-group">
+                  <label for="id_adversario">Adversário</label>
+                  {{ form.adversario }}
+                  {% if form.adversario.errors %}
+                    <div class="alert alert-danger">{{ form.adversario.errors }}</div>
+                  {% endif %}
+                </div>
+                <div class="form-group">
+                  <label for="id_local">Local</label>
+                  {{ form.local }}
+                  {% if form.local.errors %}
+                    <div class="alert alert-danger">{{ form.local.errors }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="section-footer">
+                <button type="submit" class="btn-primary">Salvar Partida</button>
+                <a href="{% url 'visualizar_perfil_atleta' atleta.id %}#partidas-section" class="btn-secondary">Cancelar</a>
+              </div>
+            </form>
+          </div>
+          {% endif %}
+
+          <!-- Lista de partidas cadastradas -->
+          {% if partidas %}
+            <div class="partidas-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Partida</th>
+                    {% if is_owner %}<th>Ações</th>{% endif %}
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for partida in partidas %}
+                    <tr>
+                      <td>{{ partida }}</td>
+                      {% if is_owner %}
+                      <td>
+                        <form method="POST" class="remove-form" style="display: inline;">
+                          {% csrf_token %}
+                          <input type="hidden" name="remover" value="1">
+                          <input type="hidden" name="item" value="{{ partida }}">
+                          <input type="hidden" name="lista" value="partidas">
+                          <button type="submit" class="btn-remove" title="Remover" onclick="return confirm('Tem certeza que deseja excluir esta partida?');">×</button>
+                        </form>
+                      </td>
+                      {% endif %}
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            
+            {% if is_owner %}
+            <div class="section-footer">
+              <a href="{% url 'visualizar_perfil_atleta' atleta.id %}?adicionar_partida=true#partidas-section" class="btn-primary">Adicionar Nova Partida</a>
+            </div>
+            {% endif %}
+          {% else %}
+            <div class="empty-state">
+              <p>Nenhuma partida cadastrada.</p>
+              {% if is_owner %}
+              <a href="{% url 'visualizar_perfil_atleta' atleta.id %}?adicionar_partida=true#partidas-section" class="btn-add">Adicionar Primeira Partida</a>
+              {% endif %}
+            </div>
+          {% endif %}
+
+        </div>
+      </div>
+      {% endif %}
     </div>
   </main>
 

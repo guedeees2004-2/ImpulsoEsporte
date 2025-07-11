@@ -401,3 +401,290 @@
     text-align: center;
     padding: 2rem;
 }
+
+/* ========== EQUIPE CARD STYLES ========== */
+.equipe-info-card {
+    background: linear-gradient(135deg, #fff 0%, #f8fffe 100%);
+    border: 2px solid #2E8B57;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(46, 139, 87, 0.15);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.equipe-info-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #2E8B57, #228B22, #32CD32);
+}
+
+.equipe-info-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(46, 139, 87, 0.2);
+}
+
+.equipe-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e0e6e0;
+}
+
+.equipe-logo {
+    margin-right: 1rem;
+}
+
+.equipe-icon {
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, #2E8B57, #228B22);
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(46, 139, 87, 0.3);
+}
+
+.equipe-title h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.8rem;
+    color: #165732;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.equipe-status {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-block;
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.equipe-details {
+    margin: 1.5rem 0;
+}
+
+.detail-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    padding: 0.8rem;
+    background: rgba(46, 139, 87, 0.05);
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.detail-item:hover {
+    background: rgba(46, 139, 87, 0.1);
+    transform: translateX(4px);
+}
+
+.detail-icon {
+    font-size: 1.2rem;
+    margin-right: 0.8rem;
+    min-width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.detail-content {
+    flex: 1;
+}
+
+.detail-label {
+    display: block;
+    font-weight: 600;
+    color: #165732;
+    margin-bottom: 0.2rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.detail-value {
+    display: block;
+    color: #333;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.equipe-actions {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.btn-view-team {
+    background: linear-gradient(135deg, #2E8B57, #228B22);
+    color: white;
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(46, 139, 87, 0.3);
+    border: none;
+    cursor: pointer;
+}
+
+.btn-view-team:hover {
+    background: linear-gradient(135deg, #228B22, #32CD32);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(46, 139, 87, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-icon {
+    font-size: 1.1rem;
+}
+
+/* Empty State para Equipe */
+.empty-state {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: rgba(46, 139, 87, 0.05);
+    border-radius: 12px;
+    border: 2px dashed #2E8B57;
+}
+
+.empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.6;
+}
+
+.empty-state p {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.btn-add {
+    background: linear-gradient(135deg, #2E8B57, #228B22);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(46, 139, 87, 0.3);
+}
+
+.btn-add:hover {
+    background: linear-gradient(135deg, #228B22, #32CD32);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(46, 139, 87, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .equipe-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .equipe-logo {
+        margin: 0 0 1rem 0;
+    }
+    
+    .detail-item {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .detail-icon {
+        margin: 0 0 0.5rem 0;
+    }
+}
+
+/* Formulário de Partidas */
+.partida-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-control {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.section-footer {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+    margin-top: 1rem;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #2E8B57;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #246B45;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #545b62;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 8px 12px;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    margin-top: 5px;
+    font-size: 12px;
+}

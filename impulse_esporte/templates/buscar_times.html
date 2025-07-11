@@ -50,12 +50,12 @@
         {% for time in resultados %}
           <div class="equipe-card">
             <div class="equipe-nome">
-              <a href="{% url 'visualizar_perfil_equipe' time.id %}">
-                {% if time.nome %}
-                  {{ time.nome }}
-                {% else %}
-                  {{ time.nome_da_equipe }}
-                {% endif %}
+              {% if time.tipo_fonte == 'usuario' %}
+                <a href="{% url 'pagina_equipe' time.id %}">
+              {% else %}
+                <a href="{% url 'visualizar_perfil_equipe' time.id %}">
+              {% endif %}
+                {{ time.nome }}
               </a>
             </div>
             
@@ -102,7 +102,11 @@
               {% endif %}
             </div>
             
-            <a href="{% url 'visualizar_perfil_equipe' time.id %}" class="contato-btn">
+            {% if time.tipo_fonte == 'usuario' %}
+              <a href="{% url 'pagina_equipe' time.id %}" class="contato-btn">
+            {% else %}
+              <a href="{% url 'visualizar_perfil_equipe' time.id %}" class="contato-btn">
+            {% endif %}
               Ver Perfil do Time
             </a>
           </div>

@@ -4,16 +4,11 @@ from django.contrib.auth.decorators import login_required
 from ..models import Patrocinador
 
 
-@login_required
 def buscar_patrocinadores(request):
     """
     View para buscar patrocinadores disponíveis.
-    Acessível apenas para usuários do tipo 'atleta' ou 'equipe'.
+    Acessível para todos os usuários (logados ou não).
     """
-    # Verificar se o usuário é atleta ou equipe
-    if request.user.tipo_conta not in ['atleta', 'equipe']:
-        return redirect('home')
-    
     # Buscar todos os patrocinadores
     patrocinadores_disponiveis = Patrocinador.objects.filter(
         usuario__tipo_conta='patrocinador'
@@ -29,7 +24,7 @@ def buscar_patrocinadores(request):
     context = {
         'patrocinadores': patrocinadores_disponiveis,
         'search_query': search_query,
-        'user_type': request.user.tipo_conta,
+        'user_type': request.user.tipo_conta if request.user.is_authenticated else None,
     }
     
     return render(request, 'buscar_patrocinadores.html', context)
