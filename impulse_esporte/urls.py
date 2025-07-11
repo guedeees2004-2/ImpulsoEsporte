@@ -15,9 +15,12 @@ urlpatterns = [
     path("atleta/<int:atleta_id>/", views.visualizar_perfil_atleta, name="visualizar_perfil_atleta"),
     path("atletas/", views.lista_atletas, name="lista_atletas"),
     path("minha-equipe/", views.minha_equipe, name="minha_equipe"),
-    path("equipe/<int:equipe_id>/partida/nova/", views.adicionar_partida, name="adicionar_partida"),
     path("equipe/<int:equipe_id>/", views.visualizar_perfil_equipe, name="visualizar_perfil_equipe"),
+    path("equipe/<int:equipe_id>/pagina/", views.pagina_equipe, name="pagina_equipe"),
     path("equipe/<int:equipe_id>/atletas/", views.listar_atletas_da_equipe, name="listar_atletas"),
+    path("equipe/<int:equipe_id>/partida/adicionar/", views.adicionar_partida, name="adicionar_partida"),
+    path("equipe/<int:equipe_id>/partida/<int:partida_id>/editar/", views.editar_partida, name="editar_partida"),
+    path("equipe/<int:equipe_id>/partida/<int:partida_id>/excluir/", views.excluir_partida, name="excluir_partida"),
     path("equipes/", views.buscar_times, name="lista_equipes"),
     path("patrocinadores/", views.buscar_patrocinadores, name="buscar_patrocinadores"),
     path("patrocinadores/publico/", listar_patrocinadores_publicos, name="pagina_patrocinadores"),  
@@ -30,9 +33,6 @@ urlpatterns = [
     path("gerenciar_equipes/", views.gerenciar_equipes, name="gerenciar_equipes"),
     path("buscar-times/", views.buscar_times, name="buscar_times"),
     path("servicos/", views.servicos, name="servicos"),
-    path('equipe/<int:equipe_id>/partida/adicionar/', views.adicionar_partida, name='adicionar_partida'),
-    path('equipe/<int:equipe_id>/partida/<int:partida_id>/editar/', views.editar_partida, name='editar_partida'),
-    path('equipe/<int:equipe_id>/partida/<int:partida_id>/excluir/', views.excluir_partida, name='excluir_partida'),
 ]
 
 if settings.DEBUG:

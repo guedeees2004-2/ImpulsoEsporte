@@ -104,6 +104,8 @@ def lista_atletas(request):
     """
     View para listar atletas disponíveis para visualização de perfil.
     """
+    from django.urls import reverse
+    
     atletas = Usuario.objects.filter(tipo_conta='atleta')
     
     # Filtro de busca
@@ -115,11 +117,23 @@ def lista_atletas(request):
             models.Q(last_name__icontains=search_query)
         )
     
+    # Lógica inteligente para o botão voltar
+    referer = request.META.get('HTTP_REFERER', '/')
+    current_url = request.build_absolute_uri()
+    lista_atletas_url = request.build_absolute_uri(reverse('lista_atletas'))
+    
+    # Se o referer é a própria página de lista de atletas ou está vazio, usar página inicial
+    if not referer or referer == current_url or lista_atletas_url in referer:
+        back_url = reverse('home')
+    else:
+        back_url = referer
+    
     context = {
         'atletas': atletas,
         'search_query': search_query,
         'user_type': getattr(request.user, 'tipo_conta', None) if request.user.is_authenticated else None,
         'title': 'Lista de Atletas - Impulso Esporte',
+        'back_url': back_url,
     }
     
     return render(request, 'lista_atletas.html', context)

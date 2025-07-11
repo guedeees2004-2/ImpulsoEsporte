@@ -22,11 +22,6 @@
   </section>
 
   <main class="equipes-container">
-    {% if user_type == 'atleta' %}
-      <a href="{% url 'pagina_atleta' %}" class="back-link">← Voltar à Página do Atleta</a>
-    {% else %}
-      <a href="{% url 'home' %}" class="back-link">← Voltar ao Início</a>
-    {% endif %}
     
     <div class="search-bar">
       <form method="GET" class="search-form">

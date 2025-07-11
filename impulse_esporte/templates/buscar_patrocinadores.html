@@ -22,13 +22,6 @@
   </section>
 
   <main class="patrocinadores-container">
-    {% if user.tipo_conta == "atleta" %}
-      <a href="{% url 'pagina_atleta' %}" class="back-link">← Voltar à Página do Atleta</a>
-    {% elif user.tipo_conta == "equipe" and user.equipe %}
-      <a href="{% url 'paginaEquipe' user.equipe.id %}" class="back-link">← Voltar à Página da Equipe</a>
-    {% else %}
-      <a href="{% url 'home' %}" class="back-link">← Voltar</a>
-    {% endif %}
     
     <div class="search-bar">
       <form method="GET">

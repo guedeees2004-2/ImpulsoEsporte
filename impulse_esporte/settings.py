@@ -131,11 +131,17 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "pt-br"
 
-
 TIME_ZONE = "America/Sao_Paulo"
 
 USE_I18N = True
 USE_TZ = True
+
+# Configurações de formato para garantir uso de 24h
+DATE_FORMAT = 'd/m/Y'
+TIME_FORMAT = 'H:i'  # Formato 24h (ex: 14:30)
+DATETIME_FORMAT = 'd/m/Y H:i'
+SHORT_DATE_FORMAT = 'd/m/Y'
+SHORT_DATETIME_FORMAT = 'd/m/Y H:i'
 
 
 # Static files (CSS, JavaScript, Images)

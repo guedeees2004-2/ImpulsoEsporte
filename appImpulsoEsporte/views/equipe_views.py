@@ -182,6 +182,27 @@ def pagina_equipe(request, equipe_id):
 
     # Buscar os jogadores vinculados à equipe
     jogadores = Jogador.objects.filter(equipe=equipe)
+    
+    # Buscar as partidas da equipe
+    from ..models import Partida
+    partidas = Partida.objects.filter(equipe=equipe).order_by('data', 'horario')
+    
+    # Verificar se deve mostrar o formulário de partida
+    mostrar_form_partida = request.GET.get('adicionar_partida') == 'true'
+    
+    # Processar formulário de partida se for POST
+    form = None
+    if is_owner:
+        if request.method == "POST":
+            form = PartidaForm(request.POST)
+            if form.is_valid():
+                partida = form.save(commit=False)
+                partida.equipe = equipe
+                partida.save()
+                messages.success(request, 'Partida adicionada com sucesso!')
+                return redirect('pagina_equipe', equipe_id=equipe.id)
+        else:
+            form = PartidaForm()
 
     context = {
         "title": f"Impulso Esporte - {equipe.nome}",
@@ -190,6 +211,9 @@ def pagina_equipe(request, equipe_id):
         'is_owner': is_owner,
         'user_type': getattr(request.user, 'tipo_conta', None),
         'patrocinadores': patrocinadores,
+        'partidas': partidas,
+        'form': form if is_owner else None,
+        'mostrar_form_partida': mostrar_form_partida,
     }
     return render(request, 'paginaEquipe.html', context)
 
@@ -332,34 +356,14 @@ def listar_atletas_da_equipe(request, equipe_id):
 
 @login_required
 def adicionar_partida(request, equipe_id):
-    equipe = get_object_or_404(Equipe, id=equipe_id)
-
-    if request.method == "POST":
-        form = PartidaForm(request.POST)
-        if form.is_valid():
-            partida = form.save(commit=False)
-            partida.equipe = equipe
-            partida.save()
-            return redirect('minha_equipe')  # ou 'paginaEquipe', equipe_id=equipe.id
-    else:
-        form = PartidaForm()
-
-    return render(request, 'form_partida.html', {'form': form, 'equipe': equipe})
+    # Redirecionar para a página da equipe com o formulário integrado
+    return redirect('pagina_equipe', equipe_id=equipe_id) + '?adicionar_partida=true#partidas-section'
 
 @login_required
 def editar_partida(request, equipe_id, partida_id):
-    equipe = get_object_or_404(Equipe, id=equipe_id)
-    partida = get_object_or_404(Partida, id=partida_id, equipe=equipe)
-
-    if request.method == "POST":
-        form = PartidaForm(request.POST, instance=partida)
-        if form.is_valid():
-            form.save()
-            return redirect('minha_equipe')
-    else:
-        form = PartidaForm(instance=partida)
-
-    return render(request, 'form_partida.html', {'form': form, 'equipe': equipe, 'editar': True})
+    # Por enquanto, redirecionar para a página da equipe
+    # TODO: Implementar edição integrada na página da equipe
+    return redirect('pagina_equipe', equipe_id=equipe_id) + '#partidas-section'
 
 @login_required
 def excluir_partida(request, equipe_id, partida_id):
